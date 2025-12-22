@@ -1,0 +1,13 @@
+{
+  "extends": "@f-code/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "erasableSyntaxOnly": false
+  },
+  "include": ["src"],
+  "exclude": ["dist", "build", "node_modules"]
+}
