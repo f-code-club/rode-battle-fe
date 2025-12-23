@@ -1,0 +1,14 @@
+{
+  "extends": "@f-code/typescript-config/base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true
+  },
+  "include": [
+    "src"
+  ]
+}
