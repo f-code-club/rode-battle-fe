@@ -17,6 +17,7 @@ export default defineConfig([
     ],
     languageOptions: {
       ecmaVersion: 2020,
+      project: "./tsconfig.json",
       globals: globals.browser,
     },
   },

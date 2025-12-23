@@ -1,152 +1,131 @@
-import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig } from "axios";
+import axios, { AxiosError, type AxiosInstance } from 'axios';
+import {
+  API_CONFIG,
+  DEV_PORT_MAP,
+  EApiService,
+  ETokenName,
+  type CustomAxiosRequestConfig,
+} from './config';
 
-import type { IResponseObject } from "@/type";
-
-const BASE_API_URL: string =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
-const NODE_ENV: string = process.env.NEXT_PUBLIC_NODE_ENV ?? "development";
-
-export enum ETokenName {
-  ACCESS_TOKEN = "access-token",
-  REFRESH_TOKEN = "refresh-token",
-}
-
-export enum EApiService {
-  MAIN = "main",
-}
-
-const DEV_PORT_MAP: Record<EApiService, number> = {
-  [EApiService.MAIN]: 4000,
-};
-
-export type CustomAxiosRequestConfig = AxiosRequestConfig & {
-  _retry?: boolean;
-};
+import type { IResponseObject } from '@/type';
 
 export const createBaseURL = (service: EApiService = EApiService.MAIN) => {
-  const path = NODE_ENV === "development" ? "/api/v1" : `/api/v1`;
+  const path = API_CONFIG.NODE_ENV === 'development' ? API_CONFIG.API_PATH : API_CONFIG.API_PATH;
 
-  if (NODE_ENV === "development") {
-    return new URL(
-      path,
-      `http://localhost:${DEV_PORT_MAP[service]}`,
-    ).toString();
+  if (API_CONFIG.NODE_ENV === 'development') {
+    return new URL(path, `http://localhost:${DEV_PORT_MAP[service]}`).toString();
   }
 
-  return new URL(path, BASE_API_URL).toString();
+  return new URL(path, API_CONFIG.BASE_API_URL).toString();
 };
 
-export const createUnAuthApi = (
-  service: EApiService = EApiService.MAIN,
-): AxiosInstance => {
-  const instance = axios.create({
-    baseURL: createBaseURL(service),
-    headers: {
-      "Content-Type": "application/json",
-    },
-    maxRedirects: 5,
-  });
-
-  if (typeof window !== "undefined") {
-    instance.interceptors.request.use(
-      (config) => {
-        return config;
-      },
-      (error) => Promise.reject(error),
-    );
+export class HttpProtocol {
+  tokenKey: Record<ETokenName, string>;
+  baseUrl: string;
+  constructor() {
+    this.tokenKey = {
+      [ETokenName.ACCESS_TOKEN]: 'access_token',
+      [ETokenName.REFRESH_TOKEN]: 'refresh_token',
+    };
+    this.baseUrl = createBaseURL();
+  }
+  getAccessToken(): string | null {
+    return sessionStorage.getItem(ETokenName.ACCESS_TOKEN);
+  }
+  getRefreshToken(): string | null {
+    return localStorage.getItem(ETokenName.REFRESH_TOKEN);
+  }
+  saveAccessToken(token: string): void {
+    sessionStorage.setItem(ETokenName.ACCESS_TOKEN, token);
+  }
+  saveRefreshToken(token: string): void {
+    localStorage.setItem(ETokenName.REFRESH_TOKEN, token);
   }
 
-  return instance;
-};
-
-export const createAuthApi = (
-  service: EApiService = EApiService.MAIN,
-): AxiosInstance => {
-  const instance = axios.create({
-    baseURL: createBaseURL(service),
-    withCredentials: true,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    maxRedirects: 5,
-  });
-
-  let isRefreshing = false;
-  let refreshSubscribers: ((token: string) => void)[] = [];
-
-  const subscribeTokenRefresh = (cb: (token: string) => void) => {
-    refreshSubscribers.push(cb);
-  };
-
-  const onRefreshed = (token: string) => {
-    refreshSubscribers.forEach((cb) => cb(token));
-    refreshSubscribers = [];
-  };
-
-  if (typeof window !== "undefined") {
-    instance.interceptors.request.use(
-      async (config) => {
-        const accessToken = localStorage.getItem(ETokenName.ACCESS_TOKEN);
-
-        if (accessToken && config.headers) {
-          config.headers["Authorization"] = `Bearer ${accessToken}`;
-        }
-
-        return config;
+  getApi(): AxiosInstance {
+    const instance = axios.create({
+      baseURL: this.baseUrl,
+      headers: {
+        'Content-Type': 'application/json',
       },
-      (error) => Promise.reject(error),
-    );
+      maxRedirects: 5,
+    });
 
-    instance.interceptors.response.use(
-      (response) => response,
-      async (error: AxiosError) => {
-        const originalRequest = error.config as CustomAxiosRequestConfig;
+    const refreshToken = this.getRefreshToken();
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
+    if (refreshToken) {
+      instance.defaults.withCredentials = true;
+    }
 
-          if (!isRefreshing) {
-            isRefreshing = true;
-            try {
-              const response = await axios.post(
-                createBaseURL() + "/auth/refresh-token",
-                null,
-                {
-                  withCredentials: true,
-                },
-              );
+    let isRefreshing = false;
+    let refreshSubscribers: ((token: string) => void)[] = [];
 
-              const { tokens } = (response.data as IResponseObject<any>)
-                .content;
+    const subscribeTokenRefresh = (cb: (token: string) => void) => {
+      refreshSubscribers.push(cb);
+    };
 
-              localStorage.setItem(
-                ETokenName.ACCESS_TOKEN,
-                tokens.ACCESS_TOKEN,
-              );
+    const onRefreshed = (token: string) => {
+      refreshSubscribers.forEach((cb) => cb(token));
+      refreshSubscribers = [];
+    };
 
-              onRefreshed(tokens.ACCESS_TOKEN);
-              isRefreshing = false;
-            } catch (err) {
-              isRefreshing = false;
+    if (typeof window !== 'undefined') {
+      instance.interceptors.request.use(
+        async (config) => {
+          const accessToken = localStorage.getItem(ETokenName.ACCESS_TOKEN);
 
-              return Promise.reject(err);
-            }
+          if (accessToken && config.headers) {
+            config.headers['Authorization'] = `Bearer ${accessToken}`;
           }
 
-          return new Promise((resolve) => {
-            subscribeTokenRefresh((token: string) => {
-              if (originalRequest.headers) {
-                originalRequest.headers["Authorization"] = `Bearer ${token}`;
+          return config;
+        },
+        (error) => Promise.reject(error),
+      );
+
+      instance.interceptors.response.use(
+        (response) => response,
+        async (error: AxiosError) => {
+          const originalRequest = error.config as CustomAxiosRequestConfig;
+
+          if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            if (!isRefreshing) {
+              isRefreshing = true;
+              try {
+                const response = await axios.post(createBaseURL() + '/auth/refresh-token', null, {
+                  withCredentials: true,
+                });
+
+                const { tokens } = (response.data as IResponseObject<any>).content;
+
+                localStorage.setItem(ETokenName.ACCESS_TOKEN, tokens.ACCESS_TOKEN);
+
+                onRefreshed(tokens.ACCESS_TOKEN);
+                isRefreshing = false;
+              } catch (err) {
+                isRefreshing = false;
+
+                return Promise.reject(err);
               }
-              resolve(instance(originalRequest));
+            }
+
+            return new Promise((resolve) => {
+              subscribeTokenRefresh((token: string) => {
+                if (originalRequest.headers) {
+                  originalRequest.headers['Authorization'] = `Bearer ${token}`;
+                }
+                resolve(instance(originalRequest));
+              });
             });
-          });
-        }
+          }
 
-        return Promise.reject(error);
-      },
-    );
+          return Promise.reject(error);
+        },
+      );
+    }
+
+    return instance;
   }
-
-  return instance;
-};
+}

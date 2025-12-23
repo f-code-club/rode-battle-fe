@@ -1,8 +1,20 @@
 {
-  "name": "util",
-  "module": "index.ts",
+  "name": "@f-code/util",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "type": "module",
+  "author": "@f-code-club",
   "private": true,
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "@f-code/typescript-config": "workspace:*"
@@ -11,6 +23,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.12",
     "axios": "^1.13.2",
     "joi": "^18.0.2"
   }
