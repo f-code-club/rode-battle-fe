@@ -9,9 +9,16 @@
   "files": [
     "dist/**"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "lint": "eslint \"src/**/*.ts*\"",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
@@ -20,11 +27,12 @@
     "@f-code/typescript-config": "workspace:*"
   },
   "peerDependencies": {
-    "typescript": "^5"
+    "typescript": "^5",
+    "@tanstack/react-query": "^5.90.12"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.90.12",
     "axios": "^1.13.2",
-    "joi": "^18.0.2"
+    "joi": "^18.0.2",
+    "tsup": "^8.5.1"
   }
 }
