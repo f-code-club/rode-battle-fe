@@ -1,9 +1,12 @@
 {
-  "name": "@repo/typescript-config",
+  "name": "@rode-battle-frontend/typescript-config",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    "./base.json": "./base.json"
   }
 }
