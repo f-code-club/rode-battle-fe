@@ -3,6 +3,8 @@
 @theme {
   --color-brand-primary: #aa3bff;
   --color-brand-secondary: #c084fc;
+  --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-heading: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 :root {
@@ -17,11 +19,11 @@
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --heading: 'Outfit', system-ui, -apple-system, sans-serif;
+  --sans: var(--font-sans);
+  --heading: var(--font-heading);
   --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
 
-  font-family: var(--sans);
+  font-family: var(--font-sans);
   color: var(--text);
   background: var(--bg);
 }
