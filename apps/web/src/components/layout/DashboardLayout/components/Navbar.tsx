@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 
-const NAV_LINKS = [
+export const NAV_LINKS = [
   { label: 'Home', path: '/' },
   { label: 'Catalog', path: '/catalog' },
   { label: 'Contests', path: '/contests' },
