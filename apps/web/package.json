@@ -11,13 +11,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@rode-battle-frontend/typescript-config": "*",
+    "@rode-battle-frontend/ui": "*",
     "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-router": "^1.169.2",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "tailwindcss": "^4.2.4",
-    "@rode-battle-frontend/ui": "*",
-    "@rode-battle-frontend/typescript-config": "*"
+    "usehooks-ts": "^3.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
