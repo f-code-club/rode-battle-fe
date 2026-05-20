@@ -1,8 +1,11 @@
 import JudgeLayout from '@/components/layout/JudgeLayout';
+import ClarificationsSection from '@/features/judge-dashboard/components/ClarificationsSection';
+import ContestsSection from '@/features/judge-dashboard/components/ContestsSection';
+import LiveContestSection from '@/features/judge-dashboard/components/LiveContestSection';
+import QuickLinkCard from '@/features/judge-dashboard/components/QuickLinkCard';
 import { Download, LayoutGrid, MessageSquare, Plus, Sparkles } from 'lucide-react';
-import { QuickLinkCard } from './components/QuickLinkCard';
 
-export const JudgeDashboardPage = () => {
+export default function JudgeDashboardPage() {
   return (
     <JudgeLayout>
       <div className="space-y-8 pb-12 font-sans">
@@ -35,7 +38,7 @@ export const JudgeDashboardPage = () => {
         <div className="space-y-3">
           <div className="flex items-center justify-between px-1">
             <h3 className="text-sm font-bold text-gray-900">Quick links</h3>
-            <span className="font-mono text-xs font-semibold tracking-wider text-gray-400 uppercase">judge tools</span>
+            <span className="text-xs font-semibold tracking-wider text-gray-400 uppercase">judge tools</span>
           </div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             <QuickLinkCard
@@ -66,7 +69,14 @@ export const JudgeDashboardPage = () => {
             />
           </div>
         </div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <LiveContestSection />
+          <div className="space-y-6 lg:col-span-1">
+            <ClarificationsSection />
+            <ContestsSection />
+          </div>
+        </div>
       </div>
     </JudgeLayout>
   );
-};
+}
