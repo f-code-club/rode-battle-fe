@@ -11,7 +11,7 @@ interface QuickLinkCardProps {
   actionText: string;
 }
 
-export function QuickLinkCard({
+export default function QuickLinkCard({
   icon,
   badgeText,
   showPulseDot = false,
@@ -26,7 +26,7 @@ export function QuickLinkCard({
         <div className="mb-4 flex items-center justify-between">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-900">{icon}</div>
           {badgeText && (
-            <span className="flex items-center gap-1.5 rounded bg-gray-100 px-2 py-0.5 font-mono text-xs font-semibold text-gray-700 uppercase">
+            <span className="flex items-center gap-1.5 rounded bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-700 uppercase">
               {showPulseDot && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />}
               {badgeText}
             </span>
@@ -36,7 +36,7 @@ export function QuickLinkCard({
         <p className="mt-1 text-xs leading-relaxed text-gray-500">{description}</p>
       </div>
       <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4 text-xs">
-        <span className="font-mono font-semibold text-gray-500">{statText}</span>
+        <span className="font-semibold text-gray-500">{statText}</span>
         <span className="flex items-center gap-1 font-semibold text-gray-900 transition-transform group-hover:translate-x-0.5">
           {actionText} <ArrowRight size={14} />
         </span>
