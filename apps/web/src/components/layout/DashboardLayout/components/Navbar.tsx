@@ -12,7 +12,7 @@ export const NAV_LINKS = [
 
 export default function Navbar() {
   return (
-    <nav className="hidden h-full items-stretch gap-1 lg:flex">
+    <nav className="hidden h-full items-stretch gap-1.5 lg:flex">
       {NAV_LINKS.map((link) => (
         <Link
           key={link.label}
@@ -25,7 +25,9 @@ export default function Navbar() {
           {({ isActive }) => (
             <>
               {link.label}
-              {isActive && <div className="absolute right-0 bottom-0 left-0 h-0.5 rounded-full bg-teal-600" />}
+              {isActive && (
+                <div className="absolute bottom-0 left-1/2 h-0.75 w-6 -translate-x-1/2 rounded-t-full bg-teal-600" />
+              )}
             </>
           )}
         </Link>
