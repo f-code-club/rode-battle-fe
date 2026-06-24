@@ -3,8 +3,8 @@
 @theme {
   --color-brand-primary: #aa3bff;
   --color-brand-secondary: #c084fc;
-  --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --font-heading: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-sans: 'Merriweather', Georgia, serif;
+  --font-heading: 'Merriweather', Georgia, serif;
 }
 
 :root {
