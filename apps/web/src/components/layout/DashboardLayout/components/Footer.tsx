@@ -1,5 +1,6 @@
-import { SiFacebook, SiWordpress, SiYoutube } from '@icons-pack/react-simple-icons';
+import { SiWordpress } from '@icons-pack/react-simple-icons';
 import { Link } from '@tanstack/react-router';
+import { SocialIcon } from 'react-social-icons';
 
 export default function Footer() {
   return (
@@ -22,12 +23,12 @@ export default function Footer() {
           </div>
 
           <div className="col-span-1 lg:col-span-3">
-            <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase">Liên kết</h3>
+            <h3 className="text-sm font-bold tracking-wide text-slate-700 uppercase">Liên kết</h3>
             <ul className="mt-4 space-y-3">
               <li>
                 <Link
                   to="/"
-                  className="hover:text-primary group flex items-center text-sm text-gray-600 transition-all"
+                  className="hover:text-primary group flex items-center text-sm text-slate-600 transition-all"
                 >
                   <span className="group-hover:bg-primary mr-2 h-1 w-1 rounded-full bg-gray-400 transition-all group-hover:w-2"></span>
                   Trang chủ
@@ -75,7 +76,7 @@ export default function Footer() {
           </div>
 
           <div className="col-span-1 lg:col-span-3">
-            <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase">Tài nguyên</h3>
+            <h3 className="text-sm font-bold tracking-wide text-slate-700 uppercase">Tài nguyên</h3>
             <ul className="mt-4 space-y-3">
               <li>
                 <a href="#" className="hover:text-primary group flex items-center text-sm text-gray-600 transition-all">
@@ -105,31 +106,28 @@ export default function Footer() {
           </div>
 
           <div className="col-span-1 lg:col-span-2">
-            <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase">Liên hệ</h3>
+            <h3 className="text-sm font-bold tracking-wide text-slate-700 uppercase">Liên hệ</h3>
             <div className="mt-4 flex flex-wrap gap-3">
-              <a
-                href="https://www.facebook.com/fcodeclub"
+              <SocialIcon
+                url="https://www.facebook.com/fcodeclub"
                 target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:bg-primary group hover:border-primary flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white shadow-xs transition-all hover:scale-110 hover:text-blue-600"
-              >
-                <SiFacebook className="h-4 w-4" />
-              </a>
-              <a
-                href="https://www.youtube.com/channel/UCZyrUXSrQ1AdkomxYz1GvCw"
+                style={{ width: 40, height: 40 }}
+                className="rounded-lg shadow-xs transition-all hover:scale-110 hover:opacity-90"
+              />
+              <SocialIcon
+                url="https://www.youtube.com/channel/UCZyrUXSrQ1AdkomxYz1GvCw"
                 target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:bg-primary group hover:border-primary flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white shadow-xs transition-all hover:scale-110 hover:text-red-500"
-              >
-                <SiYoutube className="h-4 w-4" />
-              </a>
+                style={{ width: 40, height: 40 }}
+                className="rounded-lg shadow-xs transition-all hover:scale-110 hover:opacity-90"
+              />
               <a
                 href="https://fcodehcm.wordpress.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary hover:bg-primary group hover:border-primary flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white shadow-xs transition-all hover:scale-110 hover:text-blue-500"
+                style={{ backgroundColor: '#21759b', width: 40, height: 40 }}
+                className="flex items-center justify-center rounded-full shadow-xs transition-all hover:scale-110 hover:opacity-90"
               >
-                <SiWordpress className="h-4 w-4" />
+                <SiWordpress className="h-5 w-5 text-white" />
               </a>
             </div>
           </div>
@@ -139,7 +137,7 @@ export default function Footer() {
           <p className="text-center text-sm text-gray-500">
             Dự án được thiết kế bởi:{' '}
             <a
-              className="text-primary font-medium transition-colors hover:underline"
+              className="text-primary font-medium transition-colors hover:text-slate-700 hover:underline"
               target="_blank"
               href="https://www.facebook.com/fcodeclub"
             >
