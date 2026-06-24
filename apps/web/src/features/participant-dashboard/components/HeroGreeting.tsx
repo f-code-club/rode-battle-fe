@@ -1,7 +1,10 @@
+import { Swords } from 'lucide-react';
+
 export default function HeroGreeting() {
   return (
     <div className="mb-6 overflow-hidden rounded border border-slate-200 bg-white font-sans text-slate-700 shadow-sm">
-      <div className="flex items-center justify-between bg-linear-to-r from-green-700 to-green-800 px-4 py-2 text-white">
+      <div className="flex items-center gap-2 bg-linear-to-r from-green-700 to-green-800 px-4 py-2 text-white">
+        <Swords className="relative z-10 size-5 shrink-0 text-green-200" strokeWidth={1.75} />
         <h2 className="m-0 text-base font-bold tracking-wide text-white">Chào mừng bạn đến với R.ode Battle!</h2>
       </div>
       <div className="p-5 text-sm leading-relaxed font-normal text-slate-600">
