@@ -11,13 +11,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.5.7",
+    "@rode-battle-frontend/typescript-config": "*",
+    "@rode-battle-frontend/ui": "*",
     "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-router": "^1.169.2",
+    "clsx": "^2.1.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-hook-form": "^7.83.0",
+    "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.2.4",
-    "@rode-battle-frontend/ui": "*",
-    "@rode-battle-frontend/typescript-config": "*"
+    "usehooks-ts": "^3.1.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
