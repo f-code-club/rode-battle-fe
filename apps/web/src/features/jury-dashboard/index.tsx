@@ -1,17 +1,17 @@
-import JudgeLayout from '@/components/layout/JudgeLayout';
-import ClarificationsSection from '@/features/judge-dashboard/components/ClarificationsSection';
-import ContestsSection from '@/features/judge-dashboard/components/ContestsSection';
-import LiveContestSection from '@/features/judge-dashboard/components/LiveContestSection';
-import QuickLinkCard from '@/features/judge-dashboard/components/QuickLinkCard';
+import JuryLayout from '@/components/layout/JuryLayout';
+import ClarificationsSection from '@/features/jury-dashboard/components/ClarificationsSection';
+import ContestsSection from '@/features/jury-dashboard/components/ContestsSection';
+import LiveContestSection from '@/features/jury-dashboard/components/LiveContestSection';
+import QuickLinkCard from '@/features/jury-dashboard/components/QuickLinkCard';
 import { Download, LayoutGrid, MessageSquare, Plus, Sparkles } from 'lucide-react';
 
-export default function JudgeDashboardPage() {
+export default function JuryDashboardPage() {
   return (
-    <JudgeLayout>
+    <JuryLayout>
       <div className="space-y-8 pb-12 font-sans">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">Judge dashboard</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">Jury dashboard</h1>
             <p className="text-sm text-gray-500">Managing 2 active contests and 5 open clarifications.</p>
           </div>
           <div className="flex items-center gap-3">
@@ -38,7 +38,7 @@ export default function JudgeDashboardPage() {
         <div className="space-y-3">
           <div className="flex items-center justify-between px-1">
             <h3 className="text-sm font-bold text-gray-900">Quick links</h3>
-            <span className="text-xs font-semibold tracking-wider text-gray-400 uppercase">judge tools</span>
+            <span className="text-xs font-semibold tracking-wider text-gray-400 uppercase">jury tools</span>
           </div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             <QuickLinkCard
@@ -77,6 +77,6 @@ export default function JudgeDashboardPage() {
           </div>
         </div>
       </div>
-    </JudgeLayout>
+    </JuryLayout>
   );
 }

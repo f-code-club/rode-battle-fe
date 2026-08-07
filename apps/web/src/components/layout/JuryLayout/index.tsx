@@ -1,11 +1,11 @@
-import Footer from '@/components/layout/JudgeLayout/components/Footer';
-import Header from '@/components/layout/JudgeLayout/components/Header';
-import Sidebar from '@/components/layout/JudgeLayout/components/Sidebar';
+import Footer from '@/components/layout/JuryLayout/components/Footer';
+import Header from '@/components/layout/JuryLayout/components/Header';
+import Sidebar from '@/components/layout/JuryLayout/components/Sidebar';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 
-export default function JudgeLayout({ children }: { children: React.ReactNode }) {
+export default function JuryLayout({ children }: { children: React.ReactNode }) {
   const isDesktop = useMediaQuery('(min-width: 64rem)', { initializeWithValue: true });
   const [desktopOpen, setDesktopOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
