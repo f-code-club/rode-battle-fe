@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router';
 import { Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react';
 import { useState } from 'react';
 import { useLogin } from '../hooks/useAuth';
@@ -106,20 +105,6 @@ export const LoginPage = () => {
           )}
         </button>
       </form>
-
-      <p className="mt-6 text-center text-sm text-[#6b6375]">
-        Chưa có tài khoản?{' '}
-        <Link to="/register" className="font-semibold text-green-600 hover:underline">
-          Đăng ký ngay
-        </Link>
-      </p>
-
-      <p className="mt-4 text-center text-xs text-[#b0adb6]">
-        Bạn gặp sự cố khi đăng nhập?{' '}
-        <a href="https://discord.gg/fcode" target="_blank" rel="noreferrer" className="text-green-600 hover:underline">
-          Liên hệ discord
-        </a>
-      </p>
     </AuthLayout>
   );
 };
