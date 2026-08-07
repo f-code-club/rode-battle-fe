@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
-import { ChevronLeft, ChevronRight, Megaphone, MoreHorizontal, Trophy, User } from 'lucide-react';
+import { MoreHorizontal, Trophy } from 'lucide-react';
 import { useState } from 'react';
-import type { Announcement, Contest } from '../types';
+import type { Contest } from '../types';
 
 const CONTESTS: Contest[] = [
   {
@@ -24,37 +24,37 @@ const CONTESTS: Contest[] = [
   },
 ];
 
-const ANNOUNCEMENTS: Announcement[] = [
-  {
-    id: 1,
-    author: 'Ban Quản Trị',
-    dateTime: '2026-05-07T19:40',
-    timeAgo: '12 phút trước',
-    title: 'Cơ cấu giải thưởng cuộc thi!',
-    image: 'https://oj.vnoi.info/martor/917ebd0b-a8d8-4e2d-848f-f47ee54e8dfc.png',
-    content: (
-      <>
-        Chúng tôi đang chuyển sang hệ thống tính điểm với tốc độ cập nhật nhanh hơn cho người dùng mới. Quá trình chuyển
-        đổi sẽ bảo lưu điểm số hiện tại của bạn, nhưng độ biến động sẽ được tính toán lại dựa trên 12 kì thi gần nhất.
-        Hãy đọc kỹ thay đổi trước khi tham gia vòng thi tiếp theo.
-      </>
-    ),
-  },
-  {
-    id: 2,
-    author: 'Ban Quản Trị',
-    dateTime: '2026-05-06T15:00',
-    timeAgo: '1 ngày trước',
-    title: 'Cập nhật hệ thống chấm bài (Judge) phiên bản 2.5',
-    image: 'https://oj.vnoi.info/martor/ee354e06-eb83-431a-a441-bd024e65ce56.png',
-    content: (
-      <>
-        Hệ thống chấm bài vừa được nâng cấp lên phiên bản mới nhằm tối ưu hóa bộ nhớ và tăng tốc độ thực thi cho các
-        ngôn ngữ như Python và Java. Một số lỗi nhỏ về giới hạn thời gian (TLE) không chính xác đã được khắc phục.
-      </>
-    ),
-  },
-];
+// const ANNOUNCEMENTS: Announcement[] = [
+//   {
+//     id: 1,
+//     author: 'Ban Quản Trị',
+//     dateTime: '2026-05-07T19:40',
+//     timeAgo: '12 phút trước',
+//     title: 'Cơ cấu giải thưởng cuộc thi!',
+//     image: 'https://oj.vnoi.info/martor/917ebd0b-a8d8-4e2d-848f-f47ee54e8dfc.png',
+//     content: (
+//       <>
+//         Chúng tôi đang chuyển sang hệ thống tính điểm với tốc độ cập nhật nhanh hơn cho người dùng mới. Quá trình chuyển
+//         đổi sẽ bảo lưu điểm số hiện tại của bạn, nhưng độ biến động sẽ được tính toán lại dựa trên 12 kì thi gần nhất.
+//         Hãy đọc kỹ thay đổi trước khi tham gia vòng thi tiếp theo.
+//       </>
+//     ),
+//   },
+//   {
+//     id: 2,
+//     author: 'Ban Quản Trị',
+//     dateTime: '2026-05-06T15:00',
+//     timeAgo: '1 ngày trước',
+//     title: 'Cập nhật hệ thống chấm bài (Judge) phiên bản 2.5',
+//     image: 'https://oj.vnoi.info/martor/ee354e06-eb83-431a-a441-bd024e65ce56.png',
+//     content: (
+//       <>
+//         Hệ thống chấm bài vừa được nâng cấp lên phiên bản mới nhằm tối ưu hóa bộ nhớ và tăng tốc độ thực thi cho các
+//         ngôn ngữ như Python và Java. Một số lỗi nhỏ về giới hạn thời gian (TLE) không chính xác đã được khắc phục.
+//       </>
+//     ),
+//   },
+// ];
 
 export default function MainTable() {
   const [activeTab, setActiveTab] = useState<'announcements' | 'contests'>('announcements');
@@ -63,7 +63,7 @@ export default function MainTable() {
     <section className="overflow-hidden rounded border border-slate-200 bg-white font-sans">
       <nav className="flex items-center justify-between border-b border-slate-100 px-4" aria-label="Phân loại nội dung">
         <ul className="m-0 flex list-none gap-8 p-0">
-          <li>
+          {/* <li>
             <button
               onClick={() => setActiveTab('announcements')}
               className={`flex cursor-pointer items-center gap-2 border-b-2 py-4 text-sm font-bold transition-colors ${
@@ -75,7 +75,7 @@ export default function MainTable() {
               <Megaphone className="size-4" />
               Thông báo
             </button>
-          </li>
+          </li> */}
           <li>
             <button
               onClick={() => setActiveTab('contests')}
@@ -99,7 +99,7 @@ export default function MainTable() {
       </nav>
 
       <div className="divide-y divide-slate-100">
-        {activeTab === 'announcements' ? (
+        {/* {activeTab === 'announcements' ? (
           <div className="divide-y divide-slate-100">
             {ANNOUNCEMENTS.map((item) => (
               <article key={item.id} className="p-6">
@@ -143,26 +143,23 @@ export default function MainTable() {
               </button>
             </div>
           </div>
-        ) : (
-          <div className="flex flex-col">
-            {CONTESTS.map((contest) => (
-              <div
-                key={contest.id}
-                className="flex items-center justify-between p-4 transition-colors hover:bg-slate-50"
-              >
-                <div className="flex flex-col gap-1">
-                  <Link to={contest.path as '/'} className="text-base font-medium text-blue-700 hover:underline">
-                    {contest.title}
-                  </Link>
-                  <time className="text-sm text-slate-400">{contest.startTime}</time>
-                </div>
-                <button className="cursor-pointer rounded bg-green-700 px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-green-800">
-                  Tham gia
-                </button>
+        ) : ( */}
+        <div className="flex flex-col">
+          {CONTESTS.map((contest) => (
+            <div key={contest.id} className="flex items-center justify-between p-4 transition-colors hover:bg-slate-50">
+              <div className="flex flex-col gap-1">
+                <Link to={contest.path as '/'} className="text-base font-medium text-blue-700 hover:underline">
+                  {contest.title}
+                </Link>
+                <time className="text-sm text-slate-400">{contest.startTime}</time>
               </div>
-            ))}
-          </div>
-        )}
+              <button className="cursor-pointer rounded bg-green-700 px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-green-800">
+                Tham gia
+              </button>
+            </div>
+          ))}
+        </div>
+        {/* )} */}
       </div>
     </section>
   );
