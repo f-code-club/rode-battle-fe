@@ -18,7 +18,7 @@ export const useLogin = () => {
       await authService.login(data);
       void navigate({ to: '/' });
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Đã có lỗi xảy ra, vui lòng thử lại';
+      const message = err instanceof Error ? err.message : 'Something went wrong, please try again';
       form.setError('root', { message });
     }
   });

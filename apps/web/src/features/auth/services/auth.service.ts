@@ -15,6 +15,6 @@ export const authService = {
       body: JSON.stringify(data),
     });
 
-    if (!res.ok) await parseErrorMessage(res, 'Đăng nhập thất bại');
+    if (!res.ok) await parseErrorMessage(res, 'Login failed');
   },
 };

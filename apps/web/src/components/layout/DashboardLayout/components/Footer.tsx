@@ -16,14 +16,14 @@ export default function Footer() {
               <span className="text-primary text-2xl font-bold tracking-tight">F-Code</span>
             </div>
             <p className="mt-4 text-justify text-sm leading-relaxed text-gray-600">
-              Nền tảng tổ chức và quản lý các cuộc thi lập trình chuyên nghiệp của CLB F-Code. Từ các trận đấu CSS
-              Battle đầy sáng tạo đến những cuộc thi thuật toán thách thức, chúng tôi xây dựng môi trường để sinh viên
-              rèn luyện tư duy và kỹ năng lập trình đỉnh cao.
+              Platform for organizing and managing professional programming contests by F-Code Club. From creative CSS
+              Battle rounds to challenging algorithm contests, we build an environment for students to sharpen their
+              problem-solving skills and reach the top of their game.
             </p>
           </div>
 
           <div className="col-span-1 lg:col-span-3">
-            <h3 className="text-sm font-bold tracking-wide text-slate-700 uppercase">Liên kết</h3>
+            <h3 className="text-sm font-bold tracking-wide text-slate-700 uppercase">Links</h3>
             <ul className="mt-4 space-y-3">
               <li>
                 <Link
@@ -31,7 +31,7 @@ export default function Footer() {
                   className="hover:text-primary group flex items-center text-sm text-slate-600 transition-all"
                 >
                   <span className="group-hover:bg-primary mr-2 h-1 w-1 rounded-full bg-gray-400 transition-all group-hover:w-2"></span>
-                  Trang chủ
+                  Home
                 </Link>
               </li>
               <li>
@@ -40,7 +40,7 @@ export default function Footer() {
                   className="hover:text-primary group flex items-center text-sm text-gray-600 transition-all"
                 >
                   <span className="group-hover:bg-primary mr-2 h-1 w-1 rounded-full bg-gray-400 transition-all group-hover:w-2"></span>
-                  Cuộc thi
+                  Contests
                 </Link>
               </li>
               <li>
@@ -49,7 +49,7 @@ export default function Footer() {
                   className="hover:text-primary group flex items-center text-sm text-gray-600 transition-all"
                 >
                   <span className="group-hover:bg-primary mr-2 h-1 w-1 rounded-full bg-gray-400 transition-all group-hover:w-2"></span>
-                  Bảng xếp hạng
+                  Standings
                 </Link>
               </li>
               <li>
@@ -58,7 +58,7 @@ export default function Footer() {
                   className="hover:text-primary group flex items-center text-sm text-gray-600 transition-all"
                 >
                   <span className="group-hover:bg-primary mr-2 h-1 w-1 rounded-full bg-gray-400 transition-all group-hover:w-2"></span>
-                  Thư viện đề
+                  Problem Library
                 </Link>
               </li>
               <li>
@@ -76,37 +76,37 @@ export default function Footer() {
           </div>
 
           <div className="col-span-1 lg:col-span-3">
-            <h3 className="text-sm font-bold tracking-wide text-slate-700 uppercase">Tài nguyên</h3>
+            <h3 className="text-sm font-bold tracking-wide text-slate-700 uppercase">Resources</h3>
             <ul className="mt-4 space-y-3">
               <li>
                 <a href="#" className="hover:text-primary group flex items-center text-sm text-gray-600 transition-all">
                   <span className="group-hover:bg-primary mr-2 h-1 w-1 rounded-full bg-gray-400 transition-all group-hover:w-2"></span>
-                  Tài liệu hướng dẫn
+                  Documentation
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-primary group flex items-center text-sm text-gray-600 transition-all">
                   <span className="group-hover:bg-primary mr-2 h-1 w-1 rounded-full bg-gray-400 transition-all group-hover:w-2"></span>
-                  Quy định & Thể lệ
+                  Rules & Regulations
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-primary group flex items-center text-sm text-gray-600 transition-all">
                   <span className="group-hover:bg-primary mr-2 h-1 w-1 rounded-full bg-gray-400 transition-all group-hover:w-2"></span>
-                  FAQ (Câu hỏi thường gặp)
+                  FAQ
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-primary group flex items-center text-sm text-gray-600 transition-all">
                   <span className="group-hover:bg-primary mr-2 h-1 w-1 rounded-full bg-gray-400 transition-all group-hover:w-2"></span>
-                  Cộng đồng Discord
+                  Discord Community
                 </a>
               </li>
             </ul>
           </div>
 
           <div className="col-span-1 lg:col-span-2">
-            <h3 className="text-sm font-bold tracking-wide text-slate-700 uppercase">Liên hệ</h3>
+            <h3 className="text-sm font-bold tracking-wide text-slate-700 uppercase">Contact</h3>
             <div className="mt-4 flex flex-wrap gap-3">
               <SocialIcon
                 url="https://www.facebook.com/fcodeclub"
@@ -135,7 +135,7 @@ export default function Footer() {
 
         <div className="mt-8 border-t border-gray-200 pt-6 sm:mt-10 sm:pt-8">
           <p className="text-center text-sm text-gray-500">
-            Dự án được thiết kế bởi:{' '}
+            Designed by:{' '}
             <a
               className="text-primary font-medium transition-colors hover:text-slate-700 hover:underline"
               target="_blank"

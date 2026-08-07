@@ -18,8 +18,8 @@ export const LoginPage = () => {
       <div className="mb-8 flex flex-col items-center gap-3">
         <img src="/fcode.png" alt="F-Code logo" width={52} height={52} className="object-contain" />
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#08060d]">Đăng nhập</h1>
-          <p className="mt-1 text-sm text-[#6b6375]">CLB F-Code thuộc FPT University</p>
+          <h1 className="text-2xl font-bold text-[#08060d]">Sign in</h1>
+          <p className="mt-1 text-sm text-[#6b6375]">F-Code Club · FPT University</p>
         </div>
       </div>
 
@@ -56,7 +56,7 @@ export const LoginPage = () => {
         <div>
           <div className="mb-1.5 flex items-center justify-between">
             <label htmlFor="login-password" className="text-sm font-medium text-[#08060d]">
-              Mật khẩu
+              Password
             </label>
             {/* <Link to="/forgot-password" className="text-xs text-[#16a34a] hover:underline">
               Quên mật khẩu?
@@ -98,10 +98,10 @@ export const LoginPage = () => {
         >
           {isSubmitting ? (
             <>
-              <Loader2 size={16} className="animate-spin" /> Đang đăng nhập...
+              <Loader2 size={16} className="animate-spin" /> Signing in...
             </>
           ) : (
-            'Đăng nhập'
+            'Sign in'
           )}
         </button>
       </form>

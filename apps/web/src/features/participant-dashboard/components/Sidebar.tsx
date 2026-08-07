@@ -15,7 +15,7 @@ function SideCard({ title, icon, children }: { title: string; icon: React.ReactN
 export default function Sidebar() {
   return (
     <div className="flex flex-col gap-5">
-      <SideCard title="Top thành viên" icon={<Trophy size={14} />}>
+      <SideCard title="Top Members" icon={<Trophy size={14} />}>
         <div className="animate-pulse space-y-3 p-5">
           <div className="h-3 w-full rounded bg-slate-100"></div>
           <div className="h-3 w-full rounded bg-slate-100"></div>
@@ -25,7 +25,7 @@ export default function Sidebar() {
         </div>
       </SideCard>
 
-      <SideCard title="Top đóng góp" icon={<Trophy size={14} />}>
+      <SideCard title="Top Contributors" icon={<Trophy size={14} />}>
         <div className="animate-pulse space-y-3 p-5">
           <div className="h-3 w-full rounded bg-slate-100"></div>
           <div className="h-3 w-full rounded bg-slate-100"></div>
@@ -35,7 +35,7 @@ export default function Sidebar() {
         </div>
       </SideCard>
 
-      <SideCard title="Bài mới" icon={<Share2 size={14} />}>
+      <SideCard title="New Problems" icon={<Share2 size={14} />}>
         <div className="animate-pulse space-y-3 p-5">
           <div className="h-3 w-full rounded bg-slate-100"></div>
           <div className="h-3 w-full rounded bg-slate-100"></div>

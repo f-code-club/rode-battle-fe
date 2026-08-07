@@ -6,20 +6,20 @@ import type { Contest } from '../types';
 const CONTESTS: Contest[] = [
   {
     id: 1,
-    title: 'Kỳ thi chọn đội tuyển Olympic 2026 - Ngày 1',
-    startTime: '26 Tháng 4, 2026, 20:00',
+    title: 'Olympic 2026 Team Selection — Day 1',
+    startTime: 'Apr 26, 2026, 20:00',
     path: '/contests/1',
   },
   {
     id: 2,
-    title: 'Kỳ thi chọn đội tuyển Olympic 2026 - Ngày 2',
-    startTime: '26 Tháng 4, 2026, 20:00',
+    title: 'Olympic 2026 Team Selection — Day 2',
+    startTime: 'Apr 26, 2026, 20:00',
     path: '/contests/2',
   },
   {
     id: 3,
-    title: 'Kỳ thi chọn Đội tuyển HSGQG Bắc Ninh 2025-2026',
-    startTime: '22 Tháng 4, 2026, 20:00',
+    title: 'National Team Selection Bac Ninh 2025–2026',
+    startTime: 'Apr 22, 2026, 20:00',
     path: '/contests/3',
   },
 ];
@@ -61,7 +61,7 @@ export default function MainTable() {
 
   return (
     <section className="overflow-hidden rounded border border-slate-200 bg-white font-sans">
-      <nav className="flex items-center justify-between border-b border-slate-100 px-4" aria-label="Phân loại nội dung">
+      <nav className="flex items-center justify-between border-b border-slate-100 px-4" aria-label="Content categories">
         <ul className="m-0 flex list-none gap-8 p-0">
           {/* <li>
             <button
@@ -73,7 +73,7 @@ export default function MainTable() {
               }`}
             >
               <Megaphone className="size-4" />
-              Thông báo
+              Announcements
             </button>
           </li> */}
           <li>
@@ -86,13 +86,13 @@ export default function MainTable() {
               }`}
             >
               <Trophy className="size-4" />
-              Các cuộc thi đang diễn ra
+              Active Contests
             </button>
           </li>
         </ul>
         <button
           className="cursor-pointer text-slate-400 transition-colors hover:text-slate-600"
-          aria-label="Thêm tùy chọn"
+          aria-label="More options"
         >
           <MoreHorizontal className="size-5" />
         </button>

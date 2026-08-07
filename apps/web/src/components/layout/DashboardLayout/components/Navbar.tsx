@@ -6,7 +6,6 @@ export const NAV_LINKS = [
   { label: 'Contests', path: '/contests' },
   { label: 'Standings', path: '/standings' },
   { label: 'Groups', path: '/groups' },
-  { label: 'Leaderboard', path: '/leaderboard' },
   { label: 'Help', path: '/help' },
 ];
 
