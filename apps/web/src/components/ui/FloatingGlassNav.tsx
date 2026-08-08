@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useScrolled } from '@/hooks/useScrolled';
 import { GlassPanel } from './GlassPanel';
 
 interface FloatingGlassNavProps {
@@ -7,13 +7,7 @@ interface FloatingGlassNavProps {
 }
 
 export function FloatingGlassNav({ threshold = 60, children }: FloatingGlassNavProps) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > threshold);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [threshold]);
+  const visible = useScrolled(threshold);
 
   return (
     <div

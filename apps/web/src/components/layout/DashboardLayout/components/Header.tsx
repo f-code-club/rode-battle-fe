@@ -1,15 +1,16 @@
 import MobileNav from '@/components/layout/DashboardLayout/components/MobileNav';
 import Navbar from '@/components/layout/DashboardLayout/components/Navbar';
 import { FloatingGlassNav } from '@/components/ui/FloatingGlassNav';
+import { useScrolled } from '@/hooks/useScrolled';
 import { Link } from '@tanstack/react-router';
 import { Bell, LogOut, Menu, Settings, User } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useEventListener, useOnClickOutside } from 'usehooks-ts';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const scrolled = useScrolled();
   const containerRef = useRef<HTMLDivElement>(null!);
 
   useOnClickOutside(containerRef, () => setIsOpen(false));
@@ -19,12 +20,6 @@ export default function Header() {
       setIsNavOpen(false);
     }
   });
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   return (
     <>
