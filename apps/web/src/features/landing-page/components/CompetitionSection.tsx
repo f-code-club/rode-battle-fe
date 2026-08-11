@@ -101,7 +101,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
 
 export default function CompetitionSection() {
   return (
-    <section id="competition" className="bg-gray-50 px-4 py-20 md:px-8">
+    <section id="rules" className="bg-gray-50 px-4 py-20 md:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-14 max-w-3xl">
           <p className="mb-3 text-xs font-bold tracking-[0.2em] text-green-600 uppercase">THE COMPETITION</p>
