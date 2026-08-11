@@ -1,13 +1,16 @@
 import Footer from '@/components/layout/DashboardLayout/components/Footer';
 import AboutSection from './components/AboutSection';
 import CompetitionSection from './components/CompetitionSection';
+import CTASection from './components/CTASection';
 import HeroSection from './components/HeroSection';
 import LandingNavbar from './components/Navbar';
+import PrizesSection from './components/PrizesSection';
 import StatsCard from './components/StatsCard';
+import TimelineSection from './components/TimelineSection';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-white font-sans [&>footer]:mt-0!">
       <LandingNavbar />
       <main>
         <HeroSection />
@@ -20,6 +23,9 @@ export default function LandingPage() {
           <AboutSection />
         </div>
         <CompetitionSection />
+        <TimelineSection />
+        <PrizesSection />
+        <CTASection />
       </main>
       <Footer />
     </div>
