@@ -1,5 +1,6 @@
 import Footer from '@/components/layout/DashboardLayout/components/Footer';
 import AboutSection from './components/AboutSection';
+import CompetitionSection from './components/CompetitionSection';
 import HeroSection from './components/HeroSection';
 import LandingNavbar from './components/Navbar';
 import StatsCard from './components/StatsCard';
@@ -18,6 +19,7 @@ export default function LandingPage() {
         <div className="pt-12">
           <AboutSection />
         </div>
+        <CompetitionSection />
       </main>
       <Footer />
     </div>
