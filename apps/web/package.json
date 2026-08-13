@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",
+    "@radix-ui/react-dialog": "^1.1.23",
     "@rode-battle-frontend/typescript-config": "*",
     "@rode-battle-frontend/ui": "*",
     "@tailwindcss/vite": "^4.2.4",
