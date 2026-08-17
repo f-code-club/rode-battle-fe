@@ -1,3 +1,16 @@
+export interface Problem {
+  id: string;
+  position: number;
+}
+
+export interface Contest {
+  id: string;
+  name: string;
+  start: string;
+  end: string;
+  problems: Problem[];
+}
+
 export interface Result {
   problem_id: string;
   problem_position: number;
