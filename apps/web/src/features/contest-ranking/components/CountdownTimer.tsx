@@ -8,24 +8,23 @@ interface CountdownTimerProps {
   end: string;
 }
 
-function getStatus(start: Date, end: Date): ContestStatus {
-  const now = new Date();
-  if (now < start) return 'upcoming';
-  if (now > end) return 'ended';
+function getStatus(start: string, end: string): ContestStatus {
+  const now = Date.now();
+  const startTime = new Date(start).getTime();
+  const endTime = new Date(end).getTime();
+  if (now < startTime) return 'upcoming';
+  if (now > endTime) return 'ended';
   return 'running';
 }
 
-function getRemainingSeconds(start: Date, end: Date, status: ContestStatus): number {
-  const now = new Date();
-  if (status === 'upcoming') return Math.max(0, Math.floor((start.getTime() - now.getTime()) / 1000));
-  if (status === 'running') return Math.max(0, Math.floor((end.getTime() - now.getTime()) / 1000));
-  return 0;
+function getRemainingSeconds(end: string): number {
+  return Math.max(0, Math.floor((new Date(end).getTime() - Date.now()) / 1000));
 }
 
-function getDuration(start: Date, end: Date, status: ContestStatus): number {
-  if (status === 'upcoming') return Math.floor((start.getTime() - Date.now()) / 1000);
-  if (status === 'running') return Math.floor((end.getTime() - start.getTime()) / 1000);
-  return 0;
+function getDurationSeconds(start: string, end: string): number {
+  const startTime = new Date(start).getTime();
+  const endTime = new Date(end).getTime();
+  return Math.max(1, Math.floor((endTime - startTime) / 1000));
 }
 
 function formatTime(seconds: number): string {
@@ -39,54 +38,59 @@ function formatTime(seconds: number): string {
   return `${pad(m)}:${pad(s)}`;
 }
 
-const STATUS_LABELS: Record<ContestStatus, string> = {
-  upcoming: 'Starts in',
-  running: 'Remaining',
-  ended: 'Ended',
-};
-
 export default function CountdownTimer({ start, end }: CountdownTimerProps) {
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-
-  const [status, setStatus] = useState<ContestStatus>(() => getStatus(startDate, endDate));
+  const [status, setStatus] = useState<ContestStatus>(() => getStatus(start, end));
+  const [initialRemaining] = useState(() => getRemainingSeconds(end));
+  const [duration] = useState(() => getDurationSeconds(start, end));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setStatus(getStatus(startDate, endDate));
+      setStatus(getStatus(start, end));
     }, 1000);
     return () => clearInterval(interval);
   }, [start, end]);
 
+  if (status === 'upcoming') {
+    return (
+      <div className="flex flex-col items-center gap-1.5">
+        <div className="flex h-[76px] w-[76px] items-center justify-center rounded-full border-4 border-blue-100 bg-blue-50/40 px-1 text-center">
+          <span className="text-[11px] leading-tight font-semibold text-blue-500">Coming Soon</span>
+        </div>
+      </div>
+    );
+  }
+
   if (status === 'ended') {
     return (
-      <div className="flex flex-col items-center gap-1">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-gray-200">
+      <div className="flex flex-col items-center gap-1.5">
+        <div className="flex h-[76px] w-[76px] items-center justify-center rounded-full border-4 border-gray-200">
           <span className="text-xs font-semibold text-gray-400">Ended</span>
         </div>
       </div>
     );
   }
 
-  const duration = getDuration(startDate, endDate, status);
-  const remaining = getRemainingSeconds(startDate, endDate, status);
-
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-1.5">
       <CountdownCircleTimer
+        key="running-timer"
         isPlaying
         duration={duration}
-        initialRemainingTime={remaining}
-        size={64}
+        initialRemainingTime={initialRemaining}
+        size={76}
         strokeWidth={4}
-        colors={status === 'upcoming' ? '#3b82f6' : ['#22c55e', '#eab308', '#ef4444']}
-        colorsTime={status === 'upcoming' ? undefined : [duration, duration / 2, 0]}
+        colors={['#14b8a6', '#eab308', '#ef4444']}
+        colorsTime={[duration, Math.floor(duration / 2), 0]}
         trailColor="#e5e7eb"
-        onComplete={() => setStatus(getStatus(startDate, endDate))}
+        onComplete={() => setStatus(getStatus(start, end))}
       >
-        {({ remainingTime }) => <span className="text-xs font-bold tabular-nums">{formatTime(remainingTime)}</span>}
+        {({ remainingTime }) => (
+          <span className="text-xs font-semibold tracking-tight text-gray-800 tabular-nums">
+            {formatTime(remainingTime)}
+          </span>
+        )}
       </CountdownCircleTimer>
-      <span className="text-[10px] font-medium text-gray-400">{STATUS_LABELS[status]}</span>
+      <span className="text-[11px] font-medium text-gray-400">Remaining</span>
     </div>
   );
 }
