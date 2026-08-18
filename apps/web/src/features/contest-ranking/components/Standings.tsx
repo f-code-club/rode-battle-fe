@@ -1,5 +1,9 @@
 import { cn } from '@/lib/utils';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import type { Ranking } from '../types';
+import Penalty from './Penalty';
+import Problem from './Problem';
+import Score from './Score';
 
 interface StandingsProps {
   rankings: Ranking[];
@@ -7,48 +11,40 @@ interface StandingsProps {
   currentTeam?: string;
 }
 
-function ProblemCell({ score, submissionCount }: { score: number; submissionCount: number }) {
-  if (submissionCount === 0) {
-    return <span className="text-gray-300">—</span>;
-  }
-
-  const isAccepted = score > 0;
-
-  return (
-    <div className="flex flex-col items-center">
-      <span className={cn('text-sm font-semibold', isAccepted ? 'text-green-600' : 'text-red-500')}>
-        {isAccepted ? '+' : '-'}
-        {submissionCount}
-      </span>
-    </div>
-  );
-}
-
 export default function Standings({ rankings, problemLabels, currentTeam }: StandingsProps) {
+  const [tbodyRef] = useAutoAnimate<HTMLTableSectionElement>({
+    duration: 350,
+    easing: 'ease-in-out',
+  });
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[600px] border-collapse text-sm">
         <thead>
-          <tr className="border-b-2 border-gray-200 bg-gray-100">
-            <th className="px-3 py-3 text-left text-xs font-semibold tracking-wider text-gray-400 uppercase">#</th>
-            <th className="py-3 pr-4 text-left text-xs font-semibold tracking-wider text-gray-400 uppercase">Team</th>
-            <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider text-gray-400 uppercase">
+          <tr className="border-b border-gray-200 bg-gray-50/70">
+            <th className="px-3 py-3 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">#</th>
+            <th className="py-3 pr-4 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">Team</th>
+            <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider text-gray-500 uppercase">
               Score
             </th>
-            <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider text-gray-400 uppercase">
+            <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider text-gray-500 uppercase">
               Penalty
             </th>
             {problemLabels.map((label) => (
               <th
                 key={label}
-                className="px-3 py-3 text-center text-xs font-semibold tracking-wider text-gray-400 uppercase"
+                className="px-3 py-3 text-center text-xs font-semibold tracking-wider text-gray-500 uppercase"
               >
                 {label}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody
+          ref={(el) => {
+            if (el) tbodyRef(el);
+          }}
+        >
           {rankings.map((entry, index) => (
             <tr
               key={entry.name}
@@ -60,14 +56,14 @@ export default function Standings({ rankings, problemLabels, currentTeam }: Stan
               <td className="px-3 py-4 text-left">
                 <span
                   className={cn(
-                    'text-sm font-bold',
+                    'text-sm',
                     index === 0
-                      ? 'text-amber-500'
+                      ? 'font-black text-amber-500'
                       : index === 1
-                        ? 'text-gray-400'
+                        ? 'font-black text-slate-400'
                         : index === 2
-                          ? 'text-amber-700'
-                          : 'text-gray-300',
+                          ? 'font-black text-orange-500'
+                          : 'font-semibold text-gray-300',
                   )}
                 >
                   {index + 1}
@@ -76,13 +72,17 @@ export default function Standings({ rankings, problemLabels, currentTeam }: Stan
               <td className="py-4 pr-4">
                 <span className="font-semibold text-gray-900">{entry.name}</span>
               </td>
-              <td className="px-3 py-4 text-center font-bold text-gray-900">{entry.score}</td>
-              <td className="px-3 py-4 text-center text-gray-500">{entry.penalty}</td>
+              <td className="px-3 py-4 text-center">
+                <Score score={entry.score} />
+              </td>
+              <td className="px-3 py-4 text-center">
+                <Penalty penalty={entry.penalty} />
+              </td>
               {problemLabels.map((label, problemIndex) => {
                 const detail = entry.details.find((d) => d.problem_position === problemIndex + 1);
                 return (
                   <td key={label} className="px-3 py-4 text-center">
-                    <ProblemCell score={detail?.score ?? 0} submissionCount={detail?.submission_count ?? 0} />
+                    <Problem score={detail?.score ?? 0} submissionCount={detail?.submission_count ?? 0} />
                   </td>
                 );
               })}

@@ -13,6 +13,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.10.0",
     "@hookform/resolvers": "^5.5.7",
     "@radix-ui/react-dialog": "^1.1.23",
     "@rode-battle-frontend/typescript-config": "*",
