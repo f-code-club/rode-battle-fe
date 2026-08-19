@@ -11,7 +11,7 @@ export default function CssTargetPanel({ target }: CssTargetPanelProps) {
   return (
     <div className="flex h-130 min-h-0 flex-col overflow-hidden lg:h-full">
       <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-5 py-3.5">
-        <span className="text-[13px] font-semibold tracking-[0.03em] text-gray-700 uppercase">Target</span>
+        <span className="text-xs font-semibold tracking-[0.03em] text-gray-700 uppercase">Target</span>
         <span className="font-mono text-xs text-gray-500">
           {width} × {height}
         </span>
@@ -30,7 +30,7 @@ export default function CssTargetPanel({ target }: CssTargetPanelProps) {
 
         {Boolean(target?.colors?.length) && (
           <div>
-            <div className="mb-2 text-[11px] font-semibold tracking-[0.03em] text-gray-500 uppercase">Palette</div>
+            <div className="mb-2 text-xs font-semibold tracking-[0.03em] text-gray-500 uppercase">Palette</div>
             <div className="flex flex-wrap gap-2">
               {target?.colors.map((c) => (
                 <div key={c.hex} className="flex items-center gap-2 rounded-xs border border-gray-200 px-3 py-1.75">

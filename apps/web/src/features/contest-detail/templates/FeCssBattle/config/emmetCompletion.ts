@@ -16,9 +16,6 @@ function simplify(result: CompletionResult | null): CompletionResult | null {
       detail: undefined,
       info: undefined,
     })),
-    // The library's own update() always recomputes from/to/options straight from live
-    // tracker state (ignores whatever we pass as `current`), so re-simplifying its result
-    // here keeps the label clean on every keystroke without affecting expand positions.
     update: result.update ? (current, from, to, ctx) => simplify(result.update!(current, from, to, ctx)) : undefined,
   };
 }
