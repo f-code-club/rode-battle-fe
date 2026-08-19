@@ -30,7 +30,7 @@ export const MOCK_CONTEST: Contest = {
   ],
 };
 
-const DEFAULT_STARTER_HTML = ``;
+const DEFAULT_STARTER_HTML = `<div></div>`;
 
 const MOCK_PROBLEM_DETAILS: Record<string, ContestDetailData> = {
   p1: {
