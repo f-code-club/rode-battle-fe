@@ -20,7 +20,7 @@ const STATUS_CLASS = {
 } as const;
 
 export default function ProblemRow({ contestId, problem }: ProblemRowProps) {
-  const { status } = useProblemStatus(problem.id);
+  const { status } = useProblemStatus(contestId, problem.id);
 
   return (
     <tr className="bg-white transition-colors hover:bg-gray-50">

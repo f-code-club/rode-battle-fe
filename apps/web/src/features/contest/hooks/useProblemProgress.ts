@@ -8,9 +8,9 @@ interface ProblemStatusState {
 
 const DEFAULT_STATUS_STATE: ProblemStatusState = { touched: false, submitted: false };
 
-export function useProblemStatus(problemId: string) {
+export function useProblemStatus(contestId: string, problemId: string) {
   const [state, setState] = useLocalStorage<ProblemStatusState>(
-    `contest-problem-status-${problemId}`,
+    `contest-problem-status-${contestId}-${problemId}`,
     DEFAULT_STATUS_STATE,
   );
 
