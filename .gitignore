@@ -43,3 +43,5 @@ bun-debug.log*
 
 .tanstack
 routeTree.gen.ts
+*storybook.log
+storybook-static
