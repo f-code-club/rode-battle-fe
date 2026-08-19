@@ -1,22 +1,23 @@
 import { useLocalStorage } from 'usehooks-ts';
-import type { ProblemStatus } from '../types';
+import type { ProblemStatus } from '../data';
 
-export interface ProblemProgress {
-  html: string;
-  css: string;
+interface ProblemStatusState {
+  touched: boolean;
   submitted: boolean;
 }
 
-export function useProblemProgress(problemId: string, defaults: { html: string; css: string }) {
-  return useLocalStorage<ProblemProgress>(`contest-problem-${problemId}`, {
-    html: defaults.html,
-    css: defaults.css,
-    submitted: false,
-  });
-}
+const DEFAULT_STATUS_STATE: ProblemStatusState = { touched: false, submitted: false };
 
-export function deriveProblemStatus(progress: ProblemProgress, defaults: { html: string; css: string }): ProblemStatus {
-  if (progress.submitted) return 'submitted';
-  if (progress.html !== defaults.html || progress.css !== defaults.css) return 'in-progress';
-  return 'not-started';
+export function useProblemStatus(problemId: string) {
+  const [state, setState] = useLocalStorage<ProblemStatusState>(
+    `contest-problem-status-${problemId}`,
+    DEFAULT_STATUS_STATE,
+  );
+
+  const status: ProblemStatus = state.submitted ? 'submitted' : state.touched ? 'in-progress' : 'not-started';
+
+  const markTouched = () => setState((prev) => (prev.touched ? prev : { ...prev, touched: true }));
+  const markSubmitted = () => setState((prev) => ({ ...prev, submitted: true }));
+
+  return { status, markTouched, markSubmitted };
 }
