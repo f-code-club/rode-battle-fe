@@ -30,11 +30,7 @@ export const MOCK_CONTEST: Contest = {
   ],
 };
 
-const DEFAULT_STARTER_HTML = `<div></div>
-
-<!-- OBJECTIVE -->
-<!-- Recreate the target panel using the least code possible. -->
-<!-- Remove these comments before you submit. -->`;
+const DEFAULT_STARTER_HTML = ``;
 
 const MOCK_PROBLEM_DETAILS: Record<string, ContestDetailData> = {
   p1: {
