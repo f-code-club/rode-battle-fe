@@ -19,6 +19,20 @@ export interface CssBattleTarget {
   };
 }
 
+export interface BeAlgorithmLanguageOption {
+  id: string;
+  label: string;
+  fileExt: string;
+}
+
+export interface BeAlgorithmMeta {
+  statementMarkdown: string;
+  timeLimitMs: number;
+  memoryLimitMb: number;
+  points?: number;
+  allowedLanguages: BeAlgorithmLanguageOption[];
+}
+
 export interface ContestDetailData {
   id: string;
   title: string;
@@ -26,4 +40,5 @@ export interface ContestDetailData {
   initialHtml?: string;
   initialCss?: string;
   target?: CssBattleTarget;
+  algorithm?: BeAlgorithmMeta;
 }
