@@ -1,5 +1,8 @@
-import FeCssBattleTemplate from './templates/FeCssBattle';
+import { lazy, Suspense } from 'react';
 import type { ContestDetailData } from './types';
+
+const FeCssBattleTemplate = lazy(() => import('./templates/FeCssBattle'));
+const BeAlgorithmTemplate = lazy(() => import('./templates/BeAlgorithm'));
 
 interface ContestDetailProps {
   contestId: string;
@@ -8,5 +11,10 @@ interface ContestDetailProps {
 }
 
 export default function ContestDetail({ contestId, problemId, data }: ContestDetailProps) {
-  return <FeCssBattleTemplate contestId={contestId} problemId={problemId} contestData={data} />;
+  const Template = data?.type === 'BE_ALGORITHM' ? BeAlgorithmTemplate : FeCssBattleTemplate;
+  return (
+    <Suspense fallback={null}>
+      <Template contestId={contestId} problemId={problemId} contestData={data} />
+    </Suspense>
+  );
 }
