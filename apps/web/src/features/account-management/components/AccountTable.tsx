@@ -16,7 +16,7 @@ export default function AccountTable({ accounts }: AccountTableProps) {
   if (accounts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 py-12 text-center">
-        <p className="text-sm font-medium text-gray-500">Chưa có tài khoản nào trong hệ thống</p>
+        <p className="text-sm font-medium text-gray-500">No accounts found</p>
       </div>
     );
   }
@@ -29,16 +29,16 @@ export default function AccountTable({ accounts }: AccountTableProps) {
             <tr className="border-b border-gray-200 bg-gray-50/80">
               <th className="px-4 py-3.5 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">#</th>
               <th className="px-4 py-3.5 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
-                Tên thí sinh / Đội
+                Candidate / User
               </th>
               <th className="px-4 py-3.5 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
                 Email
               </th>
               <th className="px-4 py-3.5 text-center text-xs font-semibold tracking-wider text-gray-500 uppercase">
-                Trạng thái
+                Status
               </th>
               <th className="px-4 py-3.5 text-right text-xs font-semibold tracking-wider text-gray-500 uppercase">
-                Thao tác
+                Actions
               </th>
             </tr>
           </thead>
@@ -69,7 +69,7 @@ export default function AccountTable({ accounts }: AccountTableProps) {
                         : 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20',
                     )}
                   >
-                    {account.is_banned ? 'Đã khóa' : 'Hoạt động'}
+                    {account.is_banned ? 'Banned' : 'Active'}
                   </span>
                 </td>
                 <td className="px-4 py-3.5 text-right">
@@ -84,11 +84,11 @@ export default function AccountTable({ accounts }: AccountTableProps) {
                   >
                     {account.is_banned ? (
                       <>
-                        <Unlock className="h-3 w-3" /> Mở khóa
+                        <Unlock className="h-3 w-3" /> Unban
                       </>
                     ) : (
                       <>
-                        <Lock className="h-3 w-3" /> Khóa
+                        <Lock className="h-3 w-3" /> Ban
                       </>
                     )}
                   </button>

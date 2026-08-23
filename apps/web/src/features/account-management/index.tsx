@@ -1,18 +1,15 @@
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import AccountTable from './components/AccountTable';
-import { useAccount } from './hooks/useAccount';
+import AdminLayout from '@/components/layout/AdminLayout';
+import AccountSection from './components/AccountSection';
 
 export default function AccountManagement() {
-  const accounts = useAccount();
-
   return (
-    <DashboardLayout>
+    <AdminLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Quản lý tài khoản</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Account Management</h1>
         </div>
-        <AccountTable accounts={accounts} />
+        <AccountSection />
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   );
 }

@@ -1,5 +1,5 @@
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import AccountTable from '@/features/account-management/components/AccountTable';
+import AdminLayout from '@/components/layout/AdminLayout';
+import AccountSection from '@/features/account-management/components/AccountSection';
 import type { Account } from '@/features/account-management/types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { createMemoryHistory, createRootRoute, createRouter, RouterProvider } from '@tanstack/react-router';
@@ -21,7 +21,7 @@ const MOCK_ACCOUNTS: Account[] = [
   },
   {
     id: '1a2b3c4d-0003-4000-8000-000000000003',
-    name: 'Shadow Coders (Vi phạm nội quy)',
+    name: 'Shadow Coders',
     email: 'shadow.coders@fcode.club',
     password: 'ShadowSecure$2026',
     is_banned: true,
@@ -51,15 +51,14 @@ const MOCK_ACCOUNTS: Account[] = [
 
 function AccountManagementPageMock({ accounts }: { accounts: Account[] }) {
   return (
-    <DashboardLayout>
+    <AdminLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Quản lý tài khoản</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Account Management</h1>
         </div>
-
-        <AccountTable accounts={accounts} />
+        <AccountSection accounts={accounts} />
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 
@@ -76,7 +75,7 @@ const meta: Meta<typeof AccountManagementPageMock> = {
       });
       const router = createRouter({
         routeTree: rootRoute,
-        history: createMemoryHistory({ initialEntries: ['/'] }),
+        history: createMemoryHistory({ initialEntries: ['/admin/account'] }),
       });
       return <RouterProvider router={router} />;
     },
@@ -87,14 +86,14 @@ export default meta;
 type Story = StoryObj<typeof AccountManagementPageMock>;
 
 export const Default: Story = {
-  name: '1. Danh sách tài khoản',
+  name: '1. Default Accounts',
   args: {
     accounts: MOCK_ACCOUNTS,
   },
 };
 
 export const Empty: Story = {
-  name: '2. Không có tài khoản',
+  name: '2. Empty',
   args: {
     accounts: [],
   },
