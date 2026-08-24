@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import { Lock, Unlock } from 'lucide-react';
 import { type Account, DEFAULT_PAGE_SIZE } from '../types';
 import Pagination from './Pagination';
+import Role from './Role';
 
 interface AccountTableProps {
   accounts: Account[];
@@ -34,17 +35,20 @@ export default function AccountTable({
     <div className="space-y-3.5">
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[700px] table-fixed border-collapse text-sm">
+          <table className="w-full min-w-[820px] table-fixed border-collapse text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50/80">
                 <th className="w-14 px-4 py-3.5 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
                   #
                 </th>
-                <th className="w-[34%] px-4 py-3.5 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                <th className="w-[30%] px-4 py-3.5 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
                   Candidate / User
                 </th>
-                <th className="w-[36%] px-4 py-3.5 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                <th className="w-[32%] px-4 py-3.5 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
                   Email
+                </th>
+                <th className="w-32 px-4 py-3.5 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                  Role
                 </th>
                 <th className="w-28 px-4 py-3.5 text-center text-xs font-semibold tracking-wider text-gray-500 uppercase">
                   Status
@@ -58,7 +62,7 @@ export default function AccountTable({
               {accounts.map((account, index) => (
                 <tr key={account.id} className="transition-colors hover:bg-gray-50/60">
                   <td className="w-14 px-4 py-3.5 text-left text-xs font-medium text-gray-400">{from + index}</td>
-                  <td className="w-[34%] px-4 py-3.5 text-left font-medium text-gray-900">
+                  <td className="w-[30%] px-4 py-3.5 text-left font-medium text-gray-900">
                     <div className="flex items-center gap-2.5 overflow-hidden">
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-gray-100 to-gray-200 text-xs font-bold text-gray-900 shadow-xs">
                         {account.name.charAt(0).toUpperCase()}
@@ -66,7 +70,10 @@ export default function AccountTable({
                       <span className="truncate">{account.name}</span>
                     </div>
                   </td>
-                  <td className="w-[36%] truncate px-4 py-3.5 text-left text-gray-600">{account.email}</td>
+                  <td className="w-[32%] truncate px-4 py-3.5 text-left text-gray-600">{account.email}</td>
+                  <td className="w-32 px-4 py-3.5 text-left">
+                    <Role role={account.role} />
+                  </td>
                   <td className="w-28 px-4 py-3.5 text-center">
                     <span
                       className={cn(
