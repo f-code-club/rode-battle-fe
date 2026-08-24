@@ -28,6 +28,7 @@
     "@rode-battle-frontend/typescript-config": "*",
     "@rode-battle-frontend/ui": "*",
     "@tailwindcss/vite": "^4.2.4",
+    "@tanstack/match-sorter-utils": "^9.1.2",
     "@tanstack/react-router": "^1.169.2",
     "@uiw/codemirror-theme-aura": "^4.25.11",
     "@uiw/codemirror-theme-dracula": "^4.25.11",
