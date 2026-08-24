@@ -11,7 +11,7 @@ export default function MobileNav({ isOpen, onClose }: MobileNavProps) {
   return (
     <div className={`fixed inset-0 z-50 transition-all duration-300 lg:hidden ${isOpen ? 'visible' : 'invisible'}`}>
       <div
-        className={`absolute inset-0 bg-slate-900/20 backdrop-blur-xs transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-gray-900/20 backdrop-blur-xs transition-opacity duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={onClose}
@@ -21,9 +21,14 @@ export default function MobileNav({ isOpen, onClose }: MobileNavProps) {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex h-16 items-center justify-between border-b border-slate-50 px-6">
-          <img src="/fcode.svg" alt="F-Code Logo" className="h-10 w-10" />
-          <button onClick={onClose} className="cursor-pointer">
+        <div className="flex h-16 items-center justify-between border-b border-gray-100 px-6">
+          <img src="/fcode.svg" alt="F-Code Logo" className="h-8 w-8" />
+          <button
+            type="button"
+            aria-label="Close navigation"
+            onClick={onClose}
+            className="cursor-pointer rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
+          >
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -33,9 +38,9 @@ export default function MobileNav({ isOpen, onClose }: MobileNavProps) {
               key={link.label}
               to={link.path}
               onClick={onClose}
-              className="flex items-center rounded-xl px-4 py-3 text-base font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-teal-600"
+              className="flex items-center rounded-lg px-4 py-3 text-base font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 hover:no-underline"
               activeProps={{
-                className: 'bg-teal-50 text-teal-700 font-semibold',
+                className: 'bg-gray-100 font-semibold text-gray-900',
               }}
             >
               {link.label}

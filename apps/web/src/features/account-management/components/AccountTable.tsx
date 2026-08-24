@@ -60,7 +60,7 @@ export default function AccountTable({
                   <td className="w-14 px-4 py-3.5 text-left text-xs font-medium text-gray-400">{from + index}</td>
                   <td className="w-[34%] px-4 py-3.5 text-left font-medium text-gray-900">
                     <div className="flex items-center gap-2.5 overflow-hidden">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-teal-500 to-green-700 text-xs font-bold text-white shadow-xs">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-gray-100 to-gray-200 text-xs font-bold text-gray-900 shadow-xs">
                         {account.name.charAt(0).toUpperCase()}
                       </div>
                       <span className="truncate">{account.name}</span>
@@ -72,8 +72,8 @@ export default function AccountTable({
                       className={cn(
                         'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
                         account.is_banned
-                          ? 'bg-rose-50 text-rose-700 ring-1 ring-rose-600/20'
-                          : 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20',
+                          ? 'bg-gray-900 text-white ring-1 ring-gray-900'
+                          : 'bg-gray-100 text-gray-600 ring-1 ring-gray-300',
                       )}
                     >
                       {account.is_banned ? 'Banned' : 'Active'}
@@ -85,8 +85,8 @@ export default function AccountTable({
                       className={cn(
                         'inline-flex cursor-pointer items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
                         account.is_banned
-                          ? 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
-                          : 'border border-rose-200 bg-rose-50/50 text-rose-700 hover:bg-rose-100/60',
+                          ? 'border border-gray-200 bg-white text-gray-900 hover:bg-gray-50'
+                          : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50',
                       )}
                     >
                       {account.is_banned ? (
