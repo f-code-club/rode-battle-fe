@@ -4,6 +4,8 @@ import { useAccountFilter } from '../hooks/useAccountFilter';
 import { type Account, DEFAULT_PAGE_SIZE } from '../types';
 import AccountTable from './AccountTable';
 import AddUserDialog from './AddUserDialog';
+import ImportCsvDialog from './ImportCsvDialog';
+import ImportPreview from './ImportPreview';
 import Searchbar from './Searchbar';
 
 interface AccountSectionProps {
@@ -18,6 +20,9 @@ export default function AccountSection({
   const fetchedAccounts = useAccount();
   const accounts = customAccounts ?? fetchedAccounts;
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const [isImportCsvOpen, setIsImportCsvOpen] = useState(false);
+  const [previewAccounts] = useState<Account[]>([]);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const {
     searchQuery,
@@ -32,6 +37,14 @@ export default function AccountSection({
     totalItems,
   } = useAccountFilter(accounts, pageSize);
 
+  const handleFileSelected = (_file: File) => {
+    //
+  };
+
+  const handleConfirmImport = (_accounts: Account[]) => {
+    //
+  };
+
   return (
     <div className="space-y-6">
       <Searchbar
@@ -40,6 +53,7 @@ export default function AccountSection({
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}
         counts={counts}
+        onImportCsvClick={() => setIsImportCsvOpen(true)}
         onAddUserClick={() => setIsAddUserOpen(true)}
       />
 
@@ -53,6 +67,15 @@ export default function AccountSection({
       />
 
       <AddUserDialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen} onCreated={() => {}} />
+
+      <ImportCsvDialog open={isImportCsvOpen} onOpenChange={setIsImportCsvOpen} onFileSelected={handleFileSelected} />
+
+      <ImportPreview
+        open={isPreviewOpen}
+        onOpenChange={setIsPreviewOpen}
+        accounts={previewAccounts}
+        onConfirm={handleConfirmImport}
+      />
     </div>
   );
 }

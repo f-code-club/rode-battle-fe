@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { Search, SlidersHorizontal, Upload, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import type { AccountStatusFilter } from '../types';
 
@@ -13,6 +13,7 @@ interface SearchbarProps {
     active: number;
     banned: number;
   };
+  onImportCsvClick?: () => void;
   onAddUserClick?: () => void;
 }
 
@@ -22,6 +23,7 @@ export default function Searchbar({
   statusFilter,
   onStatusFilterChange,
   counts,
+  onImportCsvClick,
   onAddUserClick,
 }: SearchbarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -137,6 +139,15 @@ export default function Searchbar({
             </div>
           )}
         </div>
+
+        <button
+          type="button"
+          onClick={onImportCsvClick}
+          className="flex h-10 cursor-pointer items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3.5 text-xs font-semibold text-gray-700 shadow-2xs transition-all hover:bg-gray-50 hover:text-black focus:outline-none"
+        >
+          <Upload className="h-3.5 w-3.5" />
+          Import CSV
+        </button>
 
         <button
           type="button"
