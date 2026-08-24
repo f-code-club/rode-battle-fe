@@ -21,6 +21,7 @@ export default function ImportCsvDialog({ open, onOpenChange, onFileSelected }: 
       }
       onFileSelected(file);
       onOpenChange(false);
+      toast.success(`${file.name} uploaded successfully`);
     },
     [onFileSelected, onOpenChange],
   );
@@ -92,9 +93,7 @@ export default function ImportCsvDialog({ open, onOpenChange, onFileSelected }: 
                 <Upload className="h-5 w-5" />
               </div>
               <div className="text-center">
-                <p className="text-sm font-semibold text-gray-800">
-                  {isDragging ? 'Drop your file here' : 'Drag & drop your file here'}
-                </p>
+                <p className="text-sm font-semibold text-gray-800">Drag & drop your file here</p>
                 <p className="mt-1 text-xs text-gray-500">
                   or <span className="font-medium text-black underline underline-offset-2">browse files</span>
                 </p>

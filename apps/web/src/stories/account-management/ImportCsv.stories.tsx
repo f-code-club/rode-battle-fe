@@ -3,6 +3,7 @@ import ImportPreview from '@/features/account-management/components/ImportPrevie
 import type { Account } from '@/features/account-management/types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import { Toaster } from 'sonner';
 
 const MOCK_ACCOUNTS: Account[] = [
   { id: '1', email: 'ducphucdn2006@gmail.com', name: 'Phạm Đức Phúc', role: 'participant', is_banned: false },
@@ -27,11 +28,8 @@ function ImportCsvDialogStory() {
       >
         Open Import CSV
       </button>
-      <ImportCsvDialog
-        open={open}
-        onOpenChange={setOpen}
-        onFileSelected={(file) => alert(`File selected: ${file.name} (${file.size} bytes)`)}
-      />
+      <ImportCsvDialog open={open} onOpenChange={setOpen} onFileSelected={() => {}} />
+      <Toaster position="bottom-right" richColors />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import AccountSection from '@/features/account-management/components/AccountSect
 import { type Account, DEFAULT_PAGE_SIZE } from '@/features/account-management/types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { createMemoryHistory, createRootRoute, createRouter, RouterProvider } from '@tanstack/react-router';
+import { Toaster } from 'sonner';
 
 const MOCK_ACCOUNTS: Account[] = [
   {
@@ -155,14 +156,17 @@ function AccountManagementPageMock({
   pageSize?: number;
 }) {
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Account Management</h1>
+    <>
+      <AdminLayout>
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Account Management</h1>
+          </div>
+          <AccountSection accounts={accounts} pageSize={pageSize} />
         </div>
-        <AccountSection accounts={accounts} pageSize={pageSize} />
-      </div>
-    </AdminLayout>
+      </AdminLayout>
+      <Toaster position="bottom-right" richColors />
+    </>
   );
 }
 
