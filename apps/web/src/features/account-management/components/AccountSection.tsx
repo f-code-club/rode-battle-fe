@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useAccount } from '../hooks/useAccount';
 import { useAccountFilter } from '../hooks/useAccountFilter';
 import { type Account, DEFAULT_PAGE_SIZE } from '../types';
 import AccountTable from './AccountTable';
+import AddUserDialog from './AddUserDialog';
 import Searchbar from './Searchbar';
 
 interface AccountSectionProps {
@@ -15,6 +17,7 @@ export default function AccountSection({
 }: AccountSectionProps) {
   const fetchedAccounts = useAccount();
   const accounts = customAccounts ?? fetchedAccounts;
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
 
   const {
     searchQuery,
@@ -37,9 +40,7 @@ export default function AccountSection({
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}
         counts={counts}
-        onAddUserClick={() => {
-          //
-        }}
+        onAddUserClick={() => setIsAddUserOpen(true)}
       />
 
       <AccountTable
@@ -50,6 +51,8 @@ export default function AccountSection({
         pageSize={pageSize}
         onPageChange={setPage}
       />
+
+      <AddUserDialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen} onCreated={() => {}} />
     </div>
   );
 }
