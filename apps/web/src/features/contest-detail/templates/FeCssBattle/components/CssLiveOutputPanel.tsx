@@ -6,9 +6,11 @@ const DEFAULT_STAGE_WIDTH = 400;
 const DEFAULT_STAGE_HEIGHT = 300;
 const PREVIEW_DEBOUNCE_MS = 180;
 
-const MOCK_STATS = {
-  yours: { primaryLabel: 'Last score', primaryValue: '–', secondaryLabel: 'High score', secondaryValue: '–' },
-  global: { primaryLabel: 'Top score', primaryValue: '972', secondaryLabel: 'Avg score', secondaryValue: '640' },
+const STATS = {
+  primaryLabel: 'Last score',
+  primaryValue: '–',
+  secondaryLabel: 'High score',
+  secondaryValue: '–',
 } as const;
 
 interface CssLiveOutputPanelProps {
@@ -21,7 +23,6 @@ export default function CssLiveOutputPanel({ html, css, target }: CssLiveOutputP
   const [compare, setCompare] = useState(false);
   const [compareX, setCompareX] = useState(100);
   const [dragging, setDragging] = useState(false);
-  const [tab, setTab] = useState<'yours' | 'global'>('yours');
   const [scale, setScale] = useState(1);
   const stageWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -59,8 +60,6 @@ export default function CssLiveOutputPanel({ html, css, target }: CssLiveOutputP
     setCompareX(100);
     setDragging(false);
   };
-
-  const stats = MOCK_STATS[tab];
 
   return (
     <div className="flex h-130 min-h-0 flex-col overflow-hidden border-b border-gray-200 lg:h-full lg:border-r lg:border-b-0">
@@ -134,42 +133,23 @@ export default function CssLiveOutputPanel({ html, css, target }: CssLiveOutputP
         </div>
 
         <div className="flex border-b border-gray-200">
-          <button
-            type="button"
-            onClick={() => setTab('yours')}
-            className={`mr-5 cursor-pointer border-b-2 px-1 py-2 text-[13px] font-semibold whitespace-nowrap transition-colors ${
-              tab === 'yours'
-                ? 'border-[#A9812D] text-gray-900'
-                : 'border-transparent text-gray-400 hover:text-gray-700'
-            }`}
-          >
+          <span className="border-b-2 border-[#A9812D] px-1 py-2 text-[13px] font-semibold whitespace-nowrap text-gray-900">
             Your stats
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab('global')}
-            className={`cursor-pointer border-b-2 px-1 py-2 text-[13px] font-semibold whitespace-nowrap transition-colors ${
-              tab === 'global'
-                ? 'border-[#A9812D] text-gray-900'
-                : 'border-transparent text-gray-400 hover:text-gray-700'
-            }`}
-          >
-            Global stats
-          </button>
+          </span>
         </div>
 
         <div className="flex gap-3">
           <div className="flex-1 rounded-xs border border-gray-200 px-3.5 py-3">
             <div className="text-[10px] font-semibold tracking-[0.04em] text-gray-500 uppercase">
-              {stats.primaryLabel}
+              {STATS.primaryLabel}
             </div>
-            <div className="mt-1 font-mono text-xl font-semibold text-gray-800">{stats.primaryValue}</div>
+            <div className="mt-1 font-mono text-xl font-semibold text-gray-800">{STATS.primaryValue}</div>
           </div>
           <div className="flex-1 rounded-xs border border-gray-200 px-3.5 py-3">
             <div className="text-[10px] font-semibold tracking-[0.04em] text-gray-500 uppercase">
-              {stats.secondaryLabel}
+              {STATS.secondaryLabel}
             </div>
-            <div className="mt-1 font-mono text-xl font-semibold text-gray-800">{stats.secondaryValue}</div>
+            <div className="mt-1 font-mono text-xl font-semibold text-gray-800">{STATS.secondaryValue}</div>
           </div>
         </div>
       </div>
