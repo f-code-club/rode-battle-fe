@@ -5,6 +5,7 @@
   --color-brand-secondary: #c084fc;
   --font-sans: 'Merriweather', Georgia, serif;
   --font-heading: 'Merriweather', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
 }
 
 :root {
@@ -21,7 +22,7 @@
 
   --sans: var(--font-sans);
   --heading: var(--font-heading);
-  --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --mono: var(--font-mono);
 
   font-family: var(--font-sans);
   color: var(--text);
@@ -93,4 +94,18 @@ body {
 
 .animate-modal-content {
   animation: modal-fade-in 0.25s ease-out forwards;
+}
+
+/* Emmet abbreviation preview panel (CSS Battle code editors) */
+.emmet-preview {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.emmet-preview .cm-editor,
+.emmet-preview .cm-content,
+.emmet-preview .cm-gutters,
+.emmet-preview .cm-line {
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
 }
