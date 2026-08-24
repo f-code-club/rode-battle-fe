@@ -7,3 +7,5 @@ export interface Account {
 }
 
 export type AccountStatusFilter = 'all' | 'active' | 'banned';
+
+export const DEFAULT_PAGE_SIZE = 5;

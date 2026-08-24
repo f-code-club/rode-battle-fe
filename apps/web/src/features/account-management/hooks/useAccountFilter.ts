@@ -1,6 +1,6 @@
 import { rankItem } from '@tanstack/match-sorter-utils';
 import { useMemo, useState } from 'react';
-import type { Account, AccountStatusFilter } from '../types';
+import { type Account, type AccountStatusFilter, DEFAULT_PAGE_SIZE } from '../types';
 
 function normalizeText(str: string): string {
   return str
@@ -12,9 +12,21 @@ function normalizeText(str: string): string {
     .trim();
 }
 
-export function useAccountFilter(accounts: Account[]) {
+export function useAccountFilter(accounts: Account[], initialPageSize = DEFAULT_PAGE_SIZE) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<AccountStatusFilter>('all');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(initialPageSize);
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    setPage(1);
+  };
+
+  const handleStatusFilterChange = (status: AccountStatusFilter) => {
+    setStatusFilter(status);
+    setPage(1);
+  };
 
   const filteredAccounts = useMemo(() => {
     const query = searchQuery.trim();
@@ -33,6 +45,13 @@ export function useAccountFilter(accounts: Account[]) {
     });
   }, [accounts, searchQuery, statusFilter]);
 
+  const totalPages = Math.ceil(filteredAccounts.length / pageSize) || 1;
+
+  const paginatedAccounts = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return filteredAccounts.slice(start, start + pageSize);
+  }, [filteredAccounts, page, pageSize]);
+
   const counts = useMemo(
     () => ({
       total: accounts.length,
@@ -44,10 +63,17 @@ export function useAccountFilter(accounts: Account[]) {
 
   return {
     searchQuery,
-    setSearchQuery,
+    setSearchQuery: handleSearchChange,
     statusFilter,
-    setStatusFilter,
+    setStatusFilter: handleStatusFilterChange,
     filteredAccounts,
+    paginatedAccounts,
     counts,
+    page,
+    setPage,
+    pageSize,
+    setPageSize,
+    totalPages,
+    totalItems: filteredAccounts.length,
   };
 }
