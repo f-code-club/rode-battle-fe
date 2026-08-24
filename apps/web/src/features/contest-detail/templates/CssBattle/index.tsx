@@ -11,13 +11,13 @@ import IntegrityWarningModal, { type IntegrityWarningModalMode } from './compone
 import { useCssDraft } from './hooks/useCssDraft';
 import { useExamIntegrity } from './hooks/useExamIntegrity';
 
-interface FeCssBattleTemplateProps {
+interface CssBattleTemplateProps {
   contestId: string;
   problemId: string;
   contestData?: ContestDetailData;
 }
 
-export default function FeCssBattleTemplate({ contestId, problemId, contestData }: FeCssBattleTemplateProps) {
+export default function CssBattleTemplate({ contestId, problemId, contestData }: CssBattleTemplateProps) {
   const navigate = useNavigate();
   const [containerEl, setContainerEl] = useState<HTMLDivElement | null>(null);
   const defaults = {

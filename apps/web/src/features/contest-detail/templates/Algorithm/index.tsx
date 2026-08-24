@@ -10,13 +10,13 @@ import SubmissionHistoryPanel from './components/SubmissionHistoryPanel';
 import SubmitPanel from './components/SubmitPanel';
 import { useSubmissionHistory } from './hooks/useSubmissionHistory';
 
-interface BeAlgorithmTemplateProps {
+interface AlgorithmTemplateProps {
   contestId: string;
   problemId: string;
   contestData?: ContestDetailData;
 }
 
-export default function BeAlgorithmTemplate({ contestId, problemId, contestData }: BeAlgorithmTemplateProps) {
+export default function AlgorithmTemplate({ contestId, problemId, contestData }: AlgorithmTemplateProps) {
   const { markSubmitted } = useProblemStatus(contestId, problemId);
   const { history, addSubmission } = useSubmissionHistory(contestId, problemId);
   const meta = contestData?.algorithm;
