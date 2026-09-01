@@ -1,0 +1,9 @@
+services:
+  rode-web:
+    image: ${REGISTRY:-rode}/web:${IMAGE_TAG:-latest}
+    container_name: rode-web
+    hostname: rode-web
+    restart: on-failure:20
+    environment:
+      NODE_ENV: production
+      CLIENT_API_BASE_URL: ${API_BASE_URL}

@@ -19,6 +19,12 @@ cd rode-battle-fe
 bun install
 ```
 
+2. **Generate routeTree.gen.ts:**
+
+```bash
+cd apps/web && bun run generate-routes
+```
+
 3. **Run development server:**
 
 ```bash
