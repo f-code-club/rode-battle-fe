@@ -1,8 +1,8 @@
 services:
-  rode-web:
-    image: ${REGISTRY:-rode}/web:${IMAGE_TAG:-latest}
-    container_name: rode-web
-    hostname: rode-web
+  rode-battle-web:
+    image: ${REGISTRY}/web:${IMAGE_TAG:-latest}
+    container_name: rode-battle-web
+    hostname: rode-battle-web
     restart: on-failure:20
     environment:
       NODE_ENV: production
