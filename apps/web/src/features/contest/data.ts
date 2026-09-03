@@ -75,47 +75,49 @@ export const MOCK_CONTEST: Contest = {
   ],
 };
 
-const DEFAULT_STARTER_HTML = `<div></div>`;
+const DEFAULT_STARTER_CODE = `<div></div>
+<style>
+  div {
+    width: 100px;
+    height: 100px;
+    background: #dd6b4d;
+  }
+</style>`;
 
 const MOCK_PROBLEM_DETAILS: Record<string, ContestDetailData> = {
   p1: {
     id: 'p1',
     title: 'Warm-up Card',
     type: 'FE_CSS_BATTLE',
-    initialHtml: DEFAULT_STARTER_HTML,
-    initialCss: '',
+    initialCode: DEFAULT_STARTER_CODE,
     target: { id: 't1', title: 'Warm-up Card', width: 400, height: 300, colors: [] },
   },
   p2: {
     id: 'p2',
     title: 'Badge Layout',
     type: 'FE_CSS_BATTLE',
-    initialHtml: DEFAULT_STARTER_HTML,
-    initialCss: '',
+    initialCode: DEFAULT_STARTER_CODE,
     target: { id: 't2', title: 'Badge Layout', width: 320, height: 160, colors: [] },
   },
   p3: {
     id: 'p3',
     title: 'Button Group',
     type: 'FE_CSS_BATTLE',
-    initialHtml: DEFAULT_STARTER_HTML,
-    initialCss: '',
+    initialCode: DEFAULT_STARTER_CODE,
     target: { id: 't3', title: 'Button Group', width: 360, height: 120, colors: [] },
   },
   p4: {
     id: 'p4',
     title: 'Login Form',
     type: 'FE_CSS_BATTLE',
-    initialHtml: DEFAULT_STARTER_HTML,
-    initialCss: '',
+    initialCode: DEFAULT_STARTER_CODE,
     target: { id: 't4', title: 'Login Form', width: 360, height: 420, colors: [] },
   },
   p5: {
     id: 'p5',
     title: 'Dashboard Widget',
     type: 'FE_CSS_BATTLE',
-    initialHtml: DEFAULT_STARTER_HTML,
-    initialCss: '',
+    initialCode: DEFAULT_STARTER_CODE,
     target: { id: 't5', title: 'Dashboard Widget', width: 480, height: 300, colors: [] },
   },
   p6: {

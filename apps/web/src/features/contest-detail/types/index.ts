@@ -37,8 +37,7 @@ export interface ContestDetailData {
   id: string;
   title: string;
   type: ContestType;
-  initialHtml?: string;
-  initialCss?: string;
+  initialCode?: string;
   target?: CssBattleTarget;
   algorithm?: BeAlgorithmMeta;
 }
