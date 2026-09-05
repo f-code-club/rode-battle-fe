@@ -1,0 +1,6 @@
+services:
+  rode-battle-web:
+    image: ${REGISTRY}/web:${IMAGE_TAG:-latest}
+    build:
+      context: ../.
+      dockerfile: apps/web/Dockerfile

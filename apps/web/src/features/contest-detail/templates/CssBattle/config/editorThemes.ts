@@ -43,8 +43,24 @@ export const EDITOR_THEMES: EditorThemeOption[] = [
   },
 ];
 
-export const DEFAULT_EDITOR_THEME_ID = 'dracula';
+export const DEFAULT_EDITOR_THEME_ID = 'github-dark';
 
 export function getEditorTheme(id: string): EditorThemeOption {
   return EDITOR_THEMES.find((theme) => theme.id === id) ?? EDITOR_THEMES[0]!;
+}
+
+export interface PageColors {
+  background: string;
+  foreground: string;
+  border: string;
+  surface: string;
+}
+
+export function getPageColors(theme: EditorThemeOption): PageColors {
+  return {
+    background: theme.background,
+    foreground: theme.foreground,
+    border: `color-mix(in srgb, ${theme.foreground} 22%, transparent)`,
+    surface: `color-mix(in srgb, ${theme.foreground} 10%, ${theme.background})`,
+  };
 }
