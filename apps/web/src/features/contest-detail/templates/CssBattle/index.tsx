@@ -2,14 +2,13 @@ import ContestFooter from '@/features/contest/components/ContestFooter';
 import ContestHeader from '@/features/contest/components/ContestHeader';
 import { useProblemStatus } from '@/features/contest/hooks/useProblemProgress';
 import { useNavigate } from '@tanstack/react-router';
-import { useState } from 'react';
 import type { ContestDetailData } from '../../types';
 import CssEditorPanel from './components/CssEditorPanel';
 import CssLiveOutputPanel from './components/CssLiveOutputPanel';
 import CssTargetPanel from './components/CssTargetPanel';
-import IntegrityWarningModal, { type IntegrityWarningModalMode } from './components/IntegrityWarningModal';
+import { getEditorTheme, getPageColors } from './config/editorThemes';
 import { useCssDraft } from './hooks/useCssDraft';
-import { useExamIntegrity } from './hooks/useExamIntegrity';
+import { useEditorThemeId } from './hooks/useEditorThemeId';
 
 interface CssBattleTemplateProps {
   contestId: string;
@@ -19,25 +18,15 @@ interface CssBattleTemplateProps {
 
 export default function CssBattleTemplate({ contestId, problemId, contestData }: CssBattleTemplateProps) {
   const navigate = useNavigate();
-  const [containerEl, setContainerEl] = useState<HTMLDivElement | null>(null);
-  const defaults = {
-    html: contestData?.initialHtml ?? '',
-    css: contestData?.initialCss ?? '',
-  };
+  const defaults = { code: contestData?.initialCode ?? '' };
   const [draft, setDraft] = useCssDraft(contestId, problemId, defaults);
   const { markTouched, markSubmitted } = useProblemStatus(contestId, problemId);
-  const { phase, violations, latestViolation, fullscreenError, enterExam, acknowledgeViolation } = useExamIntegrity(
-    contestId,
-    problemId,
-  );
+  const [themeId, setThemeId] = useEditorThemeId();
+  const theme = getEditorTheme(themeId);
+  const colors = getPageColors(theme);
 
-  const handleHtmlChange = (html: string) => {
-    setDraft((prev) => ({ ...prev, html }));
-    markTouched();
-  };
-
-  const handleCssChange = (css: string) => {
-    setDraft((prev) => ({ ...prev, css }));
+  const handleCodeChange = (code: string) => {
+    setDraft({ code });
     markTouched();
   };
 
@@ -46,38 +35,36 @@ export default function CssBattleTemplate({ contestId, problemId, contestData }:
     navigate({ to: '/contest/$contestId', params: { contestId } });
   };
 
-  const dialogMode: IntegrityWarningModalMode | null =
-    phase === 'gate'
-      ? { kind: 'gate', title: contestData?.title ?? 'Untitled problem' }
-      : latestViolation
-        ? { kind: 'warning', violation: latestViolation, violationCount: violations.length }
-        : null;
-
   return (
-    <div ref={setContainerEl} className="flex h-screen flex-col bg-gray-50 font-sans text-gray-900">
-      <ContestHeader title="R.ODE Battle" subtitle="International CSS Championship" timeRemaining="18:42" />
+    <div
+      style={{ backgroundColor: colors.background, color: colors.foreground }}
+      className="flex h-screen flex-col font-sans"
+    >
+      <ContestHeader
+        title="R.ODE Battle"
+        subtitle="International CSS Championship"
+        timeRemaining="18:42"
+        colors={colors}
+      />
 
-      <div className="grid min-h-0 flex-1 grid-cols-1 border-b border-gray-200 lg:grid-cols-[1.6fr_1fr_1fr]">
+      <div
+        style={{ borderBottom: `1px solid ${colors.border}` }}
+        className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[1.6fr_1fr_1fr]"
+      >
         <CssEditorPanel
-          html={draft.html}
-          css={draft.css}
-          onHtmlChange={handleHtmlChange}
-          onCssChange={handleCssChange}
+          code={draft.code}
+          onCodeChange={handleCodeChange}
           onSubmit={handleSubmit}
+          theme={theme}
+          themeId={themeId}
+          onThemeIdChange={setThemeId}
+          colors={colors}
         />
-        <CssLiveOutputPanel html={draft.html} css={draft.css} target={contestData?.target} />
-        <CssTargetPanel target={contestData?.target} />
+        <CssLiveOutputPanel code={draft.code} target={contestData?.target} colors={colors} />
+        <CssTargetPanel target={contestData?.target} colors={colors} />
       </div>
 
-      <ContestFooter backTo={`/contest/${contestId}/`} backLabel="Back to problems" />
-
-      <IntegrityWarningModal
-        mode={dialogMode}
-        error={fullscreenError}
-        container={containerEl}
-        onEnter={() => containerEl && enterExam(containerEl)}
-        onAcknowledge={() => containerEl && acknowledgeViolation(containerEl)}
-      />
+      <ContestFooter backTo={`/contest/${contestId}/`} backLabel="Back to problems" colors={colors} />
     </div>
   );
 }

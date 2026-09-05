@@ -1,67 +1,55 @@
 import CodeMirror from '@uiw/react-codemirror';
-import { useMemo, useState } from 'react';
-import { createCssEditorExtensions, createHtmlEditorExtensions } from '../config/editorTheme';
-import { EDITOR_THEMES, getEditorTheme } from '../config/editorThemes';
-import { useEditorThemeId } from '../hooks/useEditorThemeId';
-
-type EditorFile = 'html' | 'css';
+import { useMemo } from 'react';
+import { createCssBattleEditorExtensions } from '../config/editorTheme';
+import { EDITOR_THEMES, type EditorThemeOption, type PageColors } from '../config/editorThemes';
 
 interface CssEditorPanelProps {
-  html: string;
-  css: string;
-  onHtmlChange: (value: string) => void;
-  onCssChange: (value: string) => void;
+  code: string;
+  onCodeChange: (value: string) => void;
   onSubmit: () => void;
+  theme: EditorThemeOption;
+  themeId: string;
+  onThemeIdChange: (id: string) => void;
+  colors: Pick<PageColors, 'border'>;
 }
 
-const FILE_TABS: { key: EditorFile; label: string }[] = [
-  { key: 'html', label: 'index.html' },
-  { key: 'css', label: 'style.css' },
-];
-
-export default function CssEditorPanel({ html, css, onHtmlChange, onCssChange, onSubmit }: CssEditorPanelProps) {
-  const [activeFile, setActiveFile] = useState<EditorFile>('html');
-  const [themeId, setThemeId] = useEditorThemeId();
-
-  const theme = useMemo(() => getEditorTheme(themeId), [themeId]);
-  const htmlExtensions = useMemo(() => createHtmlEditorExtensions(theme.extension), [theme]);
-  const cssExtensions = useMemo(() => createCssEditorExtensions(theme.extension), [theme]);
+export default function CssEditorPanel({
+  code,
+  onCodeChange,
+  onSubmit,
+  theme,
+  themeId,
+  onThemeIdChange,
+  colors,
+}: CssEditorPanelProps) {
+  const extensions = useMemo(
+    () => createCssBattleEditorExtensions(theme.extension, theme.background, theme.foreground),
+    [theme],
+  );
+  const { border } = colors;
 
   return (
     <div
-      className="flex h-130 min-h-0 flex-col overflow-hidden border-b border-white/10 lg:h-full lg:border-r lg:border-b-0"
-      style={{ backgroundColor: theme.background }}
+      style={{ backgroundColor: theme.background, color: theme.foreground, borderColor: border }}
+      className="flex h-130 min-h-0 flex-col overflow-hidden border-b lg:h-full lg:border-r lg:border-b-0"
     >
-      <div className="flex shrink-0 items-center justify-between border-b border-white/10">
-        <div className="flex items-center">
-          {FILE_TABS.map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => setActiveFile(tab.key)}
-              style={activeFile === tab.key ? { color: theme.foreground } : undefined}
-              className={`cursor-pointer border-r border-white/10 px-4 py-3 text-xs font-medium tracking-[0.02em] transition-colors ${
-                activeFile === tab.key ? 'border-b-2 border-b-[#A9812D]' : 'text-gray-400 hover:text-gray-200'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+      <div style={{ borderColor: border }} className="flex shrink-0 items-center justify-between border-b">
+        <span
+          style={{ borderColor: border }}
+          className="border-r border-b-2 border-b-[#A9812D] px-4 py-3.5 text-xs font-medium tracking-[0.02em]"
+        >
+          index.html
+        </span>
 
         <select
           value={themeId}
-          onChange={(e) => setThemeId(e.target.value)}
+          onChange={(e) => onThemeIdChange(e.target.value)}
           aria-label="Editor color theme"
-          style={{ backgroundColor: theme.background, color: theme.foreground }}
-          className="mr-3 cursor-pointer rounded-sm border border-white/10 px-2 py-1 text-xs outline-none"
+          style={{ backgroundColor: theme.background, color: theme.foreground, borderColor: border }}
+          className="mr-3 cursor-pointer rounded-sm border px-2 py-1 text-xs outline-none"
         >
           {EDITOR_THEMES.map((option) => (
-            <option
-              key={option.id}
-              value={option.id}
-              style={{ backgroundColor: option.background, color: option.foreground }}
-            >
+            <option key={option.id} value={option.id} className="bg-[#20242C] text-white">
               {option.label}
             </option>
           ))}
@@ -69,30 +57,17 @@ export default function CssEditorPanel({ html, css, onHtmlChange, onCssChange, o
       </div>
 
       <div className="min-h-0 flex-1 overflow-hidden">
-        {activeFile === 'html' ? (
-          <CodeMirror
-            key="html"
-            value={html}
-            onChange={onHtmlChange}
-            height="100%"
-            theme="none"
-            className="h-full"
-            extensions={htmlExtensions}
-          />
-        ) : (
-          <CodeMirror
-            key="css"
-            value={css}
-            onChange={onCssChange}
-            height="100%"
-            theme="none"
-            className="h-full"
-            extensions={cssExtensions}
-          />
-        )}
+        <CodeMirror
+          value={code}
+          onChange={onCodeChange}
+          height="100%"
+          theme="none"
+          className="h-full"
+          extensions={extensions}
+        />
       </div>
 
-      <div className="flex shrink-0 items-center justify-end gap-3 border-t border-white/10 p-4">
+      <div style={{ borderColor: border }} className="flex shrink-0 items-center justify-end gap-3 border-t p-4">
         <button
           type="button"
           onClick={onSubmit}
