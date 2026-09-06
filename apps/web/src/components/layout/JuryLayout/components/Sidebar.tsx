@@ -1,3 +1,4 @@
+import { useLogout } from '@/features/auth/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
 import {
@@ -34,6 +35,8 @@ function MenuItem({ icon, label, to, iconClassName }: MenuItemProps) {
 }
 
 export default function Sidebar() {
+  const handleLogout = useLogout();
+
   return (
     <div className="flex h-full flex-col bg-[#071220] p-5 font-sans">
       <div className="mb-10 flex items-center gap-3 px-2">
@@ -87,12 +90,14 @@ export default function Sidebar() {
             <p className="truncate text-sm font-bold text-white">Admin</p>
             <p className="truncate text-sm text-gray-500">admin@gmail.com</p>
           </div>
-          <Link
-            to="/login"
+          <button
+            type="button"
+            onClick={handleLogout}
+            aria-label="Log out"
             className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-all hover:bg-white/10 hover:text-white"
           >
             <LogOut size={18} />
-          </Link>
+          </button>
         </div>
       </div>
     </div>
