@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { useAuthContext } from '../context/AuthContext';
 import { loginSchema, type LoginFormValues } from '../schemas/auth.schema';
 import { authService } from '../services/auth.service';
@@ -22,11 +23,13 @@ export const useLogin = () => {
     onSuccess: completeLogin,
     onError: (err: Error) => {
       form.setError('root', { message: err.message });
+      toast.error(err.message);
     },
   });
 
   useEffect(() => {
     if (loginMutation.isSuccess && accessToken) {
+      toast.success('Signed in successfully');
       void navigate({ to: '/home' });
     }
   }, [loginMutation.isSuccess, accessToken, navigate]);
@@ -45,6 +48,7 @@ export const useLogout = () => {
   return useCallback(() => {
     void authService.logout().finally(() => {
       setAccessToken(null);
+      toast.success('Signed out successfully');
       void navigate({ to: '/login' });
     });
   }, [navigate, setAccessToken]);

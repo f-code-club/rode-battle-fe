@@ -1,5 +1,6 @@
 import { configureHttpAuthRefreshFailed, configureHttpAuthTokenRefreshed, setHttpAccessToken } from '@/lib/http';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { toast } from 'sonner';
 import { authService, type AuthUser } from '../services/auth.service';
 
 export interface AuthContextValue {
@@ -46,7 +47,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [accessToken]);
 
   useEffect(() => {
-    configureHttpAuthRefreshFailed(() => setAccessToken(null));
+    configureHttpAuthRefreshFailed(() => {
+      setAccessToken(null);
+      toast.error('Session expired. Please sign in again.');
+    });
   }, [setAccessToken]);
 
   useEffect(() => {
@@ -57,7 +61,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     authService
       .refresh()
       .then((token) => (token ? completeLogin(token) : undefined))
-      .catch(() => undefined)
+      .catch((err: unknown) => {
+        toast.error(err instanceof Error ? err.message : 'Session expired. Please sign in again.');
+      })
       .finally(() => setIsAuthReady(true));
   }, [completeLogin]);
 
