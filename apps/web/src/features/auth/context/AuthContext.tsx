@@ -28,14 +28,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (token: string) => {
       const result = await authService.me(token);
       if (result.reason) {
-        setAccessToken(null);
-        const message =
-          result.reason === 'unauthenticated'
-            ? 'Session expired. Please sign in again.'
-            : result.reason === 'network_error'
-              ? 'Unable to connect to the server. Please check your network.'
-              : 'Something went wrong while loading your profile. Please try again.';
-        throw new Error(message);
+        if (result.reason === 'unauthenticated') {
+          setAccessToken(null);
+          throw new Error('Session expired. Please sign in again.');
+        }
+        throw new Error(
+          result.reason === 'network_error'
+            ? 'Unable to connect to the server. Please check your network.'
+            : 'Something went wrong while loading your profile. Please try again.',
+        );
       }
       setAccessTokenState(token);
       setUser(result.user);
