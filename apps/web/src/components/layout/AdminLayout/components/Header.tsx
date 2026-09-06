@@ -1,5 +1,6 @@
+import { useLogout } from '@/features/auth/hooks/useAuth';
 import { cn } from '@/lib/utils';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { ChevronDown, LogOut, Menu, Settings } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useEventListener, useOnClickOutside } from 'usehooks-ts';
@@ -10,7 +11,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null!);
-  const navigate = useNavigate();
+  const logout = useLogout();
 
   useOnClickOutside(containerRef, () => setIsOpen(false));
   useEventListener('keydown', (e: KeyboardEvent) => {
@@ -21,9 +22,8 @@ export default function Header() {
   });
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    void navigate({ to: '/login' });
+    setIsOpen(false);
+    logout();
   };
 
   return (
