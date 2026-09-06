@@ -1,18 +1,20 @@
 import { redirect } from '@tanstack/react-router';
 import { toast } from 'sonner';
+import type { RouterContext } from '../__root';
 
-export const checkAdmin = () => {
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
+export const checkAdmin = ({ context }: { context: RouterContext }) => {
+  const { auth } = context;
 
-  if (!token) {
+  if (!auth.isAuthReady) return;
+
+  if (!auth.accessToken) {
     throw redirect({
       to: '/login',
       search: { redirect: location.href },
     });
   }
 
-  if (role !== 'admin') {
+  if (auth.user?.role !== 'admin') {
     toast.error('You are not allowed to access this page');
     throw redirect({ to: '/' });
   }
