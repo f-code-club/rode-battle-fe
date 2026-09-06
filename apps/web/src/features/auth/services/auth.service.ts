@@ -11,6 +11,11 @@ export interface AuthUser {
 export type MeResult =
   { user: AuthUser; reason?: never } | { user: null; reason: 'unauthenticated' | 'server_error' | 'network_error' };
 
+interface ProblemDetails {
+  detail?: string;
+  errors?: { name: string; reason: string }[];
+}
+
 function rethrowIfAborted(err: unknown): void {
   if (err instanceof DOMException && err.name === 'AbortError') throw err;
 }
@@ -23,13 +28,14 @@ export const authService = {
       rethrowIfAborted(err);
       if (err instanceof HTTPError) {
         const { status } = err.response;
-        if (status === 422) {
-          const body = await err.response.json<{ detail?: string }>().catch(() => ({}) as { detail?: string });
-          throw new Error(body.detail ?? 'Invalid request. Please check your input.', { cause: err });
-        }
         if (status === 429) throw new Error('Too many attempts. Please try again later.', { cause: err });
         if (status >= 500) throw new Error('Server error. Please try again later.', { cause: err });
-        throw new Error('Invalid email or password.', { cause: err });
+        if (status === 400 || status === 401) {
+          const body = (err.data as ProblemDetails | undefined) ?? {};
+          const message = body.detail ?? body.errors?.[0]?.reason ?? 'Invalid request. Please check your input.';
+          throw new Error(message, { cause: err });
+        }
+        throw new Error('Something went wrong. Please try again.', { cause: err });
       }
       if (err instanceof TimeoutError) throw new Error('Request timed out. Please try again.', { cause: err });
       if (err instanceof TypeError) {
