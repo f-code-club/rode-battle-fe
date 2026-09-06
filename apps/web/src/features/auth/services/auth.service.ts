@@ -1,20 +1,77 @@
+import { apiClient, configureHttpAuthRefresh } from '@/lib/http';
+import { HTTPError, TimeoutError } from 'ky';
 import type { LoginFormValues } from '../schemas/auth.schema';
 
-const BASE_URL = '/api';
+export interface AuthUser {
+  email: string;
+  name: string;
+  role: string;
+}
 
-async function parseErrorMessage(res: Response, fallback: string): Promise<never> {
-  const body = await res.json().catch(() => ({}));
-  throw new Error((body as { message?: string }).message ?? fallback);
+export type MeResult =
+  { user: AuthUser; reason?: never } | { user: null; reason: 'unauthenticated' | 'server_error' | 'network_error' };
+
+function rethrowIfAborted(err: unknown): void {
+  if (err instanceof DOMException && err.name === 'AbortError') throw err;
 }
 
 export const authService = {
-  login: async (data: LoginFormValues): Promise<void> => {
-    const res = await fetch(`${BASE_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+  login: async (data: LoginFormValues, signal?: AbortSignal): Promise<string> => {
+    try {
+      return await apiClient.post('auth/login', { json: data, signal }).text();
+    } catch (err) {
+      rethrowIfAborted(err);
+      if (err instanceof HTTPError) {
+        const { status } = err.response;
+        if (status === 422) {
+          const body = await err.response.json<{ detail?: string }>().catch(() => ({}) as { detail?: string });
+          throw new Error(body.detail ?? 'Invalid request. Please check your input.', { cause: err });
+        }
+        if (status === 429) throw new Error('Too many attempts. Please try again later.', { cause: err });
+        if (status >= 500) throw new Error('Server error. Please try again later.', { cause: err });
+        throw new Error('Invalid email or password.', { cause: err });
+      }
+      if (err instanceof TimeoutError) throw new Error('Request timed out. Please try again.', { cause: err });
+      if (err instanceof TypeError) {
+        throw new Error('Unable to connect to the server. Please check your network.', { cause: err });
+      }
+      throw err;
+    }
+  },
 
-    if (!res.ok) await parseErrorMessage(res, 'Login failed');
+  refresh: async (signal?: AbortSignal): Promise<string | null> => {
+    try {
+      return await apiClient.get('auth/refresh', { signal }).text();
+    } catch (err) {
+      rethrowIfAborted(err);
+      return null;
+    }
+  },
+
+  me: async (accessToken: string, signal?: AbortSignal): Promise<MeResult> => {
+    try {
+      const user = await apiClient
+        .get('auth/me', { headers: { Authorization: `Bearer ${accessToken}` }, signal })
+        .json<AuthUser>();
+      return { user };
+    } catch (err) {
+      rethrowIfAborted(err);
+      if (err instanceof HTTPError) {
+        if (err.response.status === 401 || err.response.status === 403) {
+          return { user: null, reason: 'unauthenticated' };
+        }
+        return { user: null, reason: 'server_error' };
+      }
+      if (err instanceof TimeoutError || err instanceof TypeError) {
+        return { user: null, reason: 'network_error' };
+      }
+      return { user: null, reason: 'server_error' };
+    }
+  },
+
+  logout: async (): Promise<void> => {
+    await apiClient.get('auth/logout').catch(() => {});
   },
 };
+
+configureHttpAuthRefresh(() => authService.refresh());
