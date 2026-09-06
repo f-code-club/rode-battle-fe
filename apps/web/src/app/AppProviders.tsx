@@ -9,6 +9,7 @@ function RouterWithAuth() {
   const auth = useAuthContext();
 
   useEffect(() => {
+    if (!auth.isAuthReady) return;
     void router.invalidate();
   }, [auth.accessToken, auth.isAuthReady]);
 

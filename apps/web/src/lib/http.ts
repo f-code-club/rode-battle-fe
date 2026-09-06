@@ -2,6 +2,7 @@ import ky, { HTTPError } from 'ky';
 import { config } from './config';
 
 let currentAccessToken: string | null = null;
+let tokenEpoch = 0;
 let refreshAccessToken: (() => Promise<string | null>) | null = null;
 let onAuthRefreshFailed: (() => void) | null = null;
 let onAuthTokenRefreshed: ((token: string) => void) | null = null;
@@ -9,6 +10,7 @@ let pendingRefresh: Promise<string | null> | null = null;
 
 export function setHttpAccessToken(token: string | null) {
   currentAccessToken = token;
+  tokenEpoch += 1;
 }
 
 export function configureHttpAuthRefresh(fn: () => Promise<string | null>) {
@@ -46,11 +48,13 @@ export const apiClient = ky.create({
       }
       const isAuthEndpoint = new URL(error.request.url).pathname.includes('/auth/');
       if (isAuthEndpoint) return false;
+      const epochBeforeRefresh = tokenEpoch;
       const newToken = await refreshAccessTokenOnce();
       if (!newToken) {
         onAuthRefreshFailed?.();
         return false;
       }
+      if (tokenEpoch !== epochBeforeRefresh) return false;
       setHttpAccessToken(newToken);
       onAuthTokenRefreshed?.(newToken);
       return true;
