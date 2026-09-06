@@ -18,16 +18,20 @@ interface UserDropdownContentProps {
 
 function UserDropdownContent({ user, onClose, onLogout }: UserDropdownContentProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/30 bg-white/80 shadow-2xl backdrop-blur-2xl">
-      <div className="border-b border-slate-100/60 px-4 py-3">
-        <p className="text-sm font-semibold text-slate-800">{user?.name ?? '...'}</p>
-        <p className="text-xs text-slate-500">{user?.email ?? '...'}</p>
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xl">
+      <div className="border-b border-slate-100 px-4 py-3">
+        <p className="truncate text-sm font-semibold text-slate-800" title={user?.name}>
+          {user?.name ?? '...'}
+        </p>
+        <p className="truncate text-xs text-slate-500" title={user?.email}>
+          {user?.email ?? '...'}
+        </p>
       </div>
       <div className="p-1.5">
         <Link
           to="/"
           onClick={onClose}
-          className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-white/60 hover:text-teal-600"
+          className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-teal-700"
         >
           <User className="h-4 w-4" />
           Profile
@@ -35,16 +39,16 @@ function UserDropdownContent({ user, onClose, onLogout }: UserDropdownContentPro
         <Link
           to="/"
           onClick={onClose}
-          className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-white/60 hover:text-teal-600"
+          className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-teal-700"
         >
           <Settings className="h-4 w-4" />
           Settings
         </Link>
       </div>
-      <div className="border-t border-slate-100/60 p-1.5">
+      <div className="border-t border-slate-100 p-1.5">
         <button
           onClick={onLogout}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50/70"
+          className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-700"
         >
           <LogOut className="h-4 w-4" />
           Logout
@@ -114,7 +118,7 @@ export default function Header() {
               </button>
 
               <div
-                className={`absolute top-full right-0 mt-3 w-48 transition-all duration-200 ${
+                className={`absolute top-full right-0 mt-3 w-64 transition-all duration-200 ${
                   isFloatingOpen
                     ? 'visible translate-y-0 opacity-100'
                     : 'pointer-events-none invisible translate-y-2 opacity-0'
@@ -172,7 +176,7 @@ export default function Header() {
                     </button>
 
                     <div
-                      className={`absolute top-full right-0 mt-3 w-48 transition-all duration-200 ${
+                      className={`absolute top-full right-0 mt-3 w-64 transition-all duration-200 ${
                         isStickyOpen
                           ? 'visible translate-y-0 opacity-100'
                           : 'pointer-events-none invisible translate-y-2 opacity-0'
