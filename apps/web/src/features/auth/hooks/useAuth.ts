@@ -46,8 +46,8 @@ export const useLogout = () => {
   const { setAccessToken } = useAuthContext();
 
   return useCallback(() => {
+    setAccessToken(null);
     void authService.logout().finally(() => {
-      setAccessToken(null);
       toast.success('Signed out successfully');
       void navigate({ to: '/login' });
     });

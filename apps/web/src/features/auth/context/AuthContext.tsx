@@ -1,5 +1,5 @@
 import { configureHttpAuthRefreshFailed, configureHttpAuthTokenRefreshed, setHttpAccessToken } from '@/lib/http';
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { authService, type AuthUser } from '../services/auth.service';
 
@@ -18,8 +18,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [accessToken, setAccessTokenState] = useState<string | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
+  const isSignedOutRef = useRef(true);
 
   const setAccessToken = useCallback((token: string | null) => {
+    isSignedOutRef.current = !token;
     setAccessTokenState(token);
     if (!token) setUser(null);
   }, []);
@@ -38,6 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             : 'Something went wrong while loading your profile. Please try again.',
         );
       }
+      isSignedOutRef.current = false;
       setAccessTokenState(token);
       setUser(result.user);
     },
@@ -56,7 +59,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [setAccessToken]);
 
   useEffect(() => {
-    configureHttpAuthTokenRefreshed((token) => setAccessTokenState(token));
+    configureHttpAuthTokenRefreshed((token) => {
+      if (isSignedOutRef.current) return;
+      setAccessTokenState(token);
+    });
   }, []);
 
   useEffect(() => {
