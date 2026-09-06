@@ -9,6 +9,7 @@ export interface AuthContextValue {
   completeLogin: (accessToken: string) => Promise<void>;
   user: AuthUser | null;
   isAuthReady: boolean;
+  isLoggedIn: boolean;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -67,9 +68,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setIsAuthReady(true));
   }, [completeLogin]);
 
+  const isLoggedIn = isAuthReady && Boolean(accessToken);
+
   const value = useMemo(
-    () => ({ accessToken, setAccessToken, completeLogin, user, isAuthReady }),
-    [accessToken, setAccessToken, completeLogin, user, isAuthReady],
+    () => ({ accessToken, setAccessToken, completeLogin, user, isAuthReady, isLoggedIn }),
+    [accessToken, setAccessToken, completeLogin, user, isAuthReady, isLoggedIn],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

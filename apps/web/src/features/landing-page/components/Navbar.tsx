@@ -47,8 +47,7 @@ export default function LandingNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null!);
   const scrolled = useScrolled();
-  const { accessToken, isAuthReady } = useAuthContext();
-  const isLoggedIn = isAuthReady && Boolean(accessToken);
+  const { isAuthReady, isLoggedIn } = useAuthContext();
 
   useOnClickOutside(mobileMenuRef, () => setMobileOpen(false));
 

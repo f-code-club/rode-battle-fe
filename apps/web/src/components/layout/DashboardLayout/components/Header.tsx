@@ -65,8 +65,7 @@ export default function Header() {
   const scrolled = useScrolled();
   const floatingRef = useRef<HTMLDivElement>(null!);
   const stickyRef = useRef<HTMLDivElement>(null!);
-  const { accessToken, user, isAuthReady } = useAuthContext();
-  const isLoggedIn = isAuthReady && Boolean(accessToken);
+  const { user, isAuthReady, isLoggedIn } = useAuthContext();
   const logout = useLogout();
 
   useOnClickOutside(floatingRef, () => setIsFloatingOpen(false));
