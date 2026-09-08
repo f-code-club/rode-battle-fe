@@ -1,4 +1,5 @@
 import { FloatingGlassNav } from '@/components/ui/FloatingGlassNav';
+import { useAuthContext } from '@/features/auth/context/AuthContext';
 import { useScrolled } from '@/hooks/useScrolled';
 import { cn } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
@@ -46,6 +47,7 @@ export default function LandingNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null!);
   const scrolled = useScrolled();
+  const { isAuthReady, isLoggedIn } = useAuthContext();
 
   useOnClickOutside(mobileMenuRef, () => setMobileOpen(false));
 
@@ -76,12 +78,16 @@ export default function LandingNavbar() {
 
         <div className="h-5 w-px bg-slate-300/60" />
 
-        <Link
-          to="/login"
-          className="rounded-full bg-green-700 px-4 py-1.5 text-sm font-semibold text-white transition-all hover:bg-green-900 hover:no-underline active:scale-[0.97]"
-        >
-          Sign In
-        </Link>
+        {isAuthReady ? (
+          <Link
+            to={isLoggedIn ? '/home' : '/login'}
+            className="rounded-full bg-green-700 px-4 py-1.5 text-sm font-semibold text-white transition-all hover:bg-green-900 hover:no-underline active:scale-[0.97]"
+          >
+            {isLoggedIn ? 'Go to Dashboard' : 'Sign In'}
+          </Link>
+        ) : (
+          <div className="h-7 w-20 animate-pulse rounded-full bg-slate-200/70" />
+        )}
       </FloatingGlassNav>
 
       <header
@@ -107,12 +113,16 @@ export default function LandingNavbar() {
           </nav>
 
           <div className="ml-auto flex items-center gap-3">
-            <Link
-              to="/login"
-              className="hidden rounded-lg bg-green-700 px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-green-900 hover:no-underline active:scale-[0.97] sm:block"
-            >
-              Sign In
-            </Link>
+            {isAuthReady ? (
+              <Link
+                to={isLoggedIn ? '/home' : '/login'}
+                className="hidden rounded-lg bg-green-700 px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-green-900 hover:no-underline active:scale-[0.97] sm:block"
+              >
+                {isLoggedIn ? 'Go to Dashboard' : 'Sign In'}
+              </Link>
+            ) : (
+              <div className="hidden h-9 w-20 animate-pulse rounded-lg bg-slate-200/70 sm:block" />
+            )}
 
             <button
               aria-label="Toggle mobile menu"
@@ -152,11 +162,11 @@ export default function LandingNavbar() {
 
         <div className="mt-auto border-t border-slate-100 p-4">
           <Link
-            to="/login"
+            to={isLoggedIn ? '/home' : '/login'}
             onClick={() => setMobileOpen(false)}
             className="flex h-11 w-full items-center justify-center rounded-lg bg-green-700 text-sm font-semibold text-white transition-colors hover:bg-green-900 hover:no-underline"
           >
-            Sign In
+            {isLoggedIn ? 'Go to Dashboard' : 'Sign In'}
           </Link>
         </div>
       </div>

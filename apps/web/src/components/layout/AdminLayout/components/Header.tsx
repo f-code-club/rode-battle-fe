@@ -1,5 +1,7 @@
+import { useAuthContext } from '@/features/auth/context/AuthContext';
+import { useLogout } from '@/features/auth/hooks/useAuth';
 import { cn } from '@/lib/utils';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { ChevronDown, LogOut, Menu, Settings } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useEventListener, useOnClickOutside } from 'usehooks-ts';
@@ -10,7 +12,9 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null!);
-  const navigate = useNavigate();
+  const { user } = useAuthContext();
+  const logout = useLogout();
+  const userInitial = user?.name.charAt(0).toUpperCase() || '?';
 
   useOnClickOutside(containerRef, () => setIsOpen(false));
   useEventListener('keydown', (e: KeyboardEvent) => {
@@ -21,9 +25,8 @@ export default function Header() {
   });
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    void navigate({ to: '/login' });
+    setIsOpen(false);
+    logout();
   };
 
   return (
@@ -60,9 +63,9 @@ export default function Header() {
               className="flex cursor-pointer items-center gap-2 rounded-full py-1 pr-2 pl-1 transition-colors hover:bg-gray-100"
             >
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-xs font-bold text-white">
-                A
+                {userInitial}
               </div>
-              <span className="hidden text-sm font-semibold text-gray-900 sm:inline">Admin</span>
+              <span className="hidden text-sm font-semibold text-gray-900 sm:inline">{user?.name ?? '...'}</span>
               <ChevronDown className={cn('h-4 w-4 text-gray-400 transition-transform', isOpen && 'rotate-180')} />
             </button>
 
@@ -74,8 +77,8 @@ export default function Header() {
             >
               <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
                 <div className="border-b border-gray-100 px-4 py-3">
-                  <p className="text-sm font-semibold text-gray-900">Admin User</p>
-                  <p className="truncate text-xs text-gray-500">admin@fcode.club</p>
+                  <p className="text-sm font-semibold text-gray-900">{user?.name ?? '...'}</p>
+                  <p className="truncate text-xs text-gray-500">{user?.email ?? '...'}</p>
                 </div>
                 <div className="p-1.5">
                   <Link

@@ -1,3 +1,5 @@
+import { useAuthContext } from '@/features/auth/context/AuthContext';
+import { useLogout } from '@/features/auth/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
 import {
@@ -34,6 +36,10 @@ function MenuItem({ icon, label, to, iconClassName }: MenuItemProps) {
 }
 
 export default function Sidebar() {
+  const { user } = useAuthContext();
+  const handleLogout = useLogout();
+  const userInitial = user?.name.charAt(0).toUpperCase() || '?';
+
   return (
     <div className="flex h-full flex-col bg-[#071220] p-5 font-sans">
       <div className="mb-10 flex items-center gap-3 px-2">
@@ -81,18 +87,20 @@ export default function Sidebar() {
       <div className="mt-auto border-t border-white/10 pt-3">
         <div className="group flex items-center gap-3 rounded-xl p-2 transition-all duration-200 hover:bg-white/5">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-600 font-bold text-white shadow-lg">
-            A
+            {userInitial}
           </div>
           <div className="flex-1 overflow-hidden">
-            <p className="truncate text-sm font-bold text-white">Admin</p>
-            <p className="truncate text-sm text-gray-500">admin@gmail.com</p>
+            <p className="truncate text-sm font-bold text-white">{user?.name ?? '...'}</p>
+            <p className="truncate text-sm text-gray-500">{user?.email ?? '...'}</p>
           </div>
-          <Link
-            to="/login"
+          <button
+            type="button"
+            onClick={handleLogout}
+            aria-label="Log out"
             className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-all hover:bg-white/10 hover:text-white"
           >
             <LogOut size={18} />
-          </Link>
+          </button>
         </div>
       </div>
     </div>

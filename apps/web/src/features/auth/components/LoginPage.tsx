@@ -8,9 +8,10 @@ export const LoginPage = () => {
   const {
     form: {
       register,
-      formState: { errors, isSubmitting },
+      formState: { errors },
     },
     onSubmit,
+    isSubmitting,
   } = useLogin();
 
   return (
