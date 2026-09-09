@@ -22,12 +22,14 @@ export default function AlgorithmTemplate({ contestId, problemId, contestData }:
   const { data: history = [] } = useProblemHistory(problemId);
   const submitMutation = useSubmitProblem(problemId);
 
-  const handleSubmit = async (language: BeAlgorithmLanguageOption['id'], code: string) => {
+  const handleSubmit = async (language: BeAlgorithmLanguageOption['id'], code: string): Promise<boolean> => {
     try {
       await submitMutation.mutateAsync({ language, code });
       toast.success('Solution submitted.');
+      return true;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to submit solution.');
+      return false;
     }
   };
 

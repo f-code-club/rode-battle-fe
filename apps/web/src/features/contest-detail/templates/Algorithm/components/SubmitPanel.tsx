@@ -3,7 +3,7 @@ import type { BeAlgorithmLanguageOption } from '../../../types';
 
 interface SubmitPanelProps {
   languages: BeAlgorithmLanguageOption[];
-  onSubmit: (language: BeAlgorithmLanguageOption['id'], code: string) => Promise<void>;
+  onSubmit: (language: BeAlgorithmLanguageOption['id'], code: string) => Promise<boolean>;
   isSubmitting: boolean;
 }
 
@@ -53,8 +53,8 @@ export default function SubmitPanel({ languages, onSubmit, isSubmitting }: Submi
     if (!file || !selectedLanguage) return;
     try {
       const code = await readFileAsText(file);
-      await onSubmit(selectedLanguage.id, code);
-      resetFileInput();
+      const succeeded = await onSubmit(selectedLanguage.id, code);
+      if (succeeded) resetFileInput();
     } catch {
       setError('Failed to read the selected file.');
     }
