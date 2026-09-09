@@ -37,7 +37,7 @@ import { useState } from 'react';
 
 export default function MainTable() {
   const [activeTab, setActiveTab] = useState<'announcements' | 'contests'>('announcements');
-  const { data: contests = [], isLoading } = useContests();
+  const { data: contests = [], isLoading, isError } = useContests();
 
   return (
     <section className="overflow-hidden rounded border border-slate-200 bg-white font-sans">
@@ -126,7 +126,10 @@ export default function MainTable() {
         ) : ( */}
         <div className="flex flex-col">
           {isLoading && <div className="p-4 text-sm text-slate-400">Loading...</div>}
-          {!isLoading && contests.length === 0 && <div className="p-4 text-sm text-slate-400">No active contests.</div>}
+          {isError && <div className="p-4 text-sm text-red-500">Failed to load contests.</div>}
+          {!isLoading && !isError && contests.length === 0 && (
+            <div className="p-4 text-sm text-slate-400">No active contests.</div>
+          )}
           {contests.map((contest) => (
             <div key={contest.id} className="flex items-center justify-between p-4 transition-colors hover:bg-slate-50">
               <div className="flex flex-col gap-1">
