@@ -3,10 +3,20 @@ import type { BeAlgorithmLanguageOption } from '../../../types';
 
 interface SubmitPanelProps {
   languages: BeAlgorithmLanguageOption[];
-  onSubmit: (fileName: string, languageLabel: string) => void;
+  onSubmit: (language: BeAlgorithmLanguageOption['id'], code: string) => Promise<void>;
+  isSubmitting: boolean;
 }
 
-export default function SubmitPanel({ languages, onSubmit }: SubmitPanelProps) {
+function readFileAsText(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ''));
+    reader.onerror = () => reject(reader.error ?? new Error('Failed to read file'));
+    reader.readAsText(file);
+  });
+}
+
+export default function SubmitPanel({ languages, onSubmit, isSubmitting }: SubmitPanelProps) {
   const [languageId, setLanguageId] = useState(languages[0]?.id ?? '');
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -39,10 +49,15 @@ export default function SubmitPanel({ languages, onSubmit }: SubmitPanelProps) {
     setFile(nextFile);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!file || !selectedLanguage) return;
-    onSubmit(file.name, selectedLanguage.label);
-    resetFileInput();
+    try {
+      const code = await readFileAsText(file);
+      await onSubmit(selectedLanguage.id, code);
+      resetFileInput();
+    } catch {
+      setError('Failed to read the selected file.');
+    }
   };
 
   return (
@@ -81,10 +96,10 @@ export default function SubmitPanel({ languages, onSubmit }: SubmitPanelProps) {
         <button
           type="button"
           onClick={handleSubmit}
-          disabled={!file}
+          disabled={!file || isSubmitting}
           className="cursor-pointer rounded-sm bg-green-700 px-6.5 py-2.5 text-xs font-semibold tracking-[0.02em] whitespace-nowrap text-white transition-colors hover:bg-[#256532] disabled:cursor-not-allowed disabled:bg-gray-300"
         >
-          Submit
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
       </div>
     </div>

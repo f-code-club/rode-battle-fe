@@ -1,14 +1,15 @@
 import Footer from '@/components/layout/DashboardLayout/components/Footer';
 import Header from '@/components/layout/DashboardLayout/components/Header';
-import { useProblemStatus } from '@/features/contest/hooks/useProblemProgress';
+import StatementPanel from '@/features/contest-detail/components/StatementPanel';
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
-import type { ContestDetailData } from '../../types';
+import { toast } from 'sonner';
+import { useProblemHistory } from '../../hooks/useProblemHistory';
+import { useSubmitProblem } from '../../hooks/useSubmitProblem';
+import type { BeAlgorithmLanguageOption, ContestDetailData } from '../../types';
 import ProblemInfoPanel from './components/ProblemInfoPanel';
-import StatementPanel from './components/StatementPanel';
 import SubmissionHistoryPanel from './components/SubmissionHistoryPanel';
 import SubmitPanel from './components/SubmitPanel';
-import { useSubmissionHistory } from './hooks/useSubmissionHistory';
 
 interface AlgorithmTemplateProps {
   contestId: string;
@@ -17,13 +18,17 @@ interface AlgorithmTemplateProps {
 }
 
 export default function AlgorithmTemplate({ contestId, problemId, contestData }: AlgorithmTemplateProps) {
-  const { markSubmitted } = useProblemStatus(contestId, problemId);
-  const { history, addSubmission } = useSubmissionHistory(contestId, problemId);
   const meta = contestData?.algorithm;
+  const { data: history = [] } = useProblemHistory(problemId);
+  const submitMutation = useSubmitProblem(problemId);
 
-  const handleSubmit = (fileName: string, languageLabel: string) => {
-    addSubmission(fileName, languageLabel);
-    markSubmitted();
+  const handleSubmit = async (language: BeAlgorithmLanguageOption['id'], code: string) => {
+    try {
+      await submitMutation.mutateAsync({ language, code });
+      toast.success('Solution submitted.');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to submit solution.');
+    }
   };
 
   return (
@@ -44,11 +49,15 @@ export default function AlgorithmTemplate({ contestId, problemId, contestData }:
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[65fr_35fr]">
             <StatementPanel
               title={contestData?.title ?? 'Untitled problem'}
-              statementMarkdown={meta?.statementMarkdown}
+              statementMarkdown={contestData?.statementMarkdown}
             />
 
             <div className="flex flex-col gap-4">
-              <SubmitPanel languages={meta?.allowedLanguages ?? []} onSubmit={handleSubmit} />
+              <SubmitPanel
+                languages={meta?.allowedLanguages ?? []}
+                onSubmit={handleSubmit}
+                isSubmitting={submitMutation.isPending}
+              />
               <ProblemInfoPanel meta={meta} />
               <SubmissionHistoryPanel history={history} />
             </div>
