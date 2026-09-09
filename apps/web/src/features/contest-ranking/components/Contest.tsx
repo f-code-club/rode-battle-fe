@@ -1,6 +1,6 @@
+import type { Contest } from '@/features/contest/types';
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
-import type { Contest } from '../types';
 import CountdownTimer from './CountdownTimer';
 
 interface ContestProps {

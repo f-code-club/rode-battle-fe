@@ -1,6 +1,6 @@
+import type { Ranking } from '@/features/contest/types';
 import { cn } from '@/lib/utils';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import type { Ranking } from '../types';
 import Penalty from './Penalty';
 import Problem from './Problem';
 import Score from './Score';
