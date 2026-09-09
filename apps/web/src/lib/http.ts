@@ -78,3 +78,6 @@ export const apiClient = ky.create({
     ],
   },
 });
+
+// vì enpoint ở backend không có "/api/v1"
+export const contestsApiClient = apiClient.extend({ prefix: config.contestsBaseUrl });
