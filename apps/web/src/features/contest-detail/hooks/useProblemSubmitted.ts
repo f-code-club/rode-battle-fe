@@ -1,6 +1,9 @@
 import { useProblemHistory } from './useProblemHistory';
 
-export function useProblemSubmitted(problemId: string) {
-  const { data } = useProblemHistory(problemId);
-  return Boolean(data && data.length > 0);
+export type ProblemSubmittedStatus = 'submitted' | 'not-started' | 'unknown';
+
+export function useProblemSubmitted(problemId: string): ProblemSubmittedStatus {
+  const { data, isSuccess } = useProblemHistory(problemId);
+  if (!isSuccess) return 'unknown';
+  return data.length > 0 ? 'submitted' : 'not-started';
 }

@@ -7,10 +7,22 @@ interface ProblemRowProps {
   problem: ContestProblemSummary;
 }
 
+const STATUS_LABEL = {
+  submitted: 'Submitted',
+  'not-started': 'Not started',
+  unknown: 'Status unknown',
+} as const;
+
+const STATUS_CLASS = {
+  submitted: 'bg-green-100 text-green-700',
+  'not-started': 'bg-gray-100 text-gray-500',
+  unknown: 'bg-amber-100 text-amber-700',
+} as const;
+
 export default function ProblemRow({ contestId, problem }: ProblemRowProps) {
-  const submitted = useProblemSubmitted(problem.id);
-  const statusLabel = submitted ? 'Submitted' : 'Not started';
-  const statusClass = submitted ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500';
+  const status = useProblemSubmitted(problem.id);
+  const statusLabel = STATUS_LABEL[status];
+  const statusClass = STATUS_CLASS[status];
 
   return (
     <tr className="bg-white transition-colors hover:bg-gray-50">
