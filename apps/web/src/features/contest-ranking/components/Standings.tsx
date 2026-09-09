@@ -5,13 +5,18 @@ import Penalty from './Penalty';
 import Problem from './Problem';
 import Score from './Score';
 
+export interface ProblemColumn {
+  position: number;
+  label: string;
+}
+
 interface StandingsProps {
   rankings: Ranking[];
-  problemLabels: string[];
+  problemColumns: ProblemColumn[];
   currentTeam?: string;
 }
 
-export default function Standings({ rankings, problemLabels, currentTeam }: StandingsProps) {
+export default function Standings({ rankings, problemColumns, currentTeam }: StandingsProps) {
   const [tbodyRef] = useAutoAnimate<HTMLTableSectionElement>({
     duration: 350,
     easing: 'ease-in-out',
@@ -19,7 +24,7 @@ export default function Standings({ rankings, problemLabels, currentTeam }: Stan
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[600px] border-collapse text-sm">
+      <table className="w-full min-w-150 border-collapse text-sm">
         <thead>
           <tr className="border-b border-gray-200 bg-gray-50/70">
             <th className="px-3 py-3 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase">#</th>
@@ -30,12 +35,12 @@ export default function Standings({ rankings, problemLabels, currentTeam }: Stan
             <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider text-gray-500 uppercase">
               Penalty
             </th>
-            {problemLabels.map((label) => (
+            {problemColumns.map((column) => (
               <th
-                key={label}
+                key={column.position}
                 className="px-3 py-3 text-center text-xs font-semibold tracking-wider text-gray-500 uppercase"
               >
-                {label}
+                {column.label}
               </th>
             ))}
           </tr>
@@ -78,10 +83,10 @@ export default function Standings({ rankings, problemLabels, currentTeam }: Stan
               <td className="px-3 py-4 text-center">
                 <Penalty penalty={entry.penalty} />
               </td>
-              {problemLabels.map((label, problemIndex) => {
-                const detail = entry.details.find((d) => d.problem_position === problemIndex + 1);
+              {problemColumns.map((column) => {
+                const detail = entry.details.find((d) => d.problem_position === column.position);
                 return (
-                  <td key={label} className="px-3 py-4 text-center">
+                  <td key={column.position} className="px-3 py-4 text-center">
                     <Problem score={detail?.score ?? 0} submissionCount={detail?.submission_count ?? 0} />
                   </td>
                 );

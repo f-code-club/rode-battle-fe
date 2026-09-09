@@ -7,6 +7,7 @@ import { createMemoryHistory, createRootRoute, createRouter, RouterProvider } fr
 import { useEffect, useState } from 'react';
 
 const MOCK_PROBLEM_LABELS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'];
+const MOCK_PROBLEM_COLUMNS = MOCK_PROBLEM_LABELS.map((label, index) => ({ position: index + 1, label }));
 
 const RUNNING_RANKINGS: Ranking[] = [
   {
@@ -141,7 +142,7 @@ function ContestRankingPage({
   return (
     <DashboardLayout>
       <Contest contest={contest} />
-      <Standings rankings={rankings} problemLabels={MOCK_PROBLEM_LABELS} currentTeam={currentTeam} />
+      <Standings rankings={rankings} problemColumns={MOCK_PROBLEM_COLUMNS} currentTeam={currentTeam} />
     </DashboardLayout>
   );
 }

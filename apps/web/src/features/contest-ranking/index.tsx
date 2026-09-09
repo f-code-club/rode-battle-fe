@@ -30,12 +30,15 @@ export default function ContestRanking() {
     );
   }
 
-  const problemLabels = contest.problems.map((_, index) => problemLabel(index));
+  const problemColumns = contest.problems.map((problem, index) => ({
+    position: problem.position,
+    label: problemLabel(index),
+  }));
 
   return (
     <DashboardLayout>
       <Contest contest={contest} />
-      <Standings rankings={rankings} problemLabels={problemLabels} />
+      <Standings rankings={rankings} problemColumns={problemColumns} />
     </DashboardLayout>
   );
 }
