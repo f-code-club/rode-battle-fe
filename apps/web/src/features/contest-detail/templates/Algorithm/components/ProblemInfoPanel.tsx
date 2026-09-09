@@ -6,9 +6,8 @@ interface ProblemInfoPanelProps {
 
 export default function ProblemInfoPanel({ meta }: ProblemInfoPanelProps) {
   const rows = [
-    { label: 'Time limit', value: meta ? `${(meta.timeLimitMs / 1000).toFixed(1)}s` : '—' },
-    { label: 'Memory limit', value: meta ? `${meta.memoryLimitMb} MB` : '—' },
-    { label: 'Points', value: meta?.points != null ? String(meta.points) : '—' },
+    { label: 'Time limit', value: meta?.timeLimitMs != null ? `${(meta.timeLimitMs / 1000).toFixed(1)}s` : '—' },
+    { label: 'Memory limit', value: meta?.memoryLimitMb != null ? `${meta.memoryLimitMb} MB` : '—' },
   ];
 
   return (
