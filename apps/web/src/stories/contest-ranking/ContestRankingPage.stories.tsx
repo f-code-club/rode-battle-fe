@@ -1,7 +1,7 @@
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import Contest from '@/features/contest-ranking/components/Contest';
 import Standings from '@/features/contest-ranking/components/Standings';
-import type { Contest as ContestType, Ranking } from '@/features/contest-ranking/types';
+import type { ContestDetail as ContestType, Ranking, RankingDetail } from '@/features/contest/types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { createMemoryHistory, createRootRoute, createRouter, RouterProvider } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
@@ -221,7 +221,7 @@ const createSimSteps = (): Ranking[][] => {
     t4.score = 7;
     t4.penalty = 195;
     t4.details = [
-      ...t4.details.filter((d) => d.problem_position !== 4),
+      ...t4.details.filter((d: RankingDetail) => d.problem_position !== 4),
       { problem_id: '4', problem_position: 4, score: 2, submission_count: 2, last_submit: new Date().toISOString() },
     ];
   }
@@ -232,7 +232,7 @@ const createSimSteps = (): Ranking[][] => {
     t3.score = 10;
     t3.penalty = 215;
     t3.details = [
-      ...t3.details.filter((d) => d.problem_position !== 10),
+      ...t3.details.filter((d: RankingDetail) => d.problem_position !== 10),
       { problem_id: '10', problem_position: 10, score: 3, submission_count: 1, last_submit: new Date().toISOString() },
     ];
   }
@@ -244,7 +244,7 @@ const createSimSteps = (): Ranking[][] => {
     t2.score = 13;
     t2.penalty = 145;
     t2.details = [
-      ...t2.details.filter((d) => d.problem_position !== 12),
+      ...t2.details.filter((d: RankingDetail) => d.problem_position !== 12),
       { problem_id: '12', problem_position: 12, score: 4, submission_count: 1, last_submit: new Date().toISOString() },
     ];
   }
@@ -255,7 +255,7 @@ const createSimSteps = (): Ranking[][] => {
   if (t5) {
     t5.penalty = 270;
     t5.details = [
-      ...t5.details.filter((d) => d.problem_position !== 3),
+      ...t5.details.filter((d: RankingDetail) => d.problem_position !== 3),
       { problem_id: '3', problem_position: 3, score: 0, submission_count: 3, last_submit: new Date().toISOString() },
     ];
   }
