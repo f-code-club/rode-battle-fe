@@ -1,4 +1,4 @@
-import type { ContestProblemSummary } from '@/features/contest/data';
+import type { ContestProblemSummary } from '@/features/contest/types';
 import ProblemRow from './ProblemRow';
 
 interface ProblemsTableProps {

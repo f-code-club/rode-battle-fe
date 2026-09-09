@@ -1,5 +1,5 @@
-import type { ContestProblemSummary } from '@/features/contest/data';
-import { useProblemStatus } from '@/features/contest/hooks/useProblemProgress';
+import { useProblemSubmitted } from '@/features/contest-detail/hooks/useProblemSubmitted';
+import type { ContestProblemSummary } from '@/features/contest/types';
 import { Link } from '@tanstack/react-router';
 
 interface ProblemRowProps {
@@ -7,27 +7,17 @@ interface ProblemRowProps {
   problem: ContestProblemSummary;
 }
 
-const STATUS_LABEL = {
-  'not-started': 'Not started',
-  'in-progress': 'In progress',
-  submitted: 'Submitted',
-} as const;
-
-const STATUS_CLASS = {
-  'not-started': 'bg-gray-100 text-gray-500',
-  'in-progress': 'bg-amber-100 text-amber-700',
-  submitted: 'bg-green-100 text-green-700',
-} as const;
-
 export default function ProblemRow({ contestId, problem }: ProblemRowProps) {
-  const { status } = useProblemStatus(contestId, problem.id);
+  const submitted = useProblemSubmitted(problem.id);
+  const statusLabel = submitted ? 'Submitted' : 'Not started';
+  const statusClass = submitted ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500';
 
   return (
     <tr className="bg-white transition-colors hover:bg-gray-50">
-      <td className="px-5 py-4 text-sm font-medium wrap-break-word text-gray-900">{problem.title}</td>
+      <td className="px-5 py-4 text-sm font-medium wrap-break-word text-gray-900">{problem.name}</td>
       <td className="px-5 py-4">
-        <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_CLASS[status]}`}>
-          {STATUS_LABEL[status]}
+        <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${statusClass}`}>
+          {statusLabel}
         </span>
       </td>
       <td className="px-5 py-4 text-right">
