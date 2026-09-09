@@ -2,7 +2,7 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5173/a
 
 export const config = {
   apiBaseUrl,
-  contestsBaseUrl: apiBaseUrl.replace(/\/api\/v1\/?$/, ''),
+  contestsBaseUrl: apiBaseUrl.replace(/\/api\/v1\/?$/, '') || '/',
   isDev: import.meta.env.DEV,
   isProd: import.meta.env.PROD,
 };
