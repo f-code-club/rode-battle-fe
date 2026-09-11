@@ -1,13 +1,28 @@
 import JuryLayout from '@/components/layout/JuryLayout';
+import { useAuthContext } from '@/features/auth/context/AuthContext';
 import ClarificationsSection from '@/features/jury-dashboard/components/ClarificationsSection';
 import ContestsSection from '@/features/jury-dashboard/components/ContestsSection';
 import LiveContestSection from '@/features/jury-dashboard/components/LiveContestSection';
 import QuickLinkCard from '@/features/jury-dashboard/components/QuickLinkCard';
-import { useContests } from '@/features/jury-dashboard/hooks/useContests';
+import {
+  useContestDetail,
+  useContestRank,
+  useContests,
+  useLiveContest,
+} from '@/features/jury-dashboard/hooks/useContests';
+import { isLive } from '@/features/jury-dashboard/utils';
 import { Download, LayoutGrid, MessageSquare, Plus, Sparkles } from 'lucide-react';
 
 export default function JuryDashboardPage() {
+  const { user } = useAuthContext();
   const { contests, loading } = useContests();
+  const liveContest = useLiveContest(contests);
+  const { rankings, loading: rankLoading } = useContestRank(liveContest?.id ?? null);
+  const { detail: liveContestDetail } = useContestDetail(liveContest?.id ?? null);
+  const problemCount = liveContestDetail?.problems?.length ?? 0;
+
+  const liveCount = contests.filter((c) => isLive(c)).length;
+  const totalCount = contests.length;
 
   return (
     <JuryLayout>
@@ -15,7 +30,11 @@ export default function JuryDashboardPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
             <h1 className="text-2xl font-bold tracking-tight text-gray-900">Jury dashboard</h1>
-            <p className="text-sm text-gray-500">Managing 2 active contests and 5 open clarifications.</p>
+            <p className="text-sm text-gray-500">
+              {loading
+                ? 'Loading...'
+                : `Managing ${liveCount} active contest${liveCount !== 1 ? 's' : ''} · ${totalCount} total`}
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <button className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-100">
@@ -33,7 +52,7 @@ export default function JuryDashboardPage() {
           <div className="flex items-center gap-4">
             <Sparkles size={26} className="text-green-600" />
             <div className="space-y-1">
-              <h2 className="text-lg font-bold text-gray-900">Welcome back, Admin!</h2>
+              <h2 className="text-lg font-bold text-gray-900">Welcome back, {user?.name ?? 'Jury'}!</h2>
               <p className="text-sm text-gray-500">Welcome to the online judging and contest management system.</p>
             </div>
           </div>
@@ -49,31 +68,36 @@ export default function JuryDashboardPage() {
               badgeText="new"
               title="Create contest"
               description="Spin up a new round — set problems, scoring, schedule, and visibility."
-              statText="3 drafts"
+              statText="—"
               actionText="Start"
             />
             <QuickLinkCard
               icon={<LayoutGrid size={18} />}
-              badgeText="2 live"
-              showPulseDot
+              badgeText={liveCount > 0 ? `${liveCount} live` : '—'}
+              showPulseDot={liveCount > 0}
               title="Manage contests"
               description="Edit running rounds, adjust problemsets, rejudge, and publish standings."
-              statText="12 total"
+              statText={`${totalCount} total`}
               actionText="Open"
             />
             <QuickLinkCard
               icon={<MessageSquare size={18} />}
-              badgeText="5 open"
-              showPulseDot
+              badgeText="—"
+              showPulseDot={false}
               title="Clarifications"
               description="Answer participant questions, publish global notes, and triage reports."
-              statText="2 overdue"
+              statText="—"
               actionText="Review"
             />
           </div>
         </div>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <LiveContestSection />
+          <LiveContestSection
+            contest={liveContest}
+            rankings={rankings}
+            problemCount={problemCount}
+            loading={loading || rankLoading}
+          />
           <div className="space-y-6 lg:col-span-1">
             <ClarificationsSection />
             <ContestsSection contests={contests} loading={loading} />
