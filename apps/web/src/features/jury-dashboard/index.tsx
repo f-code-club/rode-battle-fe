@@ -3,9 +3,12 @@ import ClarificationsSection from '@/features/jury-dashboard/components/Clarific
 import ContestsSection from '@/features/jury-dashboard/components/ContestsSection';
 import LiveContestSection from '@/features/jury-dashboard/components/LiveContestSection';
 import QuickLinkCard from '@/features/jury-dashboard/components/QuickLinkCard';
+import { useContests } from '@/features/jury-dashboard/hooks/useContests';
 import { Download, LayoutGrid, MessageSquare, Plus, Sparkles } from 'lucide-react';
 
 export default function JuryDashboardPage() {
+  const { contests, loading } = useContests();
+
   return (
     <JuryLayout>
       <div className="space-y-8 pb-12 font-sans">
@@ -73,7 +76,7 @@ export default function JuryDashboardPage() {
           <LiveContestSection />
           <div className="space-y-6 lg:col-span-1">
             <ClarificationsSection />
-            <ContestsSection />
+            <ContestsSection contests={contests} loading={loading} />
           </div>
         </div>
       </div>

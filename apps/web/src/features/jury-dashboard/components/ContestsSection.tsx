@@ -1,13 +1,14 @@
-import { Trophy } from 'lucide-react';
+import { Loader2, Trophy } from 'lucide-react';
+import type { ContestSummary } from '../types';
+import { getStatusBadge, getTimeInfo } from '../utils';
 
 interface ContestRowProps {
   title: string;
   badge: string;
   timeInfo: string;
-  metaInfo: string;
 }
 
-const ContestRow = ({ title, badge, timeInfo, metaInfo }: ContestRowProps) => {
+const ContestRow = ({ title, badge, timeInfo }: ContestRowProps) => {
   return (
     <div className="flex cursor-pointer items-start gap-3.5 p-4 transition-colors hover:bg-gray-50">
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-900">
@@ -23,30 +24,43 @@ const ContestRow = ({ title, badge, timeInfo, metaInfo }: ContestRowProps) => {
             </span>
           )}
           <span>{timeInfo}</span>
-          <span aria-hidden="true">&middot;</span>
-          <span className="truncate">{metaInfo}</span>
         </div>
       </div>
     </div>
   );
 };
 
-export default function ContestsSection() {
+interface ContestsSectionProps {
+  contests: ContestSummary[];
+  loading: boolean;
+}
+
+export default function ContestsSection({ contests, loading }: ContestsSectionProps) {
   return (
     <div className="overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm">
       <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-4">
         <Trophy size={16} className="text-gray-700" />
         <h3 className="text-sm font-bold text-gray-900">Contests</h3>
+        <span className="ml-auto text-xs text-gray-400">{contests.length} total</span>
       </div>
       <div className="divide-y divide-gray-100">
-        <ContestRow
-          title="Rode Battle Championship 2026 - Elimination"
-          badge="LIVE"
-          timeInfo="1h 23m left"
-          metaInfo="2,847 in"
-        />
-        <ContestRow title="F-Code Weekly Round" badge="" timeInfo="starts in 2d 14h" metaInfo="1,420 registered" />
-        <ContestRow title="Beginner Warmup Round - May 2026" badge="" timeInfo="May 18" metaInfo="setup in review" />
+        {loading && (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 size={20} className="animate-spin text-gray-400" />
+          </div>
+        )}
+        {!loading && contests.length === 0 && (
+          <div className="px-5 py-8 text-center text-sm text-gray-400">No contests found</div>
+        )}
+        {!loading &&
+          contests.map((contest) => (
+            <ContestRow
+              key={contest.id}
+              title={contest.name}
+              badge={getStatusBadge(contest)}
+              timeInfo={getTimeInfo(contest)}
+            />
+          ))}
       </div>
     </div>
   );
