@@ -1,28 +1,10 @@
+import QueryState from '@/components/ui/QueryState';
+import { useContests } from '@/features/contest/hooks/useContests';
+import { getContestStatus } from '@/features/contest/hooks/useContestTimer';
+import { toQueryMessage } from '@/lib/http-errors';
 import { Link } from '@tanstack/react-router';
 import { MoreHorizontal, Trophy } from 'lucide-react';
 import { useState } from 'react';
-import type { Contest } from '../types';
-
-const CONTESTS: Contest[] = [
-  {
-    id: 1,
-    title: 'Olympic 2026 Team Selection — Day 1',
-    startTime: 'Apr 26, 2026, 20:00',
-    path: '/contests/1',
-  },
-  {
-    id: 2,
-    title: 'Olympic 2026 Team Selection — Day 2',
-    startTime: 'Apr 26, 2026, 20:00',
-    path: '/contests/2',
-  },
-  {
-    id: 3,
-    title: 'National Team Selection Bac Ninh 2025–2026',
-    startTime: 'Apr 22, 2026, 20:00',
-    path: '/contests/3',
-  },
-];
 
 // const ANNOUNCEMENTS: Announcement[] = [
 //   {
@@ -57,7 +39,9 @@ const CONTESTS: Contest[] = [
 // ];
 
 export default function MainTable() {
-  const [activeTab, setActiveTab] = useState<'announcements' | 'contests'>('announcements');
+  const [activeTab, setActiveTab] = useState<'announcements' | 'contests'>('contests');
+  const { data: contests = [], isLoading, isError, error } = useContests();
+  const activeContests = contests.filter((contest) => getContestStatus(contest.start, contest.end) !== 'ended');
 
   return (
     <section className="overflow-hidden rounded border border-slate-200 bg-white font-sans">
@@ -145,17 +129,32 @@ export default function MainTable() {
           </div>
         ) : ( */}
         <div className="flex flex-col">
-          {CONTESTS.map((contest) => (
+          {isLoading && <QueryState message="Loading..." size="inline" />}
+          {isError && (
+            <QueryState message={toQueryMessage(error, 'Failed to load contests.')} size="inline" tone="error" />
+          )}
+          {!isLoading && !isError && activeContests.length === 0 && (
+            <QueryState message="No active contests." size="inline" />
+          )}
+          {activeContests.map((contest) => (
             <div key={contest.id} className="flex items-center justify-between p-4 transition-colors hover:bg-slate-50">
               <div className="flex flex-col gap-1">
-                <Link to={contest.path as '/'} className="text-base font-medium text-blue-700 hover:underline">
-                  {contest.title}
+                <Link
+                  to="/contest/$contestId"
+                  params={{ contestId: contest.id }}
+                  className="text-base font-medium text-blue-700 hover:underline"
+                >
+                  {contest.name}
                 </Link>
-                <time className="text-sm text-slate-400">{contest.startTime}</time>
+                <time className="text-sm text-slate-400">{new Date(contest.start).toLocaleString('vi-VN')}</time>
               </div>
-              <button className="cursor-pointer rounded bg-green-700 px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-green-800">
+              <Link
+                to="/contest/$contestId"
+                params={{ contestId: contest.id }}
+                className="cursor-pointer rounded bg-green-700 px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-green-800"
+              >
                 Tham gia
-              </button>
+              </Link>
             </div>
           ))}
         </div>
