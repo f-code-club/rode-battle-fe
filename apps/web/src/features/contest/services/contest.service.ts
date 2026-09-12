@@ -1,6 +1,7 @@
 import { contestsApiClient } from '@/lib/http';
 import { toFriendlyError } from '@/lib/http-errors';
 import type { Contest, ContestDetail, Ranking } from '../types';
+import { sortByPosition } from '../utils';
 
 export const contestService = {
   list: async (signal?: AbortSignal): Promise<Contest[]> => {
@@ -13,7 +14,8 @@ export const contestService = {
 
   getById: async (contestId: string, signal?: AbortSignal): Promise<ContestDetail> => {
     try {
-      return await contestsApiClient.get(`contests/${contestId}`, { signal }).json<ContestDetail>();
+      const contest = await contestsApiClient.get(`contests/${contestId}`, { signal }).json<ContestDetail>();
+      return { ...contest, problems: sortByPosition(contest.problems) };
     } catch (err) {
       throw toFriendlyError(err, 'Failed to load contest.');
     }
