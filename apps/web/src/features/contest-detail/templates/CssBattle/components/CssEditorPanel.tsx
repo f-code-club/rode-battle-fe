@@ -9,6 +9,8 @@ interface CssEditorPanelProps {
   onCodeChange: (value: string) => void;
   onSubmit: () => void;
   isSubmitting?: boolean;
+  isLocked?: boolean;
+  lockReason?: string;
   theme: EditorThemeOption;
   colors: Pick<PageColors, 'border'>;
 }
@@ -18,6 +20,8 @@ export default function CssEditorPanel({
   onCodeChange,
   onSubmit,
   isSubmitting,
+  isLocked,
+  lockReason,
   theme,
   colors,
 }: CssEditorPanelProps) {
@@ -44,7 +48,11 @@ export default function CssEditorPanel({
       </div>
 
       <div style={{ borderColor: border }} className="flex shrink-0 items-center justify-center gap-3 border-t p-4">
-        <SubmitButton onClick={onSubmit} disabled={isSubmitting} label={isSubmitting ? 'Submitting...' : 'Submit'} />
+        <SubmitButton
+          onClick={onSubmit}
+          disabled={isSubmitting || isLocked}
+          label={isSubmitting ? 'Submitting...' : isLocked ? (lockReason ?? 'Submissions closed') : 'Submit'}
+        />
       </div>
     </div>
   );

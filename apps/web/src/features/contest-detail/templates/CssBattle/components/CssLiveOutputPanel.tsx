@@ -6,27 +6,46 @@ import { STAGE_HEIGHT, STAGE_WIDTH } from '../config/stage';
 
 const PREVIEW_DEBOUNCE_MS = 180;
 
-const STATS = {
-  primaryLabel: 'Last score',
-  primaryValue: '–',
-  secondaryLabel: 'High score',
-  secondaryValue: '–',
-} as const;
-
 interface CssLiveOutputPanelProps {
   code: string;
   target?: CssBattleTarget;
   compare: boolean;
   diff: boolean;
+  lastScore?: number | null;
+  highScore?: number | null;
+  isJudging?: boolean;
+  isHistoryError?: boolean;
   colors: Pick<PageColors, 'foreground' | 'border' | 'surface'>;
 }
 
-function TargetImage({ target, className }: { target?: CssBattleTarget; className?: string }) {
+function TargetImage({
+  target,
+  className,
+  onError,
+}: {
+  target?: CssBattleTarget;
+  className?: string;
+  onError: () => void;
+}) {
   if (!target?.imageUrl) return null;
-  return <img src={target.imageUrl} alt="Target" className={className ?? 'h-full w-full object-cover'} />;
+  return (
+    <img src={target.imageUrl} alt="Target" className={className ?? 'h-full w-full object-contain'} onError={onError} />
+  );
 }
 
-export default function CssLiveOutputPanel({ code, target, compare, diff, colors }: CssLiveOutputPanelProps) {
+export default function CssLiveOutputPanel({
+  code,
+  target,
+  compare,
+  diff,
+  lastScore,
+  highScore,
+  isJudging,
+  isHistoryError,
+  colors,
+}: CssLiveOutputPanelProps) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const hasTargetImage = Boolean(target?.imageUrl) && !imageFailed;
   const [compareX, setCompareX] = useState(100);
   const [dragging, setDragging] = useState(false);
   const [scale, setScale] = useState(1);
@@ -34,6 +53,14 @@ export default function CssLiveOutputPanel({ code, target, compare, diff, colors
 
   const [debouncedCode] = useDebounceValue(code, PREVIEW_DEBOUNCE_MS);
   const previewDoc = `<style>html,body{width:${STAGE_WIDTH}px;height:${STAGE_HEIGHT}px;overflow:hidden;box-sizing:border-box;margin:0}*{box-sizing:border-box}</style>${debouncedCode}`;
+
+  const [prevCompare, setPrevCompare] = useState(compare);
+  if (compare !== prevCompare) {
+    setPrevCompare(compare);
+    if (!compare) {
+      setCompareX(100);
+    }
+  }
 
   useEffect(() => {
     const wrapper = stageWrapperRef.current;
@@ -99,15 +126,20 @@ export default function CssLiveOutputPanel({ code, target, compare, diff, colors
                 className="pointer-events-none border-none"
               />
             </div>
-            {diff && (
-              <div className="pointer-events-none absolute inset-0 mix-blend-difference">
-                <TargetImage target={target} />
+            {(compare || diff) && !hasTargetImage && (
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/60 px-4 text-center text-xs text-white">
+                No target image available for this problem.
               </div>
             )}
-            {compare && (
+            {diff && hasTargetImage && (
+              <div className="pointer-events-none absolute inset-0 mix-blend-difference">
+                <TargetImage target={target} onError={() => setImageFailed(true)} />
+              </div>
+            )}
+            {compare && hasTargetImage && (
               <>
                 <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-40">
-                  <TargetImage target={target} />
+                  <TargetImage target={target} onError={() => setImageFailed(true)} />
                 </div>
                 <div
                   className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -116,7 +148,7 @@ export default function CssLiveOutputPanel({ code, target, compare, diff, colors
                     transition: dragging ? 'none' : 'clip-path 0.25s ease',
                   }}
                 >
-                  <TargetImage target={target} />
+                  <TargetImage target={target} onError={() => setImageFailed(true)} />
                 </div>
                 <div
                   className="pointer-events-none absolute top-0 bottom-0 w-px bg-[#A9812D]"
@@ -138,17 +170,35 @@ export default function CssLiveOutputPanel({ code, target, compare, diff, colors
             style={{ borderColor: colors.border, backgroundColor: colors.surface }}
             className="flex-1 rounded-xs border px-3.5 py-3"
           >
-            <div className="text-[10px] font-semibold tracking-[0.04em] uppercase opacity-70">{STATS.primaryLabel}</div>
-            <div className="mt-1 font-mono text-xl font-semibold">{STATS.primaryValue}</div>
+            <div className="text-[10px] font-semibold tracking-[0.04em] uppercase opacity-70">Last score</div>
+            <div className="mt-1 font-mono text-xl font-semibold">
+              {isHistoryError ? (
+                <span className="text-xs font-semibold text-red-500">Error</span>
+              ) : isJudging ? (
+                <span className="inline-flex animate-pulse items-center text-xs font-bold text-amber-500">
+                  Judging...
+                </span>
+              ) : lastScore != null ? (
+                `${lastScore}%`
+              ) : (
+                '–'
+              )}
+            </div>
           </div>
           <div
             style={{ borderColor: colors.border, backgroundColor: colors.surface }}
             className="flex-1 rounded-xs border px-3.5 py-3"
           >
-            <div className="text-[10px] font-semibold tracking-[0.04em] uppercase opacity-70">
-              {STATS.secondaryLabel}
+            <div className="text-[10px] font-semibold tracking-[0.04em] uppercase opacity-70">High score</div>
+            <div className="mt-1 font-mono text-xl font-semibold">
+              {isHistoryError ? (
+                <span className="text-xs font-semibold text-red-500">Error</span>
+              ) : highScore != null ? (
+                `${highScore}%`
+              ) : (
+                '–'
+              )}
             </div>
-            <div className="mt-1 font-mono text-xl font-semibold">{STATS.secondaryValue}</div>
           </div>
         </div>
       </div>

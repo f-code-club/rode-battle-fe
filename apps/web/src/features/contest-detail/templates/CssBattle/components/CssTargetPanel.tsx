@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import type { CssBattleTarget } from '../../../types';
 import type { PageColors } from '../config/editorThemes';
 
@@ -9,11 +10,23 @@ interface CssTargetPanelProps {
 
 function ColorChip({ hex, colors }: { hex: string; colors: CssTargetPanelProps['colors'] }) {
   const [copied, setCopied] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(hex);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1200);
+    try {
+      await navigator.clipboard.writeText(hex);
+      setCopied(true);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setCopied(false), 1200);
+    } catch {
+      toast.error('Failed to copy color code.');
+    }
   };
 
   return (
@@ -31,13 +44,20 @@ function ColorChip({ hex, colors }: { hex: string; colors: CssTargetPanelProps['
 
 export default function CssTargetPanel({ target, colors }: CssTargetPanelProps) {
   const colorCodes = target?.colorCodes ?? [];
+  const [imageFailed, setImageFailed] = useState(false);
+  const showImage = Boolean(target?.imageUrl) && !imageFailed;
 
   return (
     <div style={{ color: colors.foreground }} className="flex h-130 min-h-0 flex-col overflow-hidden lg:h-full">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-5">
         <div className="relative aspect-4/3 w-full overflow-hidden bg-gray-50">
-          {target?.imageUrl ? (
-            <img src={target.imageUrl} alt="Target" className="h-full w-full object-contain" />
+          {showImage ? (
+            <img
+              src={target?.imageUrl}
+              alt="Target"
+              className="h-full w-full object-contain"
+              onError={() => setImageFailed(true)}
+            />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xs opacity-60">
               No target image available for this problem.
@@ -47,19 +67,8 @@ export default function CssTargetPanel({ target, colors }: CssTargetPanelProps) 
 
         {colorCodes.length > 0 && (
           <div>
-            <div className="mb-3 flex items-center gap-2">
+            <div className="mb-3">
               <span className="text-sm font-bold">Colors</span>
-              <div className="flex items-center gap-1">
-                {['Ctrl', 'Shift', 'C'].map((key) => (
-                  <kbd
-                    key={key}
-                    style={{ borderColor: colors.border, backgroundColor: colors.surface }}
-                    className="rounded border px-1.5 py-0.5 font-mono text-[10px] tracking-wide uppercase opacity-60"
-                  >
-                    {key}
-                  </kbd>
-                ))}
-              </div>
             </div>
             <div className="flex flex-wrap gap-2">
               {colorCodes.map((hex) => (
