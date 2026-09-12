@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { ArrowRight } from 'lucide-react';
 import React from 'react';
 
@@ -9,6 +10,7 @@ interface QuickLinkCardProps {
   description: string;
   statText: string;
   actionText: string;
+  to?: string;
 }
 
 export default function QuickLinkCard({
@@ -19,9 +21,13 @@ export default function QuickLinkCard({
   description,
   statText,
   actionText,
+  to,
 }: QuickLinkCardProps) {
-  return (
-    <div className="group flex cursor-pointer flex-col justify-between rounded-md border border-gray-200 bg-white p-6 shadow-sm transition-colors hover:border-gray-900">
+  const cardClassName =
+    'group flex cursor-pointer flex-col justify-between rounded-md border border-gray-200 bg-white p-6 shadow-sm transition-colors hover:border-gray-900';
+
+  const content = (
+    <>
       <div>
         <div className="mb-4 flex items-center justify-between">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-900">{icon}</div>
@@ -41,6 +47,16 @@ export default function QuickLinkCard({
           {actionText} <ArrowRight size={14} />
         </span>
       </div>
-    </div>
+    </>
   );
+
+  if (to) {
+    return (
+      <Link to={to} className={cardClassName}>
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={cardClassName}>{content}</div>;
 }

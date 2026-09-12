@@ -64,12 +64,14 @@ export default function JuryDashboardPage() {
           </div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             <QuickLinkCard
-              icon={<Plus size={20} />}
-              badgeText="new"
+              icon={<Plus size={18} />}
+              badgeText="New"
+              showPulseDot={false}
               title="Create contest"
               description="Spin up a new round — set problems, scoring, schedule, and visibility."
               statText="—"
               actionText="Start"
+              to="/jury/contests/create"
             />
             <QuickLinkCard
               icon={<LayoutGrid size={18} />}

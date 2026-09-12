@@ -14,5 +14,5 @@ export const contestService = {
     apiClient.get(`contests/${id}/rank`, { prefix: contestPrefix }).json<Ranking[]>(),
 
   create: (data: CreateContestRequest): Promise<string> =>
-    apiClient.post('contests', { prefix: contestPrefix, json: data }).text(),
+    apiClient.post('contests', { prefix: contestPrefix, json: data }).json<string>(),
 };
