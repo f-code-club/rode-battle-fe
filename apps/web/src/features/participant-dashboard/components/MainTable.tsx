@@ -1,4 +1,7 @@
+import QueryState from '@/components/ui/QueryState';
 import { useContests } from '@/features/contest/hooks/useContests';
+import { getContestStatus } from '@/features/contest/hooks/useContestTimer';
+import { toQueryMessage } from '@/lib/http-errors';
 import { Link } from '@tanstack/react-router';
 import { MoreHorizontal, Trophy } from 'lucide-react';
 import { useState } from 'react';
@@ -36,8 +39,9 @@ import { useState } from 'react';
 // ];
 
 export default function MainTable() {
-  const [activeTab, setActiveTab] = useState<'announcements' | 'contests'>('announcements');
-  const { data: contests = [], isLoading, isError } = useContests();
+  const [activeTab, setActiveTab] = useState<'announcements' | 'contests'>('contests');
+  const { data: contests = [], isLoading, isError, error } = useContests();
+  const activeContests = contests.filter((contest) => getContestStatus(contest.start, contest.end) !== 'ended');
 
   return (
     <section className="overflow-hidden rounded border border-slate-200 bg-white font-sans">
@@ -125,12 +129,14 @@ export default function MainTable() {
           </div>
         ) : ( */}
         <div className="flex flex-col">
-          {isLoading && <div className="p-4 text-sm text-slate-400">Loading...</div>}
-          {isError && <div className="p-4 text-sm text-red-500">Failed to load contests.</div>}
-          {!isLoading && !isError && contests.length === 0 && (
-            <div className="p-4 text-sm text-slate-400">No active contests.</div>
+          {isLoading && <QueryState message="Loading..." size="inline" />}
+          {isError && (
+            <QueryState message={toQueryMessage(error, 'Failed to load contests.')} size="inline" tone="error" />
           )}
-          {contests.map((contest) => (
+          {!isLoading && !isError && activeContests.length === 0 && (
+            <QueryState message="No active contests." size="inline" />
+          )}
+          {activeContests.map((contest) => (
             <div key={contest.id} className="flex items-center justify-between p-4 transition-colors hover:bg-slate-50">
               <div className="flex flex-col gap-1">
                 <Link
