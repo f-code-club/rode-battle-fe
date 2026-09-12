@@ -11,6 +11,7 @@ import {
   useLiveContest,
 } from '@/features/jury-dashboard/hooks/useContests';
 import { isLive } from '@/features/jury-dashboard/utils';
+import { Link } from '@tanstack/react-router';
 import { Download, LayoutGrid, MessageSquare, Plus, Sparkles } from 'lucide-react';
 
 export default function JuryDashboardPage() {
@@ -41,10 +42,13 @@ export default function JuryDashboardPage() {
               <Download size={14} />
               Export
             </button>
-            <button className="flex items-center gap-2 rounded-md bg-black px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-gray-800">
+            <Link
+              to="/jury/contests/create"
+              className="flex items-center gap-2 rounded-md bg-black px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-gray-800"
+            >
               <Plus size={15} />
               Create contest
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -81,6 +85,7 @@ export default function JuryDashboardPage() {
               description="Edit running rounds, adjust problemsets, rejudge, and publish standings."
               statText={`${totalCount} total`}
               actionText="Open"
+              to="/jury/contests"
             />
             <QuickLinkCard
               icon={<MessageSquare size={18} />}
