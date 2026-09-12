@@ -7,5 +7,10 @@ export function useProblemHistory(problemId: string) {
     queryKey: problemKeys.history(problemId),
     queryFn: ({ signal }) => problemService.getHistory(problemId, signal),
     enabled: Boolean(problemId),
+    refetchInterval: (query) => {
+      const data = query.state.data;
+      const hasPending = data?.some((entry) => entry.verdict == null && entry.score == null);
+      return hasPending ? 2000 : false;
+    },
   });
 }

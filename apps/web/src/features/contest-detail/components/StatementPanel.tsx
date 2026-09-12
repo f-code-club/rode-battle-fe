@@ -1,8 +1,9 @@
 import 'katex/dist/katex.min.css';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
+import { toast } from 'sonner';
 
 interface StatementPanelProps {
   title: string;
@@ -11,11 +12,23 @@ interface StatementPanelProps {
 
 function CopyableCodeBlock({ children }: { children: string }) {
   const [copied, setCopied] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(children);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    try {
+      await navigator.clipboard.writeText(children);
+      setCopied(true);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setCopied(false), 1500);
+    } catch {
+      toast.error('Failed to copy code.');
+    }
   };
 
   return (

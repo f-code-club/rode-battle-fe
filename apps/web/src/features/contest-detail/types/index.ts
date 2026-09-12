@@ -56,6 +56,9 @@ export interface ContestDetailData {
   id: string;
   title: string;
   type: ContestType;
+  contestTitle?: string;
+  contestStart?: string;
+  contestEnd?: string;
   statementMarkdown?: string;
   algorithm?: BeAlgorithmMeta;
   target?: CssBattleTarget;
