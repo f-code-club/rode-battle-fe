@@ -55,32 +55,32 @@ export default function Sidebar() {
             <MenuItem
               icon={<LayoutDashboard size={18} />}
               label="Dashboard"
-              to="/judge"
+              to="/jury"
               iconClassName="text-orange-500"
             />
-            <MenuItem icon={<BarChart3 size={18} />} label="Analytics" to="/judge/analytics" />
+            <MenuItem icon={<BarChart3 size={18} />} label="Analytics" to="/jury/analytics" />
           </div>
         </div>
 
         <div>
           <p className="mb-3 px-3 text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase">Contests</p>
           <div className="space-y-1.5">
-            <MenuItem icon={<Plus size={18} />} label="Create contest" to="/judge/contests/create" />
-            <MenuItem icon={<ListTodo size={18} />} label="Manage contests" to="/judge/contests" />
-            <MenuItem icon={<ShieldCheck size={18} />} label="Judging queue" to="/judge/queue" />
+            <MenuItem icon={<Plus size={18} />} label="Create contest" to="/jury/contests/create" />
+            <MenuItem icon={<ListTodo size={18} />} label="Manage contests" to="/jury/contests" />
+            <MenuItem icon={<ShieldCheck size={18} />} label="Judging queue" to="/jury/queue" />
           </div>
         </div>
         <div>
           <p className="mb-3 px-3 text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase">Support</p>
           <div className="space-y-1.5">
-            <MenuItem icon={<MessageSquare size={18} />} label="Clarifications" to="/judge/clarifications" />
-            <MenuItem icon={<Users size={18} />} label="Participants" to="/judge/participants" />
+            <MenuItem icon={<MessageSquare size={18} />} label="Clarifications" to="/jury/clarifications" />
+            <MenuItem icon={<Users size={18} />} label="Participants" to="/jury/participants" />
           </div>
         </div>
         <div>
           <p className="mb-3 px-3 text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase">General</p>
           <div className="space-y-1.5">
-            <MenuItem icon={<Settings size={18} />} label="Settings" to="/judge/settings" />
+            <MenuItem icon={<Settings size={18} />} label="Settings" to="/jury/settings" />
           </div>
         </div>
       </nav>
