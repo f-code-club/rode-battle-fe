@@ -50,49 +50,57 @@ export default function Standings({ rankings, problemColumns, currentTeam }: Sta
             if (el) tbodyRef(el);
           }}
         >
-          {rankings.map((entry, index) => (
-            <tr
-              key={entry.name}
-              className={cn(
-                'border-b border-gray-50 transition-colors hover:bg-gray-50/50',
-                (currentTeam ? entry.name === currentTeam : index === 0) && 'bg-amber-100/80',
-              )}
-            >
-              <td className="px-3 py-4 text-left">
-                <span
-                  className={cn(
-                    'text-sm',
-                    index === 0
-                      ? 'font-black text-amber-500'
-                      : index === 1
-                        ? 'font-black text-slate-400'
-                        : index === 2
-                          ? 'font-black text-orange-500'
-                          : 'font-semibold text-gray-300',
-                  )}
-                >
-                  {index + 1}
-                </span>
+          {rankings.length === 0 ? (
+            <tr>
+              <td colSpan={4 + problemColumns.length} className="px-5 py-8 text-center text-sm text-gray-400">
+                Chưa có dữ liệu bảng xếp hạng.
               </td>
-              <td className="py-4 pr-4">
-                <span className="font-semibold text-gray-900">{entry.name}</span>
-              </td>
-              <td className="px-3 py-4 text-center">
-                <Score score={entry.score} />
-              </td>
-              <td className="px-3 py-4 text-center">
-                <Penalty penalty={entry.penalty} />
-              </td>
-              {problemColumns.map((column) => {
-                const detail = entry.details.find((d) => d.problem_position === column.position);
-                return (
-                  <td key={column.position} className="px-3 py-4 text-center">
-                    <Problem score={detail?.score ?? 0} submissionCount={detail?.submission_count ?? 0} />
-                  </td>
-                );
-              })}
             </tr>
-          ))}
+          ) : (
+            rankings.map((entry, index) => (
+              <tr
+                key={entry.name}
+                className={cn(
+                  'border-b border-gray-50 transition-colors hover:bg-gray-50/50',
+                  (currentTeam ? entry.name === currentTeam : index === 0) && 'bg-amber-100/80',
+                )}
+              >
+                <td className="px-3 py-4 text-left">
+                  <span
+                    className={cn(
+                      'text-sm',
+                      index === 0
+                        ? 'font-black text-amber-500'
+                        : index === 1
+                          ? 'font-black text-slate-400'
+                          : index === 2
+                            ? 'font-black text-orange-500'
+                            : 'font-semibold text-gray-300',
+                    )}
+                  >
+                    {index + 1}
+                  </span>
+                </td>
+                <td className="py-4 pr-4">
+                  <span className="font-semibold text-gray-900">{entry.name}</span>
+                </td>
+                <td className="px-3 py-4 text-center">
+                  <Score score={entry.score} />
+                </td>
+                <td className="px-3 py-4 text-center">
+                  <Penalty penalty={entry.penalty} />
+                </td>
+                {problemColumns.map((column) => {
+                  const detail = entry.details.find((d) => d.problem_position === column.position);
+                  return (
+                    <td key={column.position} className="px-3 py-4 text-center">
+                      <Problem score={detail?.score ?? 0} submissionCount={detail?.submission_count ?? 0} />
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

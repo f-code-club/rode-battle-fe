@@ -1,7 +1,7 @@
+import CountdownTimer from '@/features/contest/components/CountdownTimer';
 import type { Contest } from '@/features/contest/types';
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
-import CountdownTimer from './CountdownTimer';
 
 interface ContestProps {
   contest: Contest;
@@ -15,11 +15,12 @@ export default function Contest({ contest }: ContestProps) {
   return (
     <div className="mb-8 space-y-2">
       <Link
-        to="/home"
+        to="/contest/$contestId"
+        params={{ contestId: contest.id }}
         className="inline-flex items-center gap-1.5 text-sm text-gray-400 no-underline transition-colors hover:text-gray-700 hover:no-underline"
       >
         <ArrowLeft size={14} />
-        Back
+        Back to problems
       </Link>
       <div className="flex items-start justify-between">
         <div>
