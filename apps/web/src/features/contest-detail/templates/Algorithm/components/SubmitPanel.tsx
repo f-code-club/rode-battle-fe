@@ -1,10 +1,12 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import type { BeAlgorithmLanguageOption } from '../../../types';
 
 interface SubmitPanelProps {
   languages: BeAlgorithmLanguageOption[];
   onSubmit: (language: BeAlgorithmLanguageOption['id'], code: string) => Promise<boolean>;
   isSubmitting: boolean;
+  isLocked?: boolean;
+  lockReason?: string;
 }
 
 function readFileAsText(file: File): Promise<string> {
@@ -16,13 +18,16 @@ function readFileAsText(file: File): Promise<string> {
   });
 }
 
-export default function SubmitPanel({ languages, onSubmit, isSubmitting }: SubmitPanelProps) {
-  const [languageId, setLanguageId] = useState(languages[0]?.id ?? '');
+export default function SubmitPanel({ languages, onSubmit, isSubmitting, isLocked, lockReason }: SubmitPanelProps) {
+  const [selectedLanguageId, setSelectedLanguageId] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isPendingTransition, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const selectedLanguage = languages.find((lang) => lang.id === languageId);
+  const selectedLanguage = languages.find((lang) => lang.id === selectedLanguageId) ?? languages[0];
+  const languageId = selectedLanguage?.id ?? '';
+  const isBusy = isSubmitting || isPendingTransition;
 
   const resetFileInput = () => {
     setFile(null);
@@ -30,7 +35,7 @@ export default function SubmitPanel({ languages, onSubmit, isSubmitting }: Submi
   };
 
   const handleLanguageChange = (nextLanguageId: string) => {
-    setLanguageId(nextLanguageId);
+    setSelectedLanguageId(nextLanguageId);
     setError(null);
     resetFileInput();
   };
@@ -41,24 +46,33 @@ export default function SubmitPanel({ languages, onSubmit, isSubmitting }: Submi
       setFile(null);
       return;
     }
-    if (selectedLanguage && !nextFile.name.toLowerCase().endsWith(selectedLanguage.fileExt)) {
-      setError(`Expected a ${selectedLanguage.fileExt} file for ${selectedLanguage.label}`);
-      setFile(null);
-      return;
+    if (selectedLanguage) {
+      const allowedExts = selectedLanguage.fileExt.split(',').map((ext) => ext.trim().toLowerCase());
+      const hasValidExt = allowedExts.some((ext) => nextFile.name.toLowerCase().endsWith(ext));
+      if (!hasValidExt) {
+        setError(`Expected a ${allowedExts.join(' or ')} file for ${selectedLanguage.label}`);
+        setFile(null);
+        return;
+      }
     }
     setFile(nextFile);
   };
 
-  const handleSubmit = async () => {
-    if (!file || !selectedLanguage) return;
-    try {
-      const code = await readFileAsText(file);
-      const succeeded = await onSubmit(selectedLanguage.id, code);
-      if (succeeded) resetFileInput();
-    } catch {
-      setError('Failed to read the selected file.');
-    }
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (isBusy || isLocked || !file || !selectedLanguage) return;
+    startTransition(async () => {
+      try {
+        const code = await readFileAsText(file);
+        const succeeded = await onSubmit(selectedLanguage.id, code);
+        if (succeeded) resetFileInput();
+      } catch {
+        setError('Failed to read the selected file.');
+      }
+    });
   };
+
+  const displayExtensions = selectedLanguage ? selectedLanguage.fileExt.split(',').join(', ') : '';
 
   return (
     <div className="flex shrink-0 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white">
@@ -66,12 +80,23 @@ export default function SubmitPanel({ languages, onSubmit, isSubmitting }: Submi
         <span className="text-xs font-semibold tracking-[0.03em] text-gray-700 uppercase">Submit Solution</span>
       </div>
 
-      <div className="flex flex-col gap-3 p-5">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-5">
+        {isLocked && (
+          <div className="rounded-xs border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-800">
+            {lockReason ?? 'Submissions are closed for this contest.'}
+          </div>
+        )}
+
+        {languages.length === 0 && !isLocked && (
+          <span className="text-xs text-amber-600">No languages configured for this problem yet.</span>
+        )}
+
         <select
           value={languageId}
           onChange={(e) => handleLanguageChange(e.target.value)}
+          disabled={isLocked || isBusy}
           aria-label="Submission language"
-          className="cursor-pointer rounded-xs border border-gray-300 px-3 py-2 text-sm outline-none"
+          className="cursor-pointer rounded-xs border border-gray-300 px-3 py-2 text-sm outline-none disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
         >
           {languages.map((lang) => (
             <option key={lang.id} value={lang.id}>
@@ -80,13 +105,31 @@ export default function SubmitPanel({ languages, onSubmit, isSubmitting }: Submi
           ))}
         </select>
 
-        <label className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xs border border-dashed border-gray-300 px-4 py-6 text-center text-xs text-gray-500 hover:border-gray-400">
-          <span>{file ? file.name : `Drop file or Browse (${selectedLanguage?.fileExt ?? ''})`}</span>
+        <label
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onDrop={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (isLocked || isBusy) return;
+            handleFileChange(e.dataTransfer.files?.[0] ?? null);
+          }}
+          className={`flex flex-col items-center justify-center gap-1 rounded-xs border border-dashed border-gray-300 px-4 py-6 text-center text-xs text-gray-500 ${
+            isLocked || isBusy ? 'cursor-not-allowed bg-gray-50 text-gray-400' : 'cursor-pointer hover:border-gray-400'
+          }`}
+        >
+          <span>{file ? file.name : `Drop file or Browse (${displayExtensions})`}</span>
           <input
             ref={inputRef}
             type="file"
+            disabled={isLocked || isBusy}
             accept={selectedLanguage?.fileExt}
             className="hidden"
+            onClick={(e) => {
+              (e.currentTarget as HTMLInputElement).value = '';
+            }}
             onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
           />
         </label>
@@ -94,14 +137,13 @@ export default function SubmitPanel({ languages, onSubmit, isSubmitting }: Submi
         {error && <span className="text-xs text-red-600">{error}</span>}
 
         <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={!file || isSubmitting}
+          type="submit"
+          disabled={!file || !selectedLanguage || isBusy || isLocked}
           className="cursor-pointer rounded-sm bg-green-700 px-6.5 py-2.5 text-xs font-semibold tracking-[0.02em] whitespace-nowrap text-white transition-colors hover:bg-[#256532] disabled:cursor-not-allowed disabled:bg-gray-300"
         >
-          {isSubmitting ? 'Submitting...' : 'Submit'}
+          {isBusy ? 'Submitting...' : isLocked ? (lockReason ?? 'Submissions closed') : 'Submit'}
         </button>
-      </div>
+      </form>
     </div>
   );
 }
