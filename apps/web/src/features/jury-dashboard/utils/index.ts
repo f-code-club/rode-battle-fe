@@ -44,3 +44,30 @@ export function getStatusBadge(contest: ContestSummary): string {
   if (isUpcoming(contest)) return 'UPCOMING';
   return 'ENDED';
 }
+
+export function sortContestsByPriority(contests: ContestSummary[]): ContestSummary[] {
+  const now = Date.now();
+
+  const live: ContestSummary[] = [];
+  const upcoming: ContestSummary[] = [];
+  const ended: ContestSummary[] = [];
+
+  for (const contest of contests) {
+    const start = new Date(contest.start).getTime();
+    const end = new Date(contest.end).getTime();
+
+    if (now >= start && now <= end) {
+      live.push(contest);
+    } else if (now < start) {
+      upcoming.push(contest);
+    } else {
+      ended.push(contest);
+    }
+  }
+
+  live.sort((a, b) => new Date(a.end).getTime() - new Date(b.end).getTime());
+  upcoming.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+  ended.sort((a, b) => new Date(b.end).getTime() - new Date(a.end).getTime());
+
+  return [...live, ...upcoming, ...ended];
+}

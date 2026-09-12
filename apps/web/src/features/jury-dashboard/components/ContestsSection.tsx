@@ -1,21 +1,27 @@
-import { Loader2, Trophy } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
+import { ArrowRight, Loader2, Trophy } from 'lucide-react';
 import type { ContestSummary } from '../types';
-import { getStatusBadge, getTimeInfo } from '../utils';
+import { getStatusBadge, getTimeInfo, sortContestsByPriority } from '../utils';
 
 interface ContestRowProps {
-  title: string;
-  badge: string;
-  timeInfo: string;
+  contest: ContestSummary;
 }
 
-const ContestRow = ({ title, badge, timeInfo }: ContestRowProps) => {
+const ContestRow = ({ contest }: ContestRowProps) => {
+  const badge = getStatusBadge(contest);
+  const timeInfo = getTimeInfo(contest);
+
   return (
-    <div className="flex cursor-pointer items-start gap-3.5 p-4 transition-colors hover:bg-gray-50">
+    <Link
+      to="/jury/contests/$contestId"
+      params={{ contestId: contest.id }}
+      className="flex cursor-pointer items-start gap-3.5 p-4 transition-colors hover:bg-gray-50"
+    >
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-900">
         <Trophy size={16} />
       </div>
       <div className="min-w-0 flex-1">
-        <h4 className="truncate text-sm font-medium text-gray-900">{title}</h4>
+        <h4 className="truncate text-sm font-medium text-gray-900">{contest.name}</h4>
         <div className="mt-1 flex items-center gap-1.5 text-xs font-medium text-gray-500">
           {badge === 'LIVE' && (
             <span className="flex items-center gap-1 rounded bg-black px-1.5 py-0.5 text-xs font-bold text-white">
@@ -26,7 +32,7 @@ const ContestRow = ({ title, badge, timeInfo }: ContestRowProps) => {
           <span>{timeInfo}</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
@@ -36,6 +42,9 @@ interface ContestsSectionProps {
 }
 
 export default function ContestsSection({ contests, loading }: ContestsSectionProps) {
+  const sorted = sortContestsByPriority(contests);
+  const displayContests = sorted.slice(0, 3);
+
   return (
     <div className="overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm">
       <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-4">
@@ -52,16 +61,18 @@ export default function ContestsSection({ contests, loading }: ContestsSectionPr
         {!loading && contests.length === 0 && (
           <div className="px-5 py-8 text-center text-sm text-gray-400">No contests found</div>
         )}
-        {!loading &&
-          contests.map((contest) => (
-            <ContestRow
-              key={contest.id}
-              title={contest.name}
-              badge={getStatusBadge(contest)}
-              timeInfo={getTimeInfo(contest)}
-            />
-          ))}
+        {!loading && displayContests.map((contest) => <ContestRow key={contest.id} contest={contest} />)}
       </div>
+      {!loading && contests.length > 0 && (
+        <div className="border-t border-gray-100 bg-gray-50/50 p-3 text-center">
+          <Link
+            to="/jury/contests"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-600 transition-colors hover:text-gray-900"
+          >
+            View all {contests.length} contests <ArrowRight size={13} />
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
