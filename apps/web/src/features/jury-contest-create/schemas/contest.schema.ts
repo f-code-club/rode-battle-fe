@@ -5,7 +5,7 @@ export const createContestSchema = z
     name: z.string().trim().min(1, 'Contest name is required').max(100, 'Contest name cannot exceed 100 characters'),
     start: z.string().min(1, 'Start time is required'),
     end: z.string().min(1, 'End time is required'),
-    problems: z.array(z.string().uuid('Invalid problem UUID')).default([]),
+    problems: z.array(z.string().uuid('Invalid problem UUID')),
   })
   .refine(
     (data) => {
