@@ -1,17 +1,13 @@
+import { config } from '@/lib/config';
+import { apiClient } from '@/lib/http';
 import type { Contest, Ranking } from '../types';
 
-const BASE_URL = '/api';
+const contestPrefix = config.apiBaseUrl.replace(/\/api\/v1\/?$/, '');
 
 export const rankService = {
-  getContest: async (contestId: string): Promise<Contest> => {
-    const res = await fetch(`${BASE_URL}/contest/${contestId}`);
-    if (!res.ok) throw new Error(`Failed to fetch contest ${contestId}`);
-    return res.json();
-  },
+  getContest: (contestId: string): Promise<Contest> =>
+    apiClient.get(`contests/${contestId}`, { prefix: contestPrefix }).json<Contest>(),
 
-  getRank: async (contestId: string): Promise<Ranking[]> => {
-    const res = await fetch(`${BASE_URL}/contest/${contestId}/rank`);
-    if (!res.ok) throw new Error(`Failed to fetch rank for contest ${contestId}`);
-    return res.json();
-  },
+  getRank: (contestId: string): Promise<Ranking[]> =>
+    apiClient.get(`contests/${contestId}/rank`, { prefix: contestPrefix }).json<Ranking[]>(),
 };
