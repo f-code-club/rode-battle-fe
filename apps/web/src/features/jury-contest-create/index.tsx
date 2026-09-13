@@ -54,7 +54,7 @@ export default function CreateContestPage() {
             </div>
           )}
 
-          <form onSubmit={onSubmit} noValidate>
+          <form noValidate>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
               <div className="space-y-6 lg:col-span-2">
                 <ContestBasicInfoCard form={form} />
@@ -63,7 +63,7 @@ export default function CreateContestPage() {
               </div>
 
               <div className="space-y-6">
-                <ContestSummaryCard form={form} />
+                <ContestSummaryCard form={form} onConfirmedSubmit={onSubmit} />
               </div>
             </div>
           </form>
