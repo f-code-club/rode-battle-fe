@@ -1,7 +1,7 @@
 import ProblemTypeBadge from '@/features/jury-dashboard/components/ProblemTypeBadge';
 import { cn } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
-import { Check, ExternalLink, Eye, Loader2, Search, Trash2 } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, ExternalLink, Eye, GripVertical, Loader2, Search, Trash2 } from 'lucide-react';
 import { useId, useRef, useState } from 'react';
 import { useWatch, type UseFormReturn } from 'react-hook-form';
 import { useOnClickOutside } from 'usehooks-ts';
@@ -22,6 +22,8 @@ export default function ContestProblemsCard({ form }: ContestProblemsCardProps) 
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedMeta, setSelectedMeta] = useState<Record<string, ProblemOption>>({});
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
 
   const problems = useWatch({ control: form.control, name: 'problems' }) || [];
   const { results, isSearching, error } = useProblemSearch(query);
@@ -35,6 +37,19 @@ export default function ContestProblemsCard({ form }: ContestProblemsCardProps) 
     setQuery('');
     setActiveIndex(0);
     inputRef.current?.focus();
+  };
+
+  const moveProblem = (from: number, to: number) => {
+    if (from === to || to < 0 || to >= problems.length) return;
+    const next = [...problems];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved!);
+    form.setValue('problems', next, { shouldValidate: true, shouldDirty: true });
+  };
+
+  const endDrag = () => {
+    setDragIndex(null);
+    setOverIndex(null);
   };
 
   const removeProblem = (id: string) => {
@@ -182,9 +197,44 @@ export default function ContestProblemsCard({ form }: ContestProblemsCardProps) 
             <ol className="mt-4 divide-y divide-gray-100 rounded-lg border border-gray-200">
               {problems.map((id, idx) => {
                 const meta = selectedMeta[id];
+                const isDragging = dragIndex === idx;
+                const isDropTarget = dragIndex !== null && dragIndex !== idx && overIndex === idx;
                 return (
-                  <li key={id} className="flex items-center gap-3 px-3 py-2.5 text-sm">
-                    <span className="w-5 shrink-0 font-mono text-xs text-gray-400">{idx + 1}</span>
+                  <li
+                    key={id}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.effectAllowed = 'move';
+                      e.dataTransfer.setData('text/plain', id);
+                      setDragIndex(idx);
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                      if (overIndex !== idx) setOverIndex(idx);
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (dragIndex !== null) moveProblem(dragIndex, idx);
+                      endDrag();
+                    }}
+                    onDragEnd={endDrag}
+                    className={cn(
+                      'flex items-center gap-3 px-3 py-2.5 text-sm transition-opacity',
+                      isDragging && 'opacity-40',
+                      isDropTarget &&
+                        (dragIndex! < idx ? 'shadow-[inset_0_-2px_0_#059669]' : 'shadow-[inset_0_2px_0_#059669]'),
+                    )}
+                  >
+                    <span
+                      className="cursor-grab text-gray-300 hover:text-gray-500 active:cursor-grabbing"
+                      title="Drag to reorder"
+                    >
+                      <GripVertical size={14} />
+                    </span>
+                    <span className="w-5 shrink-0 text-center font-mono text-xs font-semibold text-gray-500">
+                      {idx + 1}
+                    </span>
                     <span
                       className="h-2.5 w-2.5 shrink-0 rounded-full"
                       style={{ backgroundColor: meta?.colorCode || '#9ca3af' }}
@@ -204,6 +254,24 @@ export default function ContestProblemsCard({ form }: ContestProblemsCardProps) 
                     >
                       <Eye size={14} />
                     </Link>
+                    <button
+                      type="button"
+                      aria-label="Move up"
+                      disabled={idx === 0}
+                      onClick={() => moveProblem(idx, idx - 1)}
+                      className="cursor-pointer rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:cursor-default disabled:opacity-30"
+                    >
+                      <ChevronUp size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Move down"
+                      disabled={idx === problems.length - 1}
+                      onClick={() => moveProblem(idx, idx + 1)}
+                      className="cursor-pointer rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:cursor-default disabled:opacity-30"
+                    >
+                      <ChevronDown size={14} />
+                    </button>
                     <button
                       type="button"
                       aria-label={`Remove ${meta?.name ?? 'problem'}`}

@@ -2,8 +2,6 @@ import type { ContestProblem } from '@/features/jury-dashboard/types';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Eye } from 'lucide-react';
 
-const POSITION_LABELS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
 interface ContestProblemsTableProps {
   problems: ContestProblem[];
 }
@@ -45,8 +43,8 @@ export default function ContestProblemsTable({ problems }: ContestProblemsTableP
         </thead>
         <tbody className="divide-y divide-gray-100">
           {problems
-            .sort((a, b) => a.position - b.position)
-            .map((problem) => (
+            .toSorted((a, b) => a.position - b.position)
+            .map((problem, index) => (
               <tr
                 key={problem.id}
                 onClick={() =>
@@ -59,7 +57,7 @@ export default function ContestProblemsTable({ problems }: ContestProblemsTableP
               >
                 <td className="px-6 py-3">
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-gray-100 text-[11px] font-bold text-gray-700">
-                    {POSITION_LABELS[problem.position - 1] ?? problem.position}
+                    {index + 1}
                   </span>
                 </td>
                 <td className="px-6 py-3 font-medium text-gray-900">{problem.name}</td>

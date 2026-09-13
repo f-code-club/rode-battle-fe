@@ -24,7 +24,7 @@ function toPayload(data: ProblemFormData): CreateProblemRequest {
   if (data.type === 'CSS_BATTLE') {
     return {
       name: data.name.trim(),
-      content: data.base64Content!,
+      content: data.base64Content!.replace(/^data:[^;]+;base64,/, ''),
       languages: ['html'],
       color_code: data.colorCode || null,
     };

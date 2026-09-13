@@ -1,4 +1,5 @@
 import JuryLayout from '@/components/layout/JuryLayout';
+import { useAuthContext } from '@/features/auth/context/AuthContext';
 import ContestsSection from '@/features/jury-dashboard/components/ContestsSection';
 import QuickLinkCard from '@/features/jury-dashboard/components/QuickLinkCard';
 import { useContests } from '@/features/jury-dashboard/hooks/useContests';
@@ -7,6 +8,7 @@ import { Link } from '@tanstack/react-router';
 import { FilePlus2, LayoutGrid, Plus } from 'lucide-react';
 
 export default function JuryDashboardPage() {
+  const { user } = useAuthContext();
   const { data: contests = [], isPending: loading } = useContests();
 
   const liveCount = contests.filter(isLive).length;
@@ -17,7 +19,7 @@ export default function JuryDashboardPage() {
       <div className="space-y-8 pb-12 font-sans">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">Jury dashboard</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">Welcome back, {user?.name ?? 'Jury'}</h1>
             <p className="text-sm text-gray-500">
               {loading ? 'Loading...' : `${liveCount} live · ${upcomingCount} upcoming · ${contests.length} total`}
             </p>
