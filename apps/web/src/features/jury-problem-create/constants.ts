@@ -2,20 +2,12 @@ import type { ProblemLanguage, ProblemType } from '@/features/jury-dashboard/typ
 
 export type AlgoLanguage = Exclude<ProblemLanguage, 'html'>;
 
-export const ALGO_LANGUAGES: { id: AlgoLanguage; label: string; ext: string }[] = [
-  { id: 'cpp', label: 'C++', ext: 'cpp' },
-  { id: 'python', label: 'Python', ext: 'py' },
-  { id: 'java', label: 'Java', ext: 'java' },
-  { id: 'rust', label: 'Rust', ext: 'rs' },
+export const ALGO_LANGUAGES: { id: AlgoLanguage; ext: string }[] = [
+  { id: 'cpp', ext: 'cpp' },
+  { id: 'python', ext: 'py' },
+  { id: 'java', ext: 'java' },
+  { id: 'rust', ext: 'rs' },
 ];
-
-export const LANGUAGE_LABELS: Record<ProblemLanguage, string> = {
-  cpp: 'C++',
-  python: 'Python',
-  java: 'Java',
-  rust: 'Rust',
-  html: 'HTML/CSS',
-};
 
 export const COLOR_PRESETS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#64748b'];
 
