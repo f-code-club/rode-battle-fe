@@ -1,16 +1,16 @@
 import JuryLayout from '@/components/layout/JuryLayout';
+import { useProblemDetail } from '@/features/jury-dashboard/hooks/useProblemDetail';
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import ProblemHeader from './components/ProblemHeader';
 import ProblemStatement from './components/ProblemStatement';
-import { useProblemDetail } from './hooks/useProblemDetail';
 
 interface ProblemDetailPageProps {
   problemId: string;
 }
 
 export default function ProblemDetailPage({ problemId }: ProblemDetailPageProps) {
-  const { data, isLoading, error } = useProblemDetail(problemId);
+  const { data, isPending: isLoading, error } = useProblemDetail(problemId);
 
   return (
     <JuryLayout>
@@ -28,7 +28,7 @@ export default function ProblemDetailPage({ problemId }: ProblemDetailPageProps)
           </div>
         )}
 
-        {error && <p className="py-24 text-center text-sm text-red-600">{error}</p>}
+        {error && <p className="py-24 text-center text-sm text-red-600">{error.message}</p>}
 
         {data && (
           <article className="mt-6">

@@ -11,7 +11,7 @@ import { Download, LayoutGrid, MessageSquare, Plus, Sparkles } from 'lucide-reac
 
 export default function JuryDashboardPage() {
   const { user } = useAuthContext();
-  const { contests, loading } = useContests();
+  const { data: contests = [], isPending: loading } = useContests();
 
   const liveContests = contests.filter((c) => isLive(c));
   const liveCount = liveContests.length;

@@ -6,29 +6,27 @@ import type {
   CreateContestRequest,
   CreateProblemRequest,
   ProblemDetailResponse,
-  Ranking,
 } from '../types';
 
 const contestPrefix = config.apiBaseUrl.replace(/\/api\/v1\/?$/, '');
 
 export const contestService = {
-  list: (): Promise<ContestSummary[]> => apiClient.get('contests', { prefix: contestPrefix }).json<ContestSummary[]>(),
+  list: (signal?: AbortSignal): Promise<ContestSummary[]> =>
+    apiClient.get('contests', { prefix: contestPrefix, signal }).json<ContestSummary[]>(),
 
-  detail: (id: string): Promise<ContestDetail> =>
-    apiClient.get(`contests/${id}`, { prefix: contestPrefix }).json<ContestDetail>(),
-
-  rank: (id: string): Promise<Ranking[]> =>
-    apiClient.get(`contests/${id}/rank`, { prefix: contestPrefix }).json<Ranking[]>(),
+  detail: (contestId: string, signal?: AbortSignal): Promise<ContestDetail> =>
+    apiClient.get(`contests/${contestId}`, { prefix: contestPrefix, signal }).json<ContestDetail>(),
 
   create: (data: CreateContestRequest): Promise<string> =>
     apiClient.post('contests', { prefix: contestPrefix, json: data }).json<string>(),
 };
 
 export const problemService = {
+  detail: (problemId: string, signal?: AbortSignal): Promise<ProblemDetailResponse> =>
+    apiClient.get(`problems/${problemId}`, { signal }).json<ProblemDetailResponse>(),
+
   create: async (data: CreateProblemRequest): Promise<string> => {
     const raw = await apiClient.post('problems', { json: data }).text();
     return raw.replace(/["\r\n]/g, '').trim();
   },
-
-  detail: (id: string): Promise<ProblemDetailResponse> => apiClient.get(`problems/${id}`).json<ProblemDetailResponse>(),
 };

@@ -19,21 +19,6 @@ export interface ContestDetail {
   problems: ContestProblem[];
 }
 
-export interface RankDetail {
-  problem_id: string;
-  problem_position: number;
-  submission_count: number;
-  score: number;
-  last_submit: string;
-}
-
-export interface Ranking {
-  name: string;
-  score: number;
-  penalty: number;
-  details: RankDetail[];
-}
-
 export interface CreateContestRequest {
   name: string;
   start: string;

@@ -1,28 +1,14 @@
-import { contestService } from '@/features/jury-dashboard/services';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { ContestStatusFilter, ContestSummary } from '../types';
+import { useContests } from '@/features/jury-dashboard/hooks/useContests';
+import { useCallback, useMemo, useState } from 'react';
+import type { ContestStatusFilter } from '../types';
 import { hasEnded, isLive, isUpcoming, sortContestsByPriority } from '../utils';
 
 export function useContestManagement(pageSize = 10) {
-  const [contests, setContests] = useState<ContestSummary[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: contests = [], isPending: loading, error, refetch } = useContests();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ContestStatusFilter>('all');
   const [page, setPage] = useState(1);
-
-  const fetchContests = useCallback(() => {
-    contestService
-      .list()
-      .then(setContests)
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    fetchContests();
-  }, [fetchContests]);
 
   const handleSearchChange = useCallback((query: string) => {
     setSearchQuery(query);
@@ -80,7 +66,7 @@ export function useContestManagement(pageSize = 10) {
     contests,
     loading,
     error,
-    refetch: fetchContests,
+    refetch,
     searchQuery,
     setSearchQuery: handleSearchChange,
     statusFilter,

@@ -1,13 +1,13 @@
 import JuryLayout from '@/components/layout/JuryLayout';
+import { useContestDetail } from '@/features/jury-dashboard/hooks/useContestDetail';
 import { Link, useParams } from '@tanstack/react-router';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import ContestInfoCard from './components/ContestInfoCard';
 import ContestProblemsTable from './components/ContestProblemsTable';
-import { useContestDetail } from './hooks/useContestDetail';
 
 export default function ContestDetailPage() {
-  const params = useParams({ strict: false }) as { contestId?: string };
-  const { contest, loading, error } = useContestDetail(params.contestId ?? '');
+  const { contestId } = useParams({ from: '/_authenticated/jury/contests/$contestId/' });
+  const { data: contest, isPending: loading, error } = useContestDetail(contestId);
 
   return (
     <JuryLayout>
@@ -29,7 +29,9 @@ export default function ContestDetailPage() {
         )}
 
         {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">{error}</div>
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">
+            {error.message}
+          </div>
         )}
 
         {!loading && contest && (
