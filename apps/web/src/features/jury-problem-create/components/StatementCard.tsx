@@ -1,4 +1,4 @@
-import StatementPanel from '@/features/contest-detail/templates/Algorithm/components/StatementPanel';
+import StatementPanel from '@/features/contest-detail/components/StatementPanel';
 import { cn } from '@/lib/utils';
 import { Bold, Code, Heading2, Italic, Sigma, SquareCode } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';

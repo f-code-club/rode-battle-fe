@@ -1,43 +1,65 @@
+export type BackendLanguage = 'rust' | 'cpp' | 'python' | 'java' | 'html';
+
+export type Verdict =
+  | 'accepted'
+  | 'wrong_answer'
+  | 'time_limit_exceeded'
+  | 'compilation_error'
+  | 'memory_limit_exceeded'
+  | 'runtime_error'
+  | 'idle_time_limit_exceeded';
+
+export interface Problem {
+  position: number | null;
+  name: string;
+  content: string;
+  time_limit: number | null;
+  memory_limit: number | null;
+  color_code: string | null;
+  languages: BackendLanguage[];
+}
+
+export interface ProblemHistoryEntry {
+  id: string;
+  language: BackendLanguage;
+  code: string;
+  verdict: Verdict | null;
+  score: number | null;
+  created_at: string;
+}
+
+export interface SubmitProblemInput {
+  language: BackendLanguage;
+  code: string;
+}
+
 export type ContestType = 'FE_CSS_BATTLE' | 'BE_ALGORITHM';
 
-export interface ColorPaletteItem {
-  name?: string;
-  hex: string;
-}
-
-export interface CssBattleTarget {
-  id: string;
-  title: string;
-  width: number;
-  height: number;
-  targetImageUrl?: string;
-  colors: ColorPaletteItem[];
-  sponsor?: {
-    name: string;
-    description: string;
-    logoUrl?: string;
-  };
-}
-
 export interface BeAlgorithmLanguageOption {
-  id: string;
+  id: Exclude<BackendLanguage, 'html'>;
   label: string;
   fileExt: string;
 }
 
 export interface BeAlgorithmMeta {
-  statementMarkdown: string;
-  timeLimitMs: number;
-  memoryLimitMb: number;
-  points?: number;
+  timeLimitMs: number | null;
+  memoryLimitMb: number | null;
   allowedLanguages: BeAlgorithmLanguageOption[];
+}
+
+export interface CssBattleTarget {
+  imageUrl: string;
+  colorCodes: string[];
 }
 
 export interface ContestDetailData {
   id: string;
   title: string;
   type: ContestType;
-  initialCode?: string;
-  target?: CssBattleTarget;
+  contestTitle?: string;
+  contestStart?: string;
+  contestEnd?: string;
+  statementMarkdown?: string;
   algorithm?: BeAlgorithmMeta;
+  target?: CssBattleTarget;
 }

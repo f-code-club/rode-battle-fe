@@ -34,6 +34,16 @@ function refreshAccessTokenOnce(): Promise<string | null> {
   return pendingRefresh;
 }
 
+let serverTimeOffsetMs = 0;
+
+export function getServerTimeOffsetMs(): number {
+  return serverTimeOffsetMs;
+}
+
+export function getCurrentServerTime(): number {
+  return Date.now() + serverTimeOffsetMs;
+}
+
 export const apiClient = ky.create({
   prefix: config.apiBaseUrl,
   credentials: 'include',
@@ -76,5 +86,19 @@ export const apiClient = ky.create({
         }
       },
     ],
+    afterResponse: [
+      ({ response }) => {
+        const dateHeader = response.headers.get('date');
+        if (dateHeader) {
+          const serverTime = new Date(dateHeader).getTime();
+          if (!Number.isNaN(serverTime)) {
+            serverTimeOffsetMs = serverTime - Date.now();
+          }
+        }
+      },
+    ],
   },
 });
+
+// vì enpoint ở backend không có "/api/v1"
+export const contestsApiClient = apiClient.extend({ prefix: config.contestsBaseUrl });

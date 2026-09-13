@@ -1,4 +1,12 @@
-import type { ContestProblemSummary } from '@/features/contest/data';
+import {
+  type ProblemSubmittedStatus,
+  resolveProblemSubmittedStatus,
+} from '@/features/contest-detail/hooks/useProblemSubmitted';
+import { problemKeys } from '@/features/contest-detail/queryKeys';
+import { problemService } from '@/features/contest-detail/services/problem.service';
+import type { ContestProblemSummary } from '@/features/contest/types';
+import { problemLabel } from '@/features/contest/utils';
+import { useQueries } from '@tanstack/react-query';
 import ProblemRow from './ProblemRow';
 
 interface ProblemsTableProps {
@@ -7,6 +15,19 @@ interface ProblemsTableProps {
 }
 
 export default function ProblemsTable({ contestId, problems }: ProblemsTableProps) {
+  const historyQueries = useQueries({
+    queries: problems.map((problem) => ({
+      queryKey: problemKeys.history(problem.id),
+      queryFn: ({ signal }: { signal?: AbortSignal }) => problemService.getHistory(problem.id, signal),
+      staleTime: 30_000,
+    })),
+  });
+
+  const getStatus = (index: number): ProblemSubmittedStatus => {
+    const q = historyQueries[index];
+    return resolveProblemSubmittedStatus(q?.data, q?.isSuccess);
+  };
+
   return (
     <div className="overflow-hidden rounded-sm border border-gray-200">
       <table className="w-full border-collapse">
@@ -18,9 +39,23 @@ export default function ProblemsTable({ contestId, problems }: ProblemsTableProp
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {problems.map((problem) => (
-            <ProblemRow key={problem.id} contestId={contestId} problem={problem} />
-          ))}
+          {problems.length === 0 ? (
+            <tr>
+              <td colSpan={3} className="px-5 py-8 text-center text-sm text-gray-400">
+                Chưa có bài thi nào trong cuộc thi này.
+              </td>
+            </tr>
+          ) : (
+            problems.map((problem, index) => (
+              <ProblemRow
+                key={problem.id}
+                contestId={contestId}
+                problem={problem}
+                status={getStatus(index)}
+                label={problemLabel(index)}
+              />
+            ))
+          )}
         </tbody>
       </table>
     </div>

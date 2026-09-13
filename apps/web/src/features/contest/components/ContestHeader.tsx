@@ -1,13 +1,15 @@
 import type { PageColors } from '@/features/contest-detail/templates/CssBattle/config/editorThemes';
+import { History } from 'lucide-react';
 
 interface ContestHeaderProps {
   title: string;
   subtitle?: string;
   timeRemaining?: string;
   colors: Pick<PageColors, 'background' | 'foreground' | 'border'>;
+  onOpenHistory?: () => void;
 }
 
-export default function ContestHeader({ title, subtitle, timeRemaining, colors }: ContestHeaderProps) {
+export default function ContestHeader({ title, subtitle, timeRemaining, colors, onOpenHistory }: ContestHeaderProps) {
   return (
     <div
       style={{
@@ -32,14 +34,26 @@ export default function ContestHeader({ title, subtitle, timeRemaining, colors }
         )}
       </div>
 
-      {timeRemaining && (
-        <div className="flex items-center gap-7">
-          <div className="text-right">
-            <div className="text-xs tracking-wider uppercase opacity-65" style={{ color: colors.foreground }}>
-              Time remaining
+      {(timeRemaining || onOpenHistory) && (
+        <div className="flex items-center gap-4">
+          {timeRemaining && (
+            <div className="text-right">
+              <div className="text-xs tracking-wider uppercase opacity-65" style={{ color: colors.foreground }}>
+                Time remaining
+              </div>
+              <div className="text-sm font-medium">{timeRemaining}</div>
             </div>
-            <div className="text-sm font-medium">{timeRemaining}</div>
-          </div>
+          )}
+          {onOpenHistory && (
+            <button
+              type="button"
+              onClick={onOpenHistory}
+              className="flex cursor-pointer items-center gap-1.5 rounded-sm bg-[#D9A441] px-3 py-1.5 text-xs font-semibold text-[#241a03] shadow-sm transition-colors hover:bg-[#e6b75c]"
+            >
+              <History size={14} />
+              Submission History
+            </button>
+          )}
         </div>
       )}
     </div>
