@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn, formatScore } from '@/lib/utils';
 import { useMotion } from '../hooks/useMotion';
 
 interface ProblemProps {
@@ -28,7 +28,7 @@ export default function Problem({ score, submissionCount }: ProblemProps) {
           +
         </span>
       )}
-      {score}
+      {formatScore(score)}
     </span>
   );
 }
