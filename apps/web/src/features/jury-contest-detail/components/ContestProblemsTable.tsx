@@ -1,4 +1,6 @@
 import type { ContestProblem } from '@/features/jury-dashboard/types';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { Eye } from 'lucide-react';
 
 const POSITION_LABELS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -7,6 +9,8 @@ interface ContestProblemsTableProps {
 }
 
 export default function ContestProblemsTable({ problems }: ContestProblemsTableProps) {
+  const navigate = useNavigate();
+
   if (problems.length === 0) {
     return (
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-2xs">
@@ -34,19 +38,42 @@ export default function ContestProblemsTable({ problems }: ContestProblemsTableP
             <th scope="col" className="px-6 py-3">
               Name
             </th>
+            <th scope="col" className="w-20 px-6 py-3 text-right">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
           {problems
             .sort((a, b) => a.position - b.position)
             .map((problem) => (
-              <tr key={problem.id} className="transition-colors hover:bg-gray-50/60">
+              <tr
+                key={problem.id}
+                onClick={() =>
+                  navigate({
+                    to: '/jury/problems/$problemId',
+                    params: { problemId: problem.id },
+                  })
+                }
+                className="cursor-pointer transition-colors hover:bg-gray-50/80"
+              >
                 <td className="px-6 py-3">
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-gray-100 text-[11px] font-bold text-gray-700">
                     {POSITION_LABELS[problem.position - 1] ?? problem.position}
                   </span>
                 </td>
                 <td className="px-6 py-3 font-medium text-gray-900">{problem.name}</td>
+                <td className="px-6 py-3 text-right">
+                  <Link
+                    to="/jury/problems/$problemId"
+                    params={{ problemId: problem.id }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="inline-flex items-center gap-1 rounded p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-700"
+                    title="View problem"
+                  >
+                    <Eye size={14} />
+                  </Link>
+                </td>
               </tr>
             ))}
         </tbody>

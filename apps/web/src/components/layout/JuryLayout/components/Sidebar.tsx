@@ -63,10 +63,13 @@ export default function Sidebar() {
         </div>
 
         <div>
-          <p className="mb-3 px-3 text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase">Contests</p>
+          <p className="mb-3 px-3 text-[10px] font-bold tracking-[0.15em] text-gray-500 uppercase">
+            Contests & Problems
+          </p>
           <div className="space-y-1.5">
             <MenuItem icon={<Plus size={18} />} label="Create contest" to="/jury/contests/create" />
             <MenuItem icon={<ListTodo size={18} />} label="Manage contests" to="/jury/contests" />
+            <MenuItem icon={<Plus size={18} />} label="Create problem" to="/jury/problems/create" />
             <MenuItem icon={<ShieldCheck size={18} />} label="Judging queue" to="/jury/queue" />
           </div>
         </div>
