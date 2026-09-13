@@ -1,6 +1,13 @@
 import { config } from '@/lib/config';
 import { apiClient } from '@/lib/http';
-import type { ContestDetail, ContestSummary, CreateContestRequest, Ranking } from '../types';
+import type {
+  ContestDetail,
+  ContestSummary,
+  CreateContestRequest,
+  CreateProblemRequest,
+  ProblemDetailResponse,
+  Ranking,
+} from '../types';
 
 const contestPrefix = config.apiBaseUrl.replace(/\/api\/v1\/?$/, '');
 
@@ -15,4 +22,13 @@ export const contestService = {
 
   create: (data: CreateContestRequest): Promise<string> =>
     apiClient.post('contests', { prefix: contestPrefix, json: data }).json<string>(),
+};
+
+export const problemService = {
+  create: async (data: CreateProblemRequest): Promise<string> => {
+    const raw = await apiClient.post('problems', { json: data }).text();
+    return raw.replace(/["\r\n]/g, '').trim();
+  },
+
+  detail: (id: string): Promise<ProblemDetailResponse> => apiClient.get(`problems/${id}`).json<ProblemDetailResponse>(),
 };

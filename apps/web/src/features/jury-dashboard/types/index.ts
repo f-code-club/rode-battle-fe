@@ -40,3 +40,5 @@ export interface CreateContestRequest {
   end: string;
   problems: string[];
 }
+
+export * from './problem';
