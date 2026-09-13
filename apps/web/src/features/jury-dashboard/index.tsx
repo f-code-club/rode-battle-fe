@@ -4,12 +4,7 @@ import ClarificationsSection from '@/features/jury-dashboard/components/Clarific
 import ContestsSection from '@/features/jury-dashboard/components/ContestsSection';
 import LiveContestSection from '@/features/jury-dashboard/components/LiveContestSection';
 import QuickLinkCard from '@/features/jury-dashboard/components/QuickLinkCard';
-import {
-  useContestDetail,
-  useContestRank,
-  useContests,
-  useLiveContest,
-} from '@/features/jury-dashboard/hooks/useContests';
+import { useContests } from '@/features/jury-dashboard/hooks/useContests';
 import { isLive } from '@/features/jury-dashboard/utils';
 import { Link } from '@tanstack/react-router';
 import { Download, LayoutGrid, MessageSquare, Plus, Sparkles } from 'lucide-react';
@@ -17,12 +12,9 @@ import { Download, LayoutGrid, MessageSquare, Plus, Sparkles } from 'lucide-reac
 export default function JuryDashboardPage() {
   const { user } = useAuthContext();
   const { contests, loading } = useContests();
-  const liveContest = useLiveContest(contests);
-  const { rankings, loading: rankLoading } = useContestRank(liveContest?.id ?? null);
-  const { detail: liveContestDetail } = useContestDetail(liveContest?.id ?? null);
-  const problemCount = liveContestDetail?.problems?.length ?? 0;
 
-  const liveCount = contests.filter((c) => isLive(c)).length;
+  const liveContests = contests.filter((c) => isLive(c));
+  const liveCount = liveContests.length;
   const totalCount = contests.length;
 
   return (
@@ -99,12 +91,7 @@ export default function JuryDashboardPage() {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <LiveContestSection
-            contest={liveContest}
-            rankings={rankings}
-            problemCount={problemCount}
-            loading={loading || rankLoading}
-          />
+          <LiveContestSection liveContests={liveContests} loading={loading} />
           <div className="space-y-6 lg:col-span-1">
             <ClarificationsSection />
             <ContestsSection contests={contests} loading={loading} />
