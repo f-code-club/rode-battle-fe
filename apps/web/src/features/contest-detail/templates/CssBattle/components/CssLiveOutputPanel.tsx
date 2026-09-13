@@ -1,3 +1,4 @@
+import { formatScore } from '@/lib/utils';
 import { type MouseEvent, useEffect, useRef, useState } from 'react';
 import { useDebounceValue } from 'usehooks-ts';
 import type { CssBattleTarget } from '../../../types';
@@ -179,7 +180,7 @@ export default function CssLiveOutputPanel({
                   Judging...
                 </span>
               ) : lastScore != null ? (
-                `${lastScore}%`
+                formatScore(lastScore)
               ) : (
                 '–'
               )}
@@ -194,7 +195,7 @@ export default function CssLiveOutputPanel({
               {isHistoryError ? (
                 <span className="text-xs font-semibold text-red-500">Error</span>
               ) : highScore != null ? (
-                `${highScore}%`
+                formatScore(highScore)
               ) : (
                 '–'
               )}

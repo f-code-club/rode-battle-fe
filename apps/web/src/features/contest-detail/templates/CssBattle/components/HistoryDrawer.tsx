@@ -1,3 +1,4 @@
+import { formatScore } from '@/lib/utils';
 import { X } from 'lucide-react';
 import { useEffect } from 'react';
 import type { ProblemHistoryEntry } from '../../../types';
@@ -13,7 +14,7 @@ interface HistoryDrawerProps {
 
 function scorePresentation(entry: ProblemHistoryEntry): { label: string; tone: 'pending' | 'scored' | 'unknown' } {
   if (entry.score != null && !Number.isNaN(entry.score)) {
-    return { label: `${Math.round(entry.score)}%`, tone: 'scored' };
+    return { label: formatScore(entry.score), tone: 'scored' };
   }
   if (entry.verdict == null) {
     return { label: 'Judging...', tone: 'pending' };
