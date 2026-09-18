@@ -1,14 +1,16 @@
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-import { useContestTimer } from '../hooks/useContestTimer';
+import { useContestTimer, type ContestTimerInfo } from '../hooks/useContestTimer';
 
 interface CountdownTimerProps {
   start: string;
   end: string;
   tone?: 'light' | 'dark';
+  timer?: ContestTimerInfo;
 }
 
-export default function CountdownTimer({ start, end, tone = 'light' }: CountdownTimerProps) {
-  const timer = useContestTimer(start, end);
+export default function CountdownTimer({ start, end, tone = 'light', timer: timerProp }: CountdownTimerProps) {
+  const ownTimer = useContestTimer(timerProp ? undefined : start, timerProp ? undefined : end);
+  const timer = timerProp ?? ownTimer;
   const isDark = tone === 'dark';
 
   if (timer.status === 'upcoming') {
