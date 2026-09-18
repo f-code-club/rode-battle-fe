@@ -54,7 +54,7 @@ export default function CssLiveOutputPanel({
   const stageWrapperRef = useRef<HTMLDivElement>(null);
 
   const [debouncedCode] = useDebounceValue(code, PREVIEW_DEBOUNCE_MS);
-  const previewDoc = `<style>html,body{width:${STAGE_WIDTH}px;height:${STAGE_HEIGHT}px;overflow:hidden;box-sizing:border-box;margin:0}*{box-sizing:border-box}</style>${debouncedCode}`;
+  const previewDoc = `<style>html,body{width:${STAGE_WIDTH}px;height:${STAGE_HEIGHT}px;overflow:hidden;margin:0}</style>${debouncedCode}`;
 
   const [prevCompare, setPrevCompare] = useState(compare);
   if (compare !== prevCompare) {
@@ -68,7 +68,7 @@ export default function CssLiveOutputPanel({
     const wrapper = stageWrapperRef.current;
     if (!wrapper) return;
 
-    const updateScale = () => setScale(wrapper.clientWidth / STAGE_WIDTH);
+    const updateScale = () => setScale(wrapper.getBoundingClientRect().width / STAGE_WIDTH);
     updateScale();
 
     const observer = new ResizeObserver(updateScale);
@@ -111,12 +111,10 @@ export default function CssLiveOutputPanel({
             <div
               style={{
                 position: 'absolute',
-                top: 0,
-                left: 0,
-                width: STAGE_WIDTH,
-                height: STAGE_HEIGHT,
-                transform: `scale(${scale})`,
-                transformOrigin: 'top left',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                zoom: scale,
               }}
             >
               <iframe
