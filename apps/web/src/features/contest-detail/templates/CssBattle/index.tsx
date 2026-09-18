@@ -1,7 +1,7 @@
 import ContestFooter from '@/features/contest/components/ContestFooter';
 import ContestHeader from '@/features/contest/components/ContestHeader';
 import { useContestTimer } from '@/features/contest/hooks/useContestTimer';
-import { useCallback, useMemo, useState, useTransition } from 'react';
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { useProblemHistory } from '../../hooks/useProblemHistory';
 import { useSubmitProblem } from '../../hooks/useSubmitProblem';
@@ -15,6 +15,8 @@ import { getEditorTheme, getPageColors } from './config/editorThemes';
 import { DEFAULT_STARTER_CODE } from './config/starterCode';
 import { useCssDraft } from './hooks/useCssDraft';
 import { useEditorThemeId } from './hooks/useEditorThemeId';
+import { formatCssBattleCode } from './utils/format';
+import { minifyCssBattleCode } from './utils/minify';
 
 interface CssBattleTemplateProps {
   contestId: string;
@@ -63,7 +65,7 @@ export default function CssBattleTemplate({ contestId, problemId, contestData }:
     [setDraft],
   );
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (isBusy) return;
     if (isLocked) {
       toast.error(lockReason ?? 'Submissions are closed.');
@@ -77,7 +79,41 @@ export default function CssBattleTemplate({ contestId, problemId, contestData }:
         toast.error(err instanceof Error ? err.message : 'Failed to submit solution.');
       }
     });
-  };
+  }, [isBusy, isLocked, lockReason, startTransition, submit, draft.code]);
+
+  const handleMinify = useCallback(() => {
+    const originalLength = draft.code.length;
+    const minified = minifyCssBattleCode(draft.code);
+    const saved = originalLength - minified.length;
+
+    if (saved > 0) {
+      setDraft({ code: minified });
+      toast.success(`Minified! Saved ${saved} ${saved === 1 ? 'char' : 'chars'}.`);
+    } else {
+      toast.info('Code is already minified.');
+    }
+  }, [draft.code, setDraft]);
+
+  const handleFormat = useCallback(() => {
+    const formatted = formatCssBattleCode(draft.code);
+    if (formatted === draft.code) {
+      toast.info('Code is already formatted.');
+    } else {
+      setDraft({ code: formatted });
+      toast.success('Code formatted.');
+    }
+  }, [draft.code, setDraft]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleSubmit();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleSubmit]);
 
   const formattedTimeRemaining =
     timer.status === 'running'
@@ -98,6 +134,12 @@ export default function CssBattleTemplate({ contestId, problemId, contestData }:
         subtitle={contestData?.title}
         timeRemaining={formattedTimeRemaining}
         colors={colors}
+        contestId={contestId}
+        currentProblemId={problemId}
+        problems={contestData?.problems}
+        contestStart={contestData?.contestStart}
+        contestEnd={contestData?.contestEnd}
+        timer={timer}
         onOpenHistory={() => setIsHistoryOpen(true)}
       />
 
@@ -113,15 +155,9 @@ export default function CssBattleTemplate({ contestId, problemId, contestData }:
         themeId={themeId}
         onThemeIdChange={setThemeId}
         compare={compare}
-        onCompareChange={(v) => {
-          setCompare(v);
-          if (v) setDiff(false);
-        }}
+        onCompareChange={setCompare}
         diff={diff}
-        onDiffChange={(v) => {
-          setDiff(v);
-          if (v) setCompare(false);
-        }}
+        onDiffChange={setDiff}
         colors={colors}
       />
 
@@ -133,6 +169,8 @@ export default function CssBattleTemplate({ contestId, problemId, contestData }:
           code={draft.code}
           onCodeChange={handleCodeChange}
           onSubmit={handleSubmit}
+          onMinify={handleMinify}
+          onFormat={handleFormat}
           isSubmitting={isBusy}
           isLocked={isLocked}
           lockReason={lockReason}
