@@ -25,7 +25,7 @@ export default function ProblemQuickSwitcher({
 }: ProblemQuickSwitcherProps) {
   const navigate = useNavigate();
   const { user } = useAuthContext();
-  const { data: rankings = [] } = useRanking(contestId, { refetchInterval: 20_000 });
+  const { data: rankings = [] } = useRanking(contestId, { refetchInterval: 30_000 });
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null!);
 

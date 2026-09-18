@@ -4,13 +4,14 @@ import { contestService } from '../services/contest.service';
 
 export interface UseRankingOptions {
   refetchInterval?: number | false;
+  enabled?: boolean;
 }
 
 export function useRanking(contestId: string, options?: UseRankingOptions) {
   return useQuery({
     queryKey: contestKeys.rank(contestId),
     queryFn: ({ signal }) => contestService.getRank(contestId, signal),
-    enabled: Boolean(contestId),
-    refetchInterval: options?.refetchInterval ?? 15_000,
+    enabled: Boolean(contestId) && (options?.enabled ?? true),
+    refetchInterval: options?.refetchInterval ?? 30_000,
   });
 }
