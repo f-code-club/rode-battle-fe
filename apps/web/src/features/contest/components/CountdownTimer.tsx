@@ -4,19 +4,31 @@ import { useContestTimer } from '../hooks/useContestTimer';
 interface CountdownTimerProps {
   start: string;
   end: string;
+  tone?: 'light' | 'dark';
 }
 
-export default function CountdownTimer({ start, end }: CountdownTimerProps) {
+export default function CountdownTimer({ start, end, tone = 'light' }: CountdownTimerProps) {
   const timer = useContestTimer(start, end);
+  const isDark = tone === 'dark';
 
   if (timer.status === 'upcoming') {
     return (
       <div className="flex flex-col items-center gap-1.5">
-        <div className="flex h-19 w-19 flex-col items-center justify-center rounded-full border-4 border-blue-200 bg-blue-50/50 px-1 text-center">
-          <span className="text-[9px] font-bold tracking-tight text-blue-600 uppercase">Starts in</span>
-          <span className="font-mono text-xs font-bold text-blue-700 tabular-nums">{timer.formattedRemaining}</span>
+        <div
+          className={`flex h-20 w-20 flex-col items-center justify-center rounded-full border-4 px-1 text-center shadow-sm ${
+            isDark ? 'border-blue-400/80 bg-blue-950/70 text-white shadow-blue-500/20' : 'border-blue-200 bg-blue-50/50'
+          }`}
+        >
+          <span
+            className={`text-[9px] font-black tracking-wider uppercase ${isDark ? 'text-blue-300' : 'text-blue-600'}`}
+          >
+            Starts in
+          </span>
+          <span className={`font-mono text-xs font-black tabular-nums ${isDark ? 'text-white' : 'text-blue-700'}`}>
+            {timer.formattedRemaining}
+          </span>
         </div>
-        <span className="text-[11px] font-medium text-blue-500">Upcoming</span>
+        <span className={`text-[11px] font-bold ${isDark ? 'text-blue-300' : 'text-blue-500'}`}>Upcoming</span>
       </div>
     );
   }
@@ -24,8 +36,14 @@ export default function CountdownTimer({ start, end }: CountdownTimerProps) {
   if (timer.status === 'ended') {
     return (
       <div className="flex flex-col items-center gap-1.5">
-        <div className="flex h-19 w-19 items-center justify-center rounded-full border-4 border-gray-200">
-          <span className="text-xs font-semibold text-gray-400">Ended</span>
+        <div
+          className={`flex h-20 w-20 items-center justify-center rounded-full border-4 ${
+            isDark ? 'border-rose-500/50 bg-rose-950/40' : 'border-gray-200'
+          }`}
+        >
+          <span className={`text-xs font-bold tracking-wider uppercase ${isDark ? 'text-rose-300' : 'text-gray-400'}`}>
+            Ended
+          </span>
         </div>
       </div>
     );
@@ -38,19 +56,29 @@ export default function CountdownTimer({ start, end }: CountdownTimerProps) {
         isPlaying
         duration={timer.durationSeconds}
         initialRemainingTime={timer.remainingSeconds}
-        size={76}
-        strokeWidth={4}
-        colors={['#14b8a6', '#eab308', '#ef4444']}
+        size={isDark ? 84 : 76}
+        strokeWidth={isDark ? 5 : 4}
+        colors={['#10b981', '#f59e0b', '#ef4444']}
         colorsTime={[timer.durationSeconds, Math.floor(timer.durationSeconds / 2), 0]}
-        trailColor="#e5e7eb"
+        trailColor={isDark ? 'rgba(255, 255, 255, 0.2)' : '#e5e7eb'}
       >
         {() => (
-          <span className="text-xs font-semibold tracking-tight text-gray-800 tabular-nums">
+          <span
+            className={`font-mono tracking-wider tabular-nums ${
+              isDark
+                ? 'text-sm font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]'
+                : 'text-xs font-semibold tracking-tight text-gray-800'
+            }`}
+          >
             {timer.formattedRemaining}
           </span>
         )}
       </CountdownCircleTimer>
-      <span className="text-[11px] font-medium text-gray-400">Remaining</span>
+      <span
+        className={`text-[11px] font-bold tracking-wide uppercase ${isDark ? 'text-emerald-300' : 'text-gray-400'}`}
+      >
+        Remaining
+      </span>
     </div>
   );
 }
