@@ -1,4 +1,5 @@
 import { formatScore } from '@/lib/utils';
+import { Loader2, Trophy } from 'lucide-react';
 import { type MouseEvent, useEffect, useRef, useState } from 'react';
 import { useDebounceValue } from 'usehooks-ts';
 import type { CssBattleTarget } from '../../../types';
@@ -53,7 +54,7 @@ export default function CssLiveOutputPanel({
   const stageWrapperRef = useRef<HTMLDivElement>(null);
 
   const [debouncedCode] = useDebounceValue(code, PREVIEW_DEBOUNCE_MS);
-  const previewDoc = `<style>html,body{width:${STAGE_WIDTH}px;height:${STAGE_HEIGHT}px;overflow:hidden;box-sizing:border-box;margin:0}*{box-sizing:border-box}</style>${debouncedCode}`;
+  const previewDoc = `<style>html,body{width:${STAGE_WIDTH}px;height:${STAGE_HEIGHT}px;overflow:hidden;margin:0}</style>${debouncedCode}`;
 
   const [prevCompare, setPrevCompare] = useState(compare);
   if (compare !== prevCompare) {
@@ -67,7 +68,7 @@ export default function CssLiveOutputPanel({
     const wrapper = stageWrapperRef.current;
     if (!wrapper) return;
 
-    const updateScale = () => setScale(wrapper.clientWidth / STAGE_WIDTH);
+    const updateScale = () => setScale(wrapper.getBoundingClientRect().width / STAGE_WIDTH);
     updateScale();
 
     const observer = new ResizeObserver(updateScale);
@@ -110,12 +111,10 @@ export default function CssLiveOutputPanel({
             <div
               style={{
                 position: 'absolute',
-                top: 0,
-                left: 0,
-                width: STAGE_WIDTH,
-                height: STAGE_HEIGHT,
-                transform: `scale(${scale})`,
-                transformOrigin: 'top left',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                zoom: scale,
               }}
             >
               <iframe
@@ -160,46 +159,66 @@ export default function CssLiveOutputPanel({
           </div>
         </div>
 
-        <div style={{ borderColor: colors.border }} className="flex border-b">
-          <span className="border-b-2 border-[#A9812D] px-1 py-2 text-[13px] font-semibold whitespace-nowrap">
-            Your stats
-          </span>
+        <div style={{ borderColor: colors.border }} className="flex items-center justify-between border-b pb-2">
+          <div className="flex items-center gap-2">
+            <Trophy size={14} className="text-amber-400" />
+            <span className="text-xs font-bold tracking-wider text-white/90 uppercase">Battle Stats</span>
+          </div>
+          {highScore != null && (
+            <span className="font-mono text-xs font-semibold text-amber-400/90">Match: {formatScore(highScore)}%</span>
+          )}
         </div>
 
-        <div className="flex gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <div
-            style={{ borderColor: colors.border, backgroundColor: colors.surface }}
-            className="flex-1 rounded-xs border px-3.5 py-3"
+            style={{ borderColor: colors.border }}
+            className="flex flex-col justify-between rounded-xl border bg-white/3 p-3.5 shadow-sm transition-colors hover:bg-white/5"
           >
-            <div className="text-[10px] font-semibold tracking-[0.04em] uppercase opacity-70">Last score</div>
-            <div className="mt-1 font-mono text-xl font-semibold">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium tracking-wider text-white/60 uppercase">Last score</span>
+            </div>
+
+            <div className="mt-2.5 flex items-baseline">
               {isHistoryError ? (
-                <span className="text-xs font-semibold text-red-500">Error</span>
+                <span className="text-xs font-semibold text-rose-400">Error</span>
               ) : isJudging ? (
-                <span className="inline-flex animate-pulse items-center text-xs font-bold text-amber-500">
-                  Judging...
-                </span>
+                <div className="flex items-center gap-2 text-xs font-medium text-cyan-300">
+                  <Loader2 size={13} className="animate-spin text-cyan-400" />
+                  <span>Judging...</span>
+                </div>
               ) : lastScore != null ? (
-                formatScore(lastScore)
+                <span className="font-mono text-2xl font-bold tracking-tight text-white">{formatScore(lastScore)}</span>
               ) : (
-                '–'
+                <span className="font-mono text-2xl font-bold text-white/25">–</span>
               )}
+            </div>
+
+            <div className="mt-1 text-[11px] text-white/40">
+              {isJudging ? 'Calculating...' : lastScore != null ? 'Latest submission' : 'No submissions yet'}
             </div>
           </div>
+
           <div
-            style={{ borderColor: colors.border, backgroundColor: colors.surface }}
-            className="flex-1 rounded-xs border px-3.5 py-3"
+            style={{ borderColor: colors.border }}
+            className="flex flex-col justify-between rounded-xl border bg-white/3 p-3.5 shadow-sm transition-colors hover:bg-white/5"
           >
-            <div className="text-[10px] font-semibold tracking-[0.04em] uppercase opacity-70">High score</div>
-            <div className="mt-1 font-mono text-xl font-semibold">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium tracking-wider text-amber-300/90 uppercase">High score</span>
+            </div>
+
+            <div className="mt-2.5 flex items-baseline">
               {isHistoryError ? (
-                <span className="text-xs font-semibold text-red-500">Error</span>
+                <span className="text-xs font-semibold text-rose-400">Error</span>
               ) : highScore != null ? (
-                formatScore(highScore)
+                <span className="font-mono text-2xl font-bold tracking-tight text-amber-300">
+                  {formatScore(highScore)}
+                </span>
               ) : (
-                '–'
+                <span className="font-mono text-2xl font-bold text-white/25">–</span>
               )}
             </div>
+
+            <div className="mt-1 text-[11px] text-white/40">{highScore != null ? 'Personal best' : 'No score yet'}</div>
           </div>
         </div>
       </div>

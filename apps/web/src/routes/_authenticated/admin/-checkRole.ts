@@ -5,7 +5,7 @@ import type { RouterContext } from '../../__root';
 export const checkAdmin = ({ context }: { context: RouterContext }) => {
   if (!context.auth.isAuthReady) return;
 
-  if (context.auth.user?.role !== 'admin') {
+  if (context.auth.user?.role?.toLowerCase() !== 'admin') {
     toast.error('You are not allowed to access this page');
     throw redirect({ to: '/' });
   }

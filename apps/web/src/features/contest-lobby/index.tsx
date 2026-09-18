@@ -1,5 +1,7 @@
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import QueryState from '@/components/ui/QueryState';
+import { useAuthContext } from '@/features/auth/context/AuthContext';
+import { isStaffRole } from '@/features/auth/utils';
 import CountdownTimer from '@/features/contest/components/CountdownTimer';
 import { useContest } from '@/features/contest/hooks/useContest';
 import { toQueryMessage } from '@/lib/http-errors';
@@ -14,6 +16,7 @@ interface ContestLobbyPageProps {
 export default function ContestLobbyPage({ contestId: propContestId }: ContestLobbyPageProps = {}) {
   const params = useParams({ strict: false }) as { contestId?: string };
   const contestId = propContestId ?? params.contestId ?? '';
+  const { user } = useAuthContext();
   const { data: contest, isLoading, isError, error } = useContest(contestId);
 
   if (isLoading) {
@@ -32,6 +35,8 @@ export default function ContestLobbyPage({ contestId: propContestId }: ContestLo
     );
   }
 
+  const isStaff = isStaffRole(user?.role);
+
   const date = new Date(contest.start).toLocaleDateString('vi-VN');
   const start = new Date(contest.start).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
   const end = new Date(contest.end).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
@@ -47,16 +52,18 @@ export default function ContestLobbyPage({ contestId: propContestId }: ContestLo
             <p className="text-sm text-gray-500">
               {date}, {start} – {end}
             </p>
-            <div className="mt-2">
-              <Link
-                to="/contest/$contestId/rank"
-                params={{ contestId: contest.id }}
-                className="inline-flex items-center gap-1.5 rounded-sm border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-2xs hover:bg-gray-50 hover:text-gray-900"
-              >
-                <Trophy size={14} className="text-amber-500" />
-                Bảng xếp hạng (Standings)
-              </Link>
-            </div>
+            {isStaff && (
+              <div className="mt-2">
+                <Link
+                  to="/contest/$contestId/rank"
+                  params={{ contestId: contest.id }}
+                  className="inline-flex items-center gap-1.5 rounded-sm border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-2xs hover:bg-gray-50 hover:text-gray-900"
+                >
+                  <Trophy size={14} className="text-amber-500" />
+                  Bảng xếp hạng (Standings)
+                </Link>
+              </div>
+            )}
           </div>
 
           <CountdownTimer start={contest.start} end={contest.end} />

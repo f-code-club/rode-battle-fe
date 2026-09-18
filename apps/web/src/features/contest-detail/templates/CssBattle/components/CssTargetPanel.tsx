@@ -22,6 +22,7 @@ function ColorChip({ hex, colors }: { hex: string; colors: CssTargetPanelProps['
     try {
       await navigator.clipboard.writeText(hex);
       setCopied(true);
+      toast.success(`Copied ${hex}`);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => setCopied(false), 1200);
     } catch {
@@ -34,10 +35,14 @@ function ColorChip({ hex, colors }: { hex: string; colors: CssTargetPanelProps['
       type="button"
       onClick={handleCopy}
       style={{ borderColor: colors.border, backgroundColor: colors.surface }}
-      className="flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 transition-opacity hover:opacity-80"
+      className="group flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 transition-all hover:border-white/30 hover:bg-white/10 active:scale-95"
+      title={`Click to copy ${hex}`}
     >
-      <span className="inline-block h-3.5 w-3.5 rounded-full" style={{ background: hex }} />
-      <span className="font-mono text-xs opacity-90">{copied ? 'Copied!' : hex}</span>
+      <span
+        className="inline-block h-3.5 w-3.5 shrink-0 rounded-full ring-1 ring-white/20 transition-transform group-hover:scale-110"
+        style={{ background: hex }}
+      />
+      <span className="font-mono text-xs font-medium opacity-90">{copied ? 'Copied!' : hex}</span>
     </button>
   );
 }
