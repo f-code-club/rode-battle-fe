@@ -47,6 +47,8 @@ export interface BeAlgorithmMeta {
   allowedLanguages: BeAlgorithmLanguageOption[];
 }
 
+import type { ContestProblemSummary } from '@/features/contest/types';
+
 export interface CssBattleTarget {
   imageUrl: string;
   colorCodes: string[];
@@ -62,4 +64,5 @@ export interface ContestDetailData {
   statementMarkdown?: string;
   algorithm?: BeAlgorithmMeta;
   target?: CssBattleTarget;
+  problems?: ContestProblemSummary[];
 }

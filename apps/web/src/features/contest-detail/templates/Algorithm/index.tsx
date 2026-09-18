@@ -1,6 +1,8 @@
 import Footer from '@/components/layout/DashboardLayout/components/Footer';
 import Header from '@/components/layout/DashboardLayout/components/Header';
+import ProblemQuickSwitcher from '@/features/contest-detail/components/ProblemQuickSwitcher';
 import StatementPanel from '@/features/contest-detail/components/StatementPanel';
+import ArenaTimerBadge from '@/features/contest/components/ArenaTimerBadge';
 import { useContestTimer } from '@/features/contest/hooks/useContestTimer';
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
@@ -48,38 +50,38 @@ export default function AlgorithmTemplate({ contestId, problemId, contestData }:
       <Header />
 
       <main className="w-full flex-1">
-        <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            <Link
-              to="/contest/$contestId"
-              params={{ contestId }}
-              className="inline-flex items-center gap-1 text-sm text-gray-500 transition-colors hover:text-gray-900"
-            >
-              <ArrowLeft size={14} />
-              Back to problems
-            </Link>
+        <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 py-1">
+            <div className="flex items-center gap-3">
+              <Link
+                to="/contest/$contestId"
+                params={{ contestId }}
+                title="Quay lại danh sách bài thi"
+                className="flex size-9 cursor-pointer items-center justify-center rounded-xl border border-gray-200/90 bg-white text-gray-600 shadow-2xs transition-all hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 active:scale-95"
+              >
+                <ArrowLeft size={16} />
+              </Link>
+              <span className="text-sm font-bold tracking-tight text-gray-900 sm:text-base">
+                {contestData?.contestTitle ?? 'Contest Arena'}
+              </span>
+            </div>
 
-            {timer.status !== 'unknown' && (
-              <div className="flex items-center gap-2.5 rounded-sm border border-gray-200 bg-white px-3 py-1.5 shadow-2xs">
-                <span className="text-xs font-semibold text-gray-700">{contestData?.contestTitle ?? 'Contest'}</span>
-                <span className="text-xs text-gray-400">•</span>
-                <span
-                  className={`font-mono text-xs font-semibold ${
-                    timer.status === 'running'
-                      ? 'text-emerald-700'
-                      : timer.status === 'ended'
-                        ? 'text-red-600'
-                        : 'text-blue-600'
-                  }`}
-                >
-                  {timer.status === 'running'
-                    ? `Time remaining: ${timer.formattedRemaining}`
-                    : timer.status === 'ended'
-                      ? 'Contest ended'
-                      : `Starts in ${timer.formattedRemaining}`}
-                </span>
+            {contestId && problemId && contestData?.problems && contestData.problems.length > 0 && (
+              <div className="order-3 flex w-full justify-center md:order-2 md:w-auto">
+                <ProblemQuickSwitcher
+                  contestId={contestId}
+                  currentProblemId={problemId}
+                  problems={contestData.problems}
+                  variant="light"
+                />
               </div>
             )}
+
+            <div className="order-2 flex items-center gap-2.5 sm:gap-3 md:order-3">
+              {contestData?.contestStart && contestData?.contestEnd && (
+                <ArenaTimerBadge start={contestData.contestStart} end={contestData.contestEnd} timer={timer} />
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[65fr_35fr]">

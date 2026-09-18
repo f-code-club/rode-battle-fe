@@ -5,8 +5,12 @@ import { toQueryMessage } from '@/lib/http-errors';
 import { useParams } from '@tanstack/react-router';
 import ContestDetail from '.';
 import { useProblem } from './hooks/useProblem';
-import { getAlgorithmLanguageOption } from './templates/Algorithm/config/languages';
-import type { ContestDetailData, Problem } from './types';
+import {
+  ALGORITHM_LANGUAGE_OPTIONS,
+  DEFAULT_ALGORITHM_LANGUAGES,
+  getAlgorithmLanguageOption,
+} from './templates/Algorithm/config/languages';
+import type { BeAlgorithmLanguageOption, ContestDetailData, Problem } from './types';
 import { detectContestType, parseColorCodes } from './utils';
 
 function toContestDetailData(problemId: string, problem: Problem, contest?: ContestDetailType): ContestDetailData {
@@ -20,9 +24,21 @@ function toContestDetailData(problemId: string, problem: Problem, contest?: Cont
       contestTitle: contest?.name,
       contestStart: contest?.start,
       contestEnd: contest?.end,
+      problems: contest?.problems,
       target: { imageUrl: problem.content, colorCodes: parseColorCodes(problem.color_code) },
     };
   }
+
+  const configuredLanguages =
+    problem.languages && problem.languages.length > 0
+      ? problem.languages
+          .map((language) => getAlgorithmLanguageOption(language))
+          .filter((option): option is BeAlgorithmLanguageOption => option != null)
+      : DEFAULT_ALGORITHM_LANGUAGES;
+
+  const allowedLanguages = configuredLanguages.some((l) => l.id === 'rust')
+    ? configuredLanguages
+    : [...configuredLanguages, ALGORITHM_LANGUAGE_OPTIONS.rust];
 
   return {
     id: problemId,
@@ -31,13 +47,12 @@ function toContestDetailData(problemId: string, problem: Problem, contest?: Cont
     contestTitle: contest?.name,
     contestStart: contest?.start,
     contestEnd: contest?.end,
+    problems: contest?.problems,
     statementMarkdown: problem.content,
     algorithm: {
       timeLimitMs: problem.time_limit,
       memoryLimitMb: problem.memory_limit,
-      allowedLanguages: problem.languages
-        .map((language) => getAlgorithmLanguageOption(language))
-        .filter((option) => option != null),
+      allowedLanguages,
     },
   };
 }
@@ -46,6 +61,7 @@ export default function ContestProblemPage() {
   const { contestId, problemId } = useParams({
     from: '/_authenticated/contest/$contestId/problem/$problemId',
   });
+
   const {
     data: contest,
     isLoading: isContestLoading,
