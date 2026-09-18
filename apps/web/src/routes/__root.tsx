@@ -1,3 +1,5 @@
+import ErrorPage from '@/components/ui/ErrorPage';
+import NotFoundPage from '@/components/ui/NotFoundPage';
 import type { AuthContextValue } from '@/features/auth/context/AuthContext';
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
@@ -8,6 +10,8 @@ export interface RouterContext {
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  notFoundComponent: NotFoundPage,
+  errorComponent: ErrorPage,
   component: () => (
     <div className="bg-bg selection:bg-accent/30 selection:text-text-h min-h-screen">
       <Outlet />

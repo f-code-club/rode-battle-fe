@@ -8,7 +8,6 @@ import { useRanking } from '@/features/contest/hooks/useRanking';
 import { problemLabel } from '@/features/contest/utils';
 import { toQueryMessage } from '@/lib/http-errors';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 import Contest from './components/Contest';
 import Standings from './components/Standings';
 
@@ -17,7 +16,6 @@ export default function ContestRanking() {
   const { data: contest, isLoading, isError, error } = useContest(contestId);
   const timer = useContestTimer(contest?.start, contest?.end);
   const { user } = useAuthContext();
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const isStaff = isStaffRole(user?.role);
 
   const {
@@ -28,22 +26,6 @@ export default function ContestRanking() {
     refetchInterval: !isStaff || timer.isEnded ? false : 30_000,
     enabled: isStaff,
   });
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  const handleToggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen?.()?.catch(() => {});
-    } else {
-      document.exitFullscreen?.()?.catch(() => {});
-    }
-  };
 
   if (!isStaff) {
     return (
@@ -77,31 +59,18 @@ export default function ContestRanking() {
     label: problemLabel(index),
   }));
 
-  const content = (
-    <div className={isFullscreen ? 'min-h-screen bg-slate-950 p-4 text-white sm:p-8' : ''}>
+  return (
+    <DashboardLayout>
       <title>{`${contest.name} — Bảng xếp hạng trực tiếp`}</title>
       <meta name="description" content={`Live standings and scoreboard for ${contest.name}`} />
 
-      <Contest
-        contest={contest}
-        timer={timer}
-        totalTeams={rankings.length}
-        totalProblems={problemColumns.length}
-        isFullscreen={isFullscreen}
-        onToggleFullscreen={handleToggleFullscreen}
-      />
+      <Contest contest={contest} timer={timer} />
 
       {isRankingError ? (
         <QueryState message={toQueryMessage(rankingError, 'Failed to load ranking.')} size="inline" tone="error" />
       ) : (
         <Standings rankings={rankings} problemColumns={problemColumns} currentTeam={user?.name} />
       )}
-    </div>
+    </DashboardLayout>
   );
-
-  if (isFullscreen) {
-    return <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950">{content}</div>;
-  }
-
-  return <DashboardLayout>{content}</DashboardLayout>;
 }
