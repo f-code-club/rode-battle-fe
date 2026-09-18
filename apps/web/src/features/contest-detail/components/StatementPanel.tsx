@@ -2,6 +2,8 @@ import 'katex/dist/katex.min.css';
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import rehypeKatex from 'rehype-katex';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import { toast } from 'sonner';
 
@@ -53,6 +55,16 @@ const markdownComponents: Components = {
   ol: ({ children }) => <ol className="mb-4 list-decimal space-y-1 pl-6 text-gray-800">{children}</ol>,
   h2: ({ children }) => <h2 className="mt-8 mb-3 text-base font-semibold">{children}</h2>,
   h3: ({ children }) => <h3 className="mt-6 mb-2 text-sm font-semibold">{children}</h3>,
+  table: ({ children }) => (
+    <div className="mb-4 overflow-x-auto">
+      <table className="w-full border-collapse text-left text-sm">{children}</table>
+    </div>
+  ),
+  thead: ({ children }) => <thead className="border-b-2 border-gray-300">{children}</thead>,
+  th: ({ children }) => (
+    <th className="border border-gray-200 bg-gray-50 px-3 py-2 font-semibold text-gray-800">{children}</th>
+  ),
+  td: ({ children }) => <td className="border border-gray-200 px-3 py-2 align-top text-gray-800">{children}</td>,
   code({ className, children }) {
     const text = String(children).replace(/\n$/, '');
     if (!className) {
@@ -68,7 +80,11 @@ export default function StatementPanel({ title, statementMarkdown }: StatementPa
       <div className="mx-auto max-w-3xl px-8 py-8">
         <h1 className="mb-6 text-center text-xl font-semibold text-gray-900">{title}</h1>
         {statementMarkdown ? (
-          <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]} components={markdownComponents}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[rehypeRaw, rehypeKatex]}
+            components={markdownComponents}
+          >
             {statementMarkdown}
           </ReactMarkdown>
         ) : (
