@@ -55,7 +55,7 @@ export default function CssTargetPanel({ target, colors }: CssTargetPanelProps) 
   return (
     <div style={{ color: colors.foreground }} className="flex h-130 min-h-0 flex-col overflow-hidden lg:h-full">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-5">
-        <div className="relative aspect-4/3 w-full overflow-hidden bg-gray-50">
+        <div className="relative aspect-square w-full overflow-hidden bg-gray-50">
           {showImage ? (
             <img
               src={target?.imageUrl}

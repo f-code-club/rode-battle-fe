@@ -121,8 +121,8 @@ export default function TargetImageCard({ form, disabled }: TargetImageCardProps
             <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
               <AlertTriangle size={14} className="mt-0.5 shrink-0" />
               <span>
-                This image is not 4:3 ({meta.width} × {meta.height}). The contestant view shows the target at 4:3 and
-                crops the overflow, so part of it will be hidden.
+                This image is not square ({meta.width} × {meta.height}). The contestant view shows the target as a
+                square and crops the overflow, so part of it will be hidden.
               </span>
             </div>
           )}
