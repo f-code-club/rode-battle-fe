@@ -16,8 +16,8 @@ export const DEFAULT_COLOR: Record<ProblemType, string> = {
   ALGORITHM: '#10b981',
 };
 
-export const CSS_TARGET_ASPECT = 4 / 3;
-export const CSS_TARGET_RECOMMENDED = { width: 400, height: 300 };
+export const CSS_TARGET_ASPECT = 1;
+export const CSS_TARGET_RECOMMENDED = { width: 300, height: 300 };
 export const CSS_TARGET_MAX_BYTES = 5 * 1024 * 1024;
 
 export const inputClass =
