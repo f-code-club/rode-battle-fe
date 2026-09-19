@@ -2,6 +2,7 @@ import { problemService } from '@/features/jury-dashboard/services';
 import type { CreateProblemRequest, ProblemType } from '@/features/jury-dashboard/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { DEFAULT_COLOR } from '../constants';
@@ -42,6 +43,8 @@ function toPayload(data: ProblemFormData): CreateProblemRequest {
 }
 
 export function useCreateProblem() {
+  const [formKey, setFormKey] = useState(0);
+
   const form = useForm<ProblemFormData>({
     resolver: zodResolver(problemSchema),
     defaultValues: DEFAULT_VALUES,
@@ -68,12 +71,14 @@ export function useCreateProblem() {
   };
 
   const resetForm = () => {
-    form.reset(DEFAULT_VALUES);
+    form.reset(DEFAULT_VALUES, { keepFieldsRef: true });
     createProblem.reset();
+    setFormKey((k) => k + 1);
   };
 
   return {
     form,
+    formKey,
     problemType,
     isSubmitting: createProblem.isPending,
     createdProblem,
