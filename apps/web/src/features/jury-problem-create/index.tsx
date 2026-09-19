@@ -12,7 +12,7 @@ import { useCreateProblem } from './hooks/useCreateProblem';
 
 export default function ProblemCreatePage() {
   const navigate = useNavigate();
-  const { form, problemType, isSubmitting, createdProblem, handleTypeChange, submitProblem, resetForm } =
+  const { form, formKey, problemType, isSubmitting, createdProblem, handleTypeChange, submitProblem, resetForm } =
     useCreateProblem();
 
   const openProblem = (problemId: string) => navigate({ to: '/jury/problems/$problemId', params: { problemId } });
@@ -30,7 +30,7 @@ export default function ProblemCreatePage() {
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">Create problem</h1>
         </div>
 
-        <form noValidate onSubmit={(e) => e.preventDefault()}>
+        <form key={formKey} noValidate onSubmit={(e) => e.preventDefault()}>
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
             <div className="space-y-5 lg:col-span-2">
               <GeneralCard

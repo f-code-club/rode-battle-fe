@@ -91,10 +91,7 @@ export default function ProblemSuccessModal({
             </button>
             <button
               type="button"
-              onClick={() => {
-                onClose();
-                onCreateAnother();
-              }}
+              onClick={onCreateAnother}
               className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-200 py-2.5 text-xs font-semibold text-gray-700 hover:bg-gray-50"
             >
               <Plus size={15} /> Create another
