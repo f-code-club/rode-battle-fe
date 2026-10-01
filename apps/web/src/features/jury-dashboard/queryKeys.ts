@@ -6,5 +6,6 @@ export const juryContestKeys = {
 
 export const juryProblemKeys = {
   all: ['jury', 'problems'] as const,
+  list: () => [...juryProblemKeys.all, 'list'] as const,
   detail: (problemId: string) => [...juryProblemKeys.all, 'detail', problemId] as const,
 };

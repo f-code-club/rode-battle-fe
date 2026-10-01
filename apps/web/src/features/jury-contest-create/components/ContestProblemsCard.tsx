@@ -127,7 +127,7 @@ export default function ContestProblemsCard({ form }: ContestProblemsCardProps) 
                 }}
                 onFocus={() => setOpen(true)}
                 onKeyDown={handleKeyDown}
-                placeholder="Paste problem UUID"
+                placeholder="Search by name or paste UUID"
                 className="h-10 w-full rounded-lg border border-gray-200 bg-white pr-9 pl-9 text-sm text-gray-900 transition-colors placeholder:text-gray-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none"
               />
               {isSearching && (
@@ -139,11 +139,11 @@ export default function ContestProblemsCard({ form }: ContestProblemsCardProps) 
               <div
                 id={listboxId}
                 role="listbox"
-                className="absolute inset-x-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
+                className="absolute inset-x-0 top-full z-20 mt-1 max-h-[220px] overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
               >
                 {results.length === 0 ? (
                   <div className="px-3 py-6 text-center text-xs text-gray-500">
-                    {isSearching ? 'Searching…' : (error ?? 'Enter a valid problem UUID')}
+                    {isSearching ? 'Searching…' : (error ?? 'Type to search problems')}
                   </div>
                 ) : (
                   results.map((option, index) => {

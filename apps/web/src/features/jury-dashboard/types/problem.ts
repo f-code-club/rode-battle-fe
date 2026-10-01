@@ -13,6 +13,14 @@ export interface CreateProblemRequest {
   color_code?: string | null;
 }
 
+export interface ProblemListItem {
+  id: string;
+  name: string;
+  position: number | null;
+  time_limit: number | null;
+  memory_limit: number | null;
+}
+
 export interface ProblemDetailResponse {
   position: number | null;
   name: string;
