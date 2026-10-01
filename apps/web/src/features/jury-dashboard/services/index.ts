@@ -6,6 +6,7 @@ import type {
   CreateContestRequest,
   CreateProblemRequest,
   ProblemDetailResponse,
+  ProblemListItem,
 } from '../types';
 
 const contestPrefix = config.apiBaseUrl.replace(/\/api\/v1\/?$/, '');
@@ -22,6 +23,9 @@ export const contestService = {
 };
 
 export const problemService = {
+  list: (signal?: AbortSignal): Promise<ProblemListItem[]> =>
+    apiClient.get('problems', { signal }).json<ProblemListItem[]>(),
+
   detail: (problemId: string, signal?: AbortSignal): Promise<ProblemDetailResponse> =>
     apiClient.get(`problems/${problemId}`, { signal }).json<ProblemDetailResponse>(),
 
